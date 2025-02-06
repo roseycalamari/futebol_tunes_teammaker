@@ -20,6 +20,14 @@
 
         <main>
             <div class="players-container">
+                <div class="player-count-selector">
+                    <label class="count-label">Número de Jogadores:</label>
+                    <div class="count-buttons">
+                        <button class="count-btn" data-count="10">10 Jogadores</button>
+                        <button class="count-btn active" data-count="15">15 Jogadores</button>
+                    </div>
+                </div>
+                
                 <div class="input-group" id="playersInputs">
                     <!-- Player inputs will be generated here -->
                 </div>
@@ -28,7 +36,7 @@
                 </button>
             </div>
 
-            <div class="teams-container">
+            <div class="teams-container three-teams">
                 <div class="team" id="teamA">
                     <h2>Equipa A</h2>
                     <ul class="team-list"></ul>

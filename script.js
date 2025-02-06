@@ -3,13 +3,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const generateButton = document.getElementById('generateTeams');
     const playersSection = document.querySelector('.players-container');
     const teamsContainer = document.querySelector('.teams-container');
-    const REQUIRED_PLAYERS = 15; // Exactly 15 players needed
-    const PLAYERS_PER_TEAM = 5; // 5 players per team
+    let REQUIRED_PLAYERS = 15; // Default to 15 players
+    const PLAYERS_PER_TEAM = 5; // Always 5 players per team
 
     // Initially hide teams container
     teamsContainer.style.display = 'none';
 
+    // Add event listeners for player count buttons
+    document.querySelectorAll('.count-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updatePlayerCount(parseInt(btn.dataset.count));
+        });
+    });
+
+    function updatePlayerCount(count) {
+        REQUIRED_PLAYERS = count;
+        playersContainer.innerHTML = ''; // Clear existing inputs
+        createPlayerInputs();
+        
+        // Update teams container layout and visibility of team C
+        teamsContainer.className = `teams-container ${count === 10 ? 'two-teams' : 'three-teams'}`;
+        const teamC = document.getElementById('teamC');
+        teamC.style.display = count === 10 ? 'none' : 'block';
+    }
+
     function createPlayerInputs() {
+        playersContainer.innerHTML = ''; // Clear existing inputs
         for (let i = 0; i < REQUIRED_PLAYERS; i++) {
             const playerDiv = document.createElement('div');
             playerDiv.className = 'player-input';
@@ -45,29 +66,34 @@ document.addEventListener('DOMContentLoaded', function() {
         const teams = {
             A: [],
             B: [],
-            C: []
+            C: REQUIRED_PLAYERS === 15 ? [] : null // Only create team C for 15 players
         };
 
-        // Use snake draft pattern to distribute players
-        // This ensures each team gets a mix of high and low skilled players
-        for (let i = 0; i < PLAYERS_PER_TEAM; i++) {
-            // Forward distribution (A -> B -> C)
-            const forwardIndex = i * 3;
-            if (forwardIndex < players.length) {
+        if (REQUIRED_PLAYERS === 15) {
+            // Distribute 15 players into 3 teams using snake draft
+            for (let i = 0; i < PLAYERS_PER_TEAM; i++) {
+                const forwardIndex = i * 3;
                 teams.A.push(players[forwardIndex]);
-                if (forwardIndex + 1 < players.length) teams.B.push(players[forwardIndex + 1]);
-                if (forwardIndex + 2 < players.length) teams.C.push(players[forwardIndex + 2]);
+                teams.B.push(players[forwardIndex + 1]);
+                teams.C.push(players[forwardIndex + 2]);
+            }
+        } else {
+            // Distribute 10 players into 2 teams using alternating pattern
+            for (let i = 0; i < players.length; i++) {
+                if (i % 2 === 0) {
+                    teams.A.push(players[i]);
+                } else {
+                    teams.B.push(players[i]);
+                }
             }
         }
 
-        // Verify team balance
-        const skillA = calculateTeamSkill(teams.A);
-        const skillB = calculateTeamSkill(teams.B);
-        const skillC = calculateTeamSkill(teams.C);
-
-        console.log(`Team A Skill: ${skillA}`);
-        console.log(`Team B Skill: ${skillB}`);
-        console.log(`Team C Skill: ${skillC}`);
+        // Log team skills for verification
+        Object.keys(teams).forEach(team => {
+            if (teams[team]) {
+                console.log(`Team ${team} Skill: ${calculateTeamSkill(teams[team])}`);
+            }
+        });
 
         return teams;
     }
@@ -91,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (emptyFields) {
-            alert('Por favor, preencha os nomes de todos os 15 jogadores.');
+            alert(`Por favor, preencha os nomes de todos os ${REQUIRED_PLAYERS} jogadores.`);
             return;
         }
 
@@ -121,6 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayTeams(teams) {
         Object.keys(teams).forEach(team => {
+            if (!teams[team]) return; // Skip if team is null (Team C in 10-player mode)
+            
             const teamList = document.querySelector(`#team${team} .team-list`);
             teamList.innerHTML = '';
             
@@ -159,6 +187,9 @@ document.addEventListener('DOMContentLoaded', function() {
             input.classList.remove('error');
         });
         document.querySelectorAll('.skill-level').forEach(select => select.value = '1');
+
+        // Clear team totals
+        document.querySelectorAll('.team-total-skill').forEach(el => el.remove());
     }
 
     // Initialize
