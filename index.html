@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futebol Tunes TeamMaker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="ddaw.png" alt="Futebol Tunes Logo" id="logo">
+            </div>
+            <h1>Futebol Tunes TeamMaker</h1>
+            <p class="creator">criado por Ruben Rosa</p>
+        </header>
+
+        <main>
+            <div class="players-container">
+                <div class="input-group" id="playersInputs">
+                    <!-- Player inputs will be generated here -->
+                </div>
+                <button id="generateTeams" class="generate-btn">
+                    <i class="fas fa-users"></i> Gerar Equipas
+                </button>
+            </div>
+
+            <div class="teams-container">
+                <div class="team" id="teamA">
+                    <h2>Equipa A</h2>
+                    <ul class="team-list"></ul>
+                </div>
+                <div class="team" id="teamB">
+                    <h2>Equipa B</h2>
+                    <ul class="team-list"></ul>
+                </div>
+                <div class="team" id="teamC">
+                    <h2>Equipa C</h2>
+                    <ul class="team-list"></ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
