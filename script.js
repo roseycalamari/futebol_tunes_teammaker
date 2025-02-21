@@ -36,15 +36,26 @@ document.addEventListener('DOMContentLoaded', function() {
             playerDiv.className = 'player-input';
             playerDiv.innerHTML = `
                 <input type="text" placeholder="Nome do Jogador ${i + 1} *" class="player-name" required>
-                <div class="skill-selector">
-                    <label>Nível:</label>
-                    <select class="skill-level">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
+                <div class="player-attributes">
+                    <div class="skill-selector">
+                        <label>Nível:</label>
+                        <select class="skill-level">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="position-selector">
+                        <label>Posição:</label>
+                        <select class="player-position">
+                            <option value="atacante">Atacante</option>
+                            <option value="defensor">Defensor</option>
+                            <option value="guarda-redes">Guarda-Redes</option>
+                            <option value="híbrido">Híbrido</option>
+                        </select>
+                    </div>
                 </div>
             `;
             playersContainer.appendChild(playerDiv);
@@ -55,47 +66,133 @@ document.addEventListener('DOMContentLoaded', function() {
         return team.reduce((sum, player) => sum + player.skill, 0);
     }
 
+    function countPositions(team) {
+        const counts = {
+            'atacante': 0,
+            'defensor': 0, 
+            'guarda-redes': 0,
+            'híbrido': 0
+        };
+        
+        team.forEach(player => {
+            counts[player.position]++;
+        });
+        
+        return counts;
+    }
+
+    function evaluateTeamBalance(teams) {
+        let maxSkillDifference = 0;
+        const teamKeys = Object.keys(teams).filter(key => teams[key] !== null);
+        
+        // Calculate max skill difference between any two teams
+        for (let i = 0; i < teamKeys.length; i++) {
+            for (let j = i + 1; j < teamKeys.length; j++) {
+                const diff = Math.abs(
+                    calculateTeamSkill(teams[teamKeys[i]]) - 
+                    calculateTeamSkill(teams[teamKeys[j]])
+                );
+                maxSkillDifference = Math.max(maxSkillDifference, diff);
+            }
+        }
+        
+        // Calculate position balance score (lower is better)
+        let positionImbalance = 0;
+        const positionCounts = teamKeys.map(key => countPositions(teams[key]));
+        
+        for (let i = 0; i < teamKeys.length; i++) {
+            for (let j = i + 1; j < teamKeys.length; j++) {
+                Object.keys(positionCounts[0]).forEach(pos => {
+                    positionImbalance += Math.abs(
+                        positionCounts[i][pos] - positionCounts[j][pos]
+                    );
+                });
+            }
+        }
+        
+        // Combined score (lower is better)
+        return maxSkillDifference * 2 + positionImbalance;
+    }
+
     function balanceTeams(players) {
         if (players.length !== REQUIRED_PLAYERS) {
             throw new Error(`Precisamente ${REQUIRED_PLAYERS} jogadores são necessários`);
         }
 
+        const numTeams = REQUIRED_PLAYERS === 15 ? 3 : 2;
+        const teamKeys = ['A', 'B', 'C'].slice(0, numTeams);
+        
         // Sort players by skill level (highest to lowest)
         players.sort((a, b) => b.skill - a.skill);
-
-        const teams = {
-            A: [],
-            B: [],
-            C: REQUIRED_PLAYERS === 15 ? [] : null // Only create team C for 15 players
-        };
-
-        if (REQUIRED_PLAYERS === 15) {
-            // Distribute 15 players into 3 teams using snake draft
-            for (let i = 0; i < PLAYERS_PER_TEAM; i++) {
-                const forwardIndex = i * 3;
-                teams.A.push(players[forwardIndex]);
-                teams.B.push(players[forwardIndex + 1]);
-                teams.C.push(players[forwardIndex + 2]);
-            }
-        } else {
-            // Distribute 10 players into 2 teams using alternating pattern
-            for (let i = 0; i < players.length; i++) {
-                if (i % 2 === 0) {
-                    teams.A.push(players[i]);
-                } else {
-                    teams.B.push(players[i]);
+        
+        // Try multiple distribution strategies and pick the most balanced one
+        let bestTeams = null;
+        let bestScore = Infinity;
+        
+        // Run multiple iterations with slight variations
+        for (let iteration = 0; iteration < 1000; iteration++) {
+            // Create a copy of players and add slight randomization for skill-equivalent players
+            const shuffledPlayers = [...players].sort((a, b) => {
+                const skillDiff = b.skill - a.skill;
+                // If skills are equal, randomly sort
+                if (skillDiff === 0) {
+                    return Math.random() - 0.5;
                 }
+                return skillDiff;
+            });
+            
+            const candidateTeams = {};
+            teamKeys.forEach(key => {
+                candidateTeams[key] = [];
+            });
+            
+            // Initialize with the top players in each team
+            for (let i = 0; i < numTeams; i++) {
+                candidateTeams[teamKeys[i]].push(shuffledPlayers[i]);
+            }
+            
+            // Distribute remaining players using a greedy approach
+            for (let i = numTeams; i < shuffledPlayers.length; i++) {
+                const player = shuffledPlayers[i];
+                
+                // Find the team with the lowest current skill total
+                let minTeamSkill = Infinity;
+                let targetTeam = null;
+                
+                teamKeys.forEach(key => {
+                    const teamSkill = calculateTeamSkill(candidateTeams[key]);
+                    if (teamSkill < minTeamSkill) {
+                        minTeamSkill = teamSkill;
+                        targetTeam = key;
+                    }
+                });
+                
+                candidateTeams[targetTeam].push(player);
+            }
+            
+            // Evaluate this distribution
+            const score = evaluateTeamBalance(candidateTeams);
+            
+            if (score < bestScore) {
+                bestScore = score;
+                bestTeams = JSON.parse(JSON.stringify(candidateTeams));
             }
         }
-
-        // Log team skills for verification
-        Object.keys(teams).forEach(team => {
-            if (teams[team]) {
-                console.log(`Team ${team} Skill: ${calculateTeamSkill(teams[team])}`);
+        
+        // Add null for Team C if we're in 10-player mode
+        if (numTeams === 2) {
+            bestTeams.C = null;
+        }
+        
+        // Log team info for verification
+        Object.keys(bestTeams).forEach(team => {
+            if (bestTeams[team]) {
+                console.log(`Team ${team} Skill: ${calculateTeamSkill(bestTeams[team])}`);
+                console.log(`Team ${team} Positions:`, countPositions(bestTeams[team]));
             }
         });
-
-        return teams;
+        
+        return bestTeams;
     }
 
     function generateTeams() {
@@ -106,13 +203,14 @@ document.addEventListener('DOMContentLoaded', function() {
         playerInputs.forEach(input => {
             const name = input.querySelector('.player-name').value.trim();
             const skill = parseInt(input.querySelector('.skill-level').value);
+            const position = input.querySelector('.player-position').value;
             
             if (!name) {
                 emptyFields = true;
                 input.querySelector('.player-name').classList.add('error');
             } else {
                 input.querySelector('.player-name').classList.remove('error');
-                players.push({ name, skill });
+                players.push({ name, skill, position });
             }
         });
 
@@ -155,19 +253,46 @@ document.addEventListener('DOMContentLoaded', function() {
             teams[team].forEach(player => {
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    ${player.name}
-                    <span class="skill-badge">Nível: ${player.skill}</span>
+                    <div class="player-info">
+                        <span class="player-name">${player.name}</span>
+                        <div class="player-badges">
+                            <span class="skill-badge">Nível: ${player.skill}</span>
+                            <span class="position-badge position-${player.position}">${formatPosition(player.position)}</span>
+                        </div>
+                    </div>
                 `;
                 teamList.appendChild(li);
             });
 
-            // Display team total skill
+            // Display team stats
             const totalSkill = calculateTeamSkill(teams[team]);
-            const totalSkillElement = document.createElement('div');
-            totalSkillElement.className = 'team-total-skill';
-            totalSkillElement.innerHTML = `Total Skill: ${totalSkill}`;
-            teamList.insertAdjacentElement('afterend', totalSkillElement);
+            const positions = countPositions(teams[team]);
+            
+            const teamStatsElement = document.createElement('div');
+            teamStatsElement.className = 'team-stats';
+            
+            teamStatsElement.innerHTML = `
+                <div class="team-total-skill">Total Skill: ${totalSkill}</div>
+                <div class="team-positions">
+                    <div class="position-count"><span class="position-icon atacante"></span> ${positions['atacante']}</div>
+                    <div class="position-count"><span class="position-icon defensor"></span> ${positions['defensor']}</div>
+                    <div class="position-count"><span class="position-icon guarda-redes"></span> ${positions['guarda-redes']}</div>
+                    <div class="position-count"><span class="position-icon híbrido"></span> ${positions['híbrido']}</div>
+                </div>
+            `;
+            
+            teamList.insertAdjacentElement('afterend', teamStatsElement);
         });
+    }
+    
+    function formatPosition(position) {
+        const map = {
+            'atacante': 'AT',
+            'defensor': 'DF',
+            'guarda-redes': 'GR',
+            'híbrido': 'HB'
+        };
+        return map[position] || position;
     }
 
     function resetGenerator() {
@@ -187,9 +312,10 @@ document.addEventListener('DOMContentLoaded', function() {
             input.classList.remove('error');
         });
         document.querySelectorAll('.skill-level').forEach(select => select.value = '1');
+        document.querySelectorAll('.player-position').forEach(select => select.value = 'atacante');
 
-        // Clear team totals
-        document.querySelectorAll('.team-total-skill').forEach(el => el.remove());
+        // Clear team stats
+        document.querySelectorAll('.team-stats').forEach(el => el.remove());
     }
 
     // Initialize

@@ -5,6 +5,12 @@
     --white: #ffffff;
     --glass-bg: rgba(255, 255, 255, 0.9);
     --glass-border: rgba(255, 255, 255, 0.4);
+    
+    /* Position colors */
+    --atacante-color: #ff5722;
+    --defensor-color: #2196f3;
+    --guarda-redes-color: #4caf50;
+    --hibrido-color: #9c27b0;
 }
 
 * {
@@ -150,20 +156,27 @@ input[type="text"]:focus {
     box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-.skill-selector {
+.player-attributes {
+    display: flex;
+    gap: 1rem;
+}
+
+.skill-selector, .position-selector {
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    flex: 1;
 }
 
-.skill-selector label {
+.skill-selector label, .position-selector label {
     font-size: 0.95rem;
     color: var(--primary-color);
     font-weight: 600;
+    min-width: 60px;
 }
 
 select {
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    padding: 0.75rem 2rem 0.75rem 1rem;
     border: 2px solid rgba(219, 74, 43, 0.2);
     border-radius: 8px;
     background: white;
@@ -177,6 +190,7 @@ select {
     background-position: right 0.8rem center;
     background-size: 1.5em;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 select:hover {
@@ -256,8 +270,6 @@ select:focus {
 }
 
 .team-list li {
-    display: flex;
-    justify-content: space-between;
     padding: 0.8rem 0;
     border-bottom: 1px solid rgba(219, 74, 43, 0.1);
     font-weight: 500;
@@ -267,13 +279,52 @@ select:focus {
     border-bottom: none;
 }
 
-.skill-badge {
-    background: var(--primary-light);
-    color: var(--primary-color);
+.player-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.player-name {
+    font-weight: 600;
+}
+
+.player-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.skill-badge, .position-badge {
     padding: 0.4rem 0.8rem;
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 600;
+}
+
+.skill-badge {
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.position-badge {
+    color: white;
+}
+
+.position-atacante {
+    background-color: var(--atacante-color);
+}
+
+.position-defensor {
+    background-color: var(--defensor-color);
+}
+
+.position-guarda-redes {
+    background-color: var(--guarda-redes-color);
+}
+
+.position-híbrido {
+    background-color: var(--hibrido-color);
 }
 
 input.error {
@@ -286,14 +337,58 @@ input.error:focus {
     box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
 }
 
-.team-total-skill {
+.team-stats {
     margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.team-total-skill {
     padding: 0.8rem;
     background: var(--primary-light);
     color: var(--primary-color);
     border-radius: 8px;
     text-align: center;
     font-weight: 600;
+}
+
+.team-positions {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+.position-count {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.position-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.position-icon.atacante {
+    background-color: var(--atacante-color);
+}
+
+.position-icon.defensor {
+    background-color: var(--defensor-color);
+}
+
+.position-icon.guarda-redes {
+    background-color: var(--guarda-redes-color);
+}
+
+.position-icon.híbrido {
+    background-color: var(--hibrido-color);
 }
 
 /* Mobile adjustments */
@@ -334,13 +429,12 @@ input.error:focus {
         margin-bottom: 0.5rem;
     }
 
-    .skill-selector {
+    .player-attributes {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
+        gap: 0.8rem;
     }
 
-    select {
+    .skill-selector, .position-selector {
         width: 100%;
     }
 
@@ -372,22 +466,25 @@ input.error:focus {
     .team-list li {
         padding: 0.8rem 0;
         font-size: 0.95rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 0.5rem;
     }
 
-    .skill-badge {
+    .player-badges {
+        margin-top: 0.5rem;
+    }
+
+    .skill-badge, .position-badge {
         padding: 0.3rem 0.6rem;
         font-size: 0.85rem;
     }
 
-    .team-total-skill {
-        margin-top: 0.8rem;
-        padding: 0.6rem;
-        font-size: 0.9rem;
+    .team-positions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .position-count {
+        font-size: 0.85rem;
+        min-width: 45%;
     }
 }
 
