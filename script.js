@@ -189,8 +189,40 @@ document.addEventListener('DOMContentLoaded', function() {
         if (numTeams === 2) {
             bestTeams.C = null;
         }
-        
+
+        // Assign vest property to teams
+        assignVests(bestTeams, numTeams);
+
         return bestTeams;
+    }
+
+    // Function to assign vests to teams
+    function assignVests(teams, numTeams) {
+        if (numTeams === 3) {
+            // For 15 players (3 teams): Teams A and C get vests
+            teams.A.forEach(player => player.needsVest = true);
+            teams.C.forEach(player => player.needsVest = true);
+            // Team B doesn't need vests
+            if (teams.B) {
+                teams.B.forEach(player => player.needsVest = false);
+            }
+            
+            // Add vest property to team objects
+            teams.A.needsVest = true;
+            teams.C.needsVest = true;
+            if (teams.B) teams.B.needsVest = false;
+        } else {
+            // For 10 players (2 teams): Teams A gets vests
+            teams.A.forEach(player => player.needsVest = true);
+            // Team B doesn't need vests
+            if (teams.B) {
+                teams.B.forEach(player => player.needsVest = false);
+            }
+            
+            // Add vest property to team objects
+            teams.A.needsVest = true;
+            if (teams.B) teams.B.needsVest = false;
+        }
     }
 
     function collectPlayerData() {
@@ -325,12 +357,23 @@ document.addEventListener('DOMContentLoaded', function() {
     function createTeamInfoPanel(teamKey, teamPlayers) {
         const totalSkill = calculateTeamSkill(teamPlayers).toFixed(1);
         const positions = countPositions(teamPlayers);
+        const needsVest = teamPlayers.needsVest;
         
         const panel = document.createElement('div');
         panel.className = `team-info-panel team-${teamKey.toLowerCase()}`;
         
+        let vestBadge = '';
+        if (needsVest) {
+            vestBadge = '<span class="vest-badge">Coletes</span>';
+        }
+        
         panel.innerHTML = `
-            <h2>Equipa ${teamKey}</h2>
+            <h2>
+                <div class="team-name-container">
+                    Equipa ${teamKey}
+                    ${vestBadge}
+                </div>
+            </h2>
             <ul class="team-players-list">
                 ${teamPlayers.map(player => `
                     <li>
@@ -364,9 +407,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const totalSkill = calculateTeamSkill(teamPlayers).toFixed(1);
         const positions = countPositions(teamPlayers);
+        const needsVest = teamPlayers.needsVest;
+        
+        let vestIndicator = '';
+        if (needsVest) {
+            vestIndicator = '<span class="pitch-vest-indicator">Coletes</span>';
+        }
         
         containerDiv.innerHTML = `
-            <div class="pitch-team-name">Equipa ${teamKey}</div>
+            <div class="pitch-team-name">
+                Equipa ${teamKey}
+                ${vestIndicator}
+            </div>
             <div class="pitch-team-stats">
                 <div class="pitch-team-stat">Skill: ${totalSkill}</div>
                 <div class="pitch-team-stat">AT: ${positions['atacante']}</div>
@@ -533,60 +585,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return positionHTML;
     }
     
-    function getPositionCoordinates(position, index, totalOfType) {
-        // Calculate positions based on player type and count
-        let x, y;
-        
-        switch(position) {
-            case 'atacante':
-                // Attackers positioned in front (top area)
-                if (totalOfType === 1) {
-                    x = 50; // Center
-                    y = 20; // Near top
-                } else if (totalOfType === 2) {
-                    x = index === 0 ? 30 : 70; // Left and right
-                    y = 20;
-                } else {
-                    // For 3 or more attackers, distribute across the top
-                    x = 25 + (index * (50 / (totalOfType - 1)));
-                    y = 20;
-                }
-                break;
-                
-            case 'defensor':
-                // Defenders positioned in back (bottom area)
-                if (totalOfType === 1) {
-                    x = 50; // Center
-                    y = 80; // Near bottom
-                } else if (totalOfType === 2) {
-                    x = index === 0 ? 30 : 70; // Left and right
-                    y = 80;
-                } else {
-                    // For 3 or more defenders, distribute across the bottom
-                    x = 25 + (index * (50 / (totalOfType - 1)));
-                    y = 80;
-                }
-                break;
-                
-            case 'híbrido':
-                // Hybrids positioned in the middle area
-                if (totalOfType === 1) {
-                    x = 50; // Center
-                    y = 50; // Middle
-                } else if (totalOfType === 2) {
-                    x = index === 0 ? 35 : 65; // Left and right of center
-                    y = 50;
-                } else {
-                    // For 3 or more hybrids, distribute across the middle
-                    x = 25 + (index * (50 / (totalOfType - 1)));
-                    y = 50;
-                }
-                break;
-        }
-        
-        return { x, y };
-    }
-    
     function createPlayerToken(player, x, y, teamKey) {
         // Get initials from player name
         const nameParts = player.name.split(' ');
@@ -595,9 +593,12 @@ document.addEventListener('DOMContentLoaded', function() {
             initials += nameParts[nameParts.length - 1].charAt(0).toUpperCase();
         }
         
+        // Check if player needs vest
+        const vestClass = player.needsVest ? 'with-vest' : '';
+        
         return `
             <div class="team-player team-${teamKey.toLowerCase()}" style="left: ${x}%; top: ${y}%;">
-                <div class="player-token">${initials}</div>
+                <div class="player-token ${vestClass}">${initials}</div>
                 <div class="player-popup">
                     <div class="player-popup-name">${player.name}</div>
                     <div class="player-popup-details">
@@ -628,7 +629,13 @@ document.addEventListener('DOMContentLoaded', function() {
             4.7: '5-', 5: '5', 5.3: '5+'
         };
         
-        return skillMap[skillValue] || skillValue.toString();
+        // If the skill value exists in the map, return it
+        if (skillMap[skillValue]) {
+            return skillMap[skillValue];
+        }
+        
+        // If the skill value is undefined or invalid, return a default value
+        return '1'; // Default to level 1 if invalid
     }
 
     function resetGenerator() {

@@ -17,6 +17,9 @@
     --field-color: #399e3d;
     --field-line-color: rgba(255, 255, 255, 0.7);
     --field-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2);
+    
+    /* Vest color */
+    --vest-color: #f6c700;
 }
 
 * {
@@ -874,6 +877,51 @@ input.error:focus {
     color: var(--primary-color);
 }
 
+/* Vest badge styling */
+.vest-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--vest-color);
+    color: #333;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.team-name-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pitch-vest-indicator {
+    display: inline-block;
+    background-color: var(--vest-color);
+    color: #333;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+/* Player token vest indicator */
+.player-token.with-vest::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--vest-color);
+    border-radius: 50%;
+    border: 2px solid white;
+    z-index: 2;
+}
+
 /* Responsive adjustments */
 @media (max-width: 900px) {
     .pitch-view {
@@ -983,4 +1031,14 @@ input.error:focus {
     opacity: 1;
     transform: translateY(0);
     display: block;
+}
+
+.team-label {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.team-label h3 {
+    margin: 0;
+    color: #333;
 }
