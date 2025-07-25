@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Generator - NiteRun</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -25,49 +25,28 @@
                 </div>
                 
                 <main>
-                    <!-- Team Generator Steps -->
-                    <div class="generator-steps">
-                        <div class="step active" data-step="1">
-                            <div class="step-number">1</div>
-                            <span>Jogadores</span>
-                        </div>
-                        <div class="step" data-step="2">
-                            <div class="step-number">2</div>
-                            <span>Configurar</span>
-                        </div>
-                        <div class="step" data-step="3">
-                            <div class="step-number">3</div>
-                            <span>Equipas</span>
-                        </div>
-                    </div>
-
                     <!-- Step 1: Player Count Selection -->
                     <div class="step-content" id="step1">
                         <div class="players-container">
                             <div class="player-count-selector">
                                 <label class="count-label">Número de Jogadores:</label>
                                 <div class="count-buttons">
-                                    <button class="count-btn" data-count="5">
-                                        <i class="fas fa-users"></i>
-                                        <span>5 Jogadores</span>
-                                        <small>1 Equipa</small>
-                                    </button>
-                                    <button class="count-btn" data-count="10">
-                                        <i class="fas fa-users"></i>
+                                    <button class="count-btn active" data-count="10">
+                                        <img src="assets/images/temasicon.png" alt="Players Icon" class="count-btn-icon">
                                         <span>10 Jogadores</span>
-                                        <small>2 Equipas</small>
+                                        <small>2 Equipas de 5</small>
                                     </button>
-                                    <button class="count-btn active" data-count="15">
-                                        <i class="fas fa-users"></i>
+                                    <button class="count-btn" data-count="15">
+                                        <img src="assets/images/temasicon.png" alt="Players Icon" class="count-btn-icon">
                                         <span>15 Jogadores</span>
-                                        <small>3 Equipas</small>
+                                        <small>3 Equipas de 5</small>
                                     </button>
                                 </div>
                             </div>
                             
                             <div class="generation-options">
                                 <button class="next-step-btn" onclick="nextStep()">
-                                    <span>Configurar Jogadores</span>
+                                    <span>Próximo</span>
                                     <i class="fas fa-arrow-right"></i>
                                 </button>
                             </div>
@@ -79,12 +58,6 @@
                         <div class="players-config-container">
                             <div class="config-header">
                                 <h2>Configurar Jogadores</h2>
-                                <div class="player-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" id="progressFill"></div>
-                                    </div>
-                                    <p class="player-counter">Jogador <span id="currentPlayerNumber">1</span> de <span id="totalPlayers">15</span></p>
-                                </div>
                             </div>
 
                             <!-- Player Navigation List -->
@@ -127,9 +100,10 @@
                                         <div class="form-group">
                                             <label>Posição:</label>
                                             <select id="playerPosition" class="position-select">
-                                                <option value="atacante">⚔️ Atacante</option>
-                                                <option value="hibrido" selected>⚡ Híbrido</option>
-                                                <option value="defensor">🛡️ Defensor</option>
+                                                <option value="atacante">Atacante</option>
+                                                <option value="hibrido" selected>Híbrido</option>
+                                                <option value="defensor">Defensor</option>
+                                                <option value="gr">GR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -138,39 +112,53 @@
                                         <label>Atributos Especiais:</label>
                                         <div class="attributes-grid">
                                             <button type="button" class="attribute-btn" data-attr="malabarista">
-                                                <i class="fas fa-star"></i>
-                                                <span>Malabarista</span>
-                                                <small>Dribbler, flashy, bom remate</small>
+                                                <img src="assets/images/malabaristaicon.png" alt="Malabarista" class="attribute-icon">
+                                                <div class="content">
+                                                    <span>Malabarista</span>
+                                                    <small>Dribbler, flashy, bom remate</small>
+                                                </div>
                                             </button>
                                             <button type="button" class="attribute-btn" data-attr="muralha">
-                                                <i class="fas fa-shield-alt"></i>
-                                                <span>A Muralha</span>
-                                                <small>Forte na marcação, excelente defesa</small>
+                                                <img src="assets/images/muralhaicon.png" alt="A Muralha" class="attribute-icon">
+                                                <div class="content">
+                                                    <span>A Muralha</span>
+                                                    <small>Forte na marcação, excelente defesa</small>
+                                                </div>
                                             </button>
                                             <button type="button" class="attribute-btn" data-attr="sweeper">
-                                                <i class="fas fa-exchange-alt"></i>
-                                                <span>Sweeper</span>
-                                                <small>Versátil guarda-redes + campo</small>
+                                                <img src="assets/images/sweepericon.png" alt="Sweeper" class="attribute-icon">
+                                                <div class="content">
+                                                    <span>Sweeper</span>
+                                                    <small>Versátil guarda-redes + campo</small>
+                                                </div>
                                             </button>
                                             <button type="button" class="attribute-btn" data-attr="luva">
-                                                <i class="fas fa-hand-paper"></i>
-                                                <span>Luva D'or</span>
-                                                <small>Excelente guarda-redes nato</small>
+                                                <img src="assets/images/luvadoricon.png" alt="Luva D'or" class="attribute-icon">
+                                                <div class="content">
+                                                    <span>Luva D'or</span>
+                                                    <small>Excelente guarda-redes nato</small>
+                                                </div>
                                             </button>
                                             <button type="button" class="attribute-btn" data-attr="sr90">
-                                                <i class="fas fa-clock"></i>
-                                                <span>Sr. 90 Minutos</span>
-                                                <small>Completo, criativo, trabalhador</small>
+                                                <img src="assets/images/sr90minutos.png" alt="Sr. 90 Minutos" class="attribute-icon">
+                                                <div class="content">
+                                                    <span>Sr. 90 Minutos</span>
+                                                    <small>Completo, criativo, trabalhador</small>
+                                                </div>
                                             </button>
                                             <button type="button" class="attribute-btn" data-attr="arquiteto">
-                                                <i class="fas fa-chess-queen"></i>
-                                                <span>O Arquiteto</span>
-                                                <small>Ótimo passe, controla ritmo</small>
+                                                <img src="assets/images/arquitetoicon.png" alt="O Arquiteto" class="attribute-icon">
+                                                <div class="content">
+                                                    <span>O Arquiteto</span>
+                                                    <small>Ótimo passe, controla ritmo</small>
+                                                </div>
                                             </button>
                                             <button type="button" class="attribute-btn" data-attr="matador">
-                                                <i class="fas fa-bullseye"></i>
-                                                <span>El Matador</span>
-                                                <small>Finalizador elite, baixa defesa</small>
+                                                <img src="assets/images/elmatadoricon.png" alt="El Matador" class="attribute-icon">
+                                                <div class="content">
+                                                    <span>El Matador</span>
+                                                    <small>Finalizador elite, baixa defesa</small>
+                                                </div>
                                             </button>
                                         </div>
                                     </div>
@@ -182,7 +170,7 @@
                                         <span>Anterior</span>
                                     </button>
                                     <button class="save-continue-btn" onclick="saveAndContinue()">
-                                        <span>Salvar & Continuar</span>
+                                        <span>Próximo</span>
                                         <i class="fas fa-arrow-right"></i>
                                     </button>
                                 </div>
@@ -211,20 +199,21 @@
                         <div class="teams-container">
                             <div class="teams-header">
                                 <h2>Equipas Geradas</h2>
-                                <div class="action-buttons">
-                                    <button class="regenerate-btn" onclick="regenerateTeams()">
-                                        <i class="fas fa-redo"></i>
-                                        <span>Gerar Novamente</span>
-                                    </button>
-                                    <button class="back-btn" onclick="goToStep(2)">
-                                        <i class="fas fa-edit"></i>
-                                        <span>Editar Jogadores</span>
-                                    </button>
-                                </div>
                             </div>
 
                             <div class="teams-display" id="teamsDisplay">
                                 <!-- Generated teams will be displayed here -->
+                            </div>
+
+                            <div class="action-buttons-bottom">
+                                <button class="regenerate-btn" onclick="regenerateTeams()">
+                                    <i class="fas fa-redo"></i>
+                                    <span>Gerar Novamente</span>
+                                </button>
+                                <button class="back-btn" onclick="goToStep(2)">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Editar Jogadores</span>
+                                </button>
                             </div>
 
                             <div class="teams-stats" id="teamsStats">

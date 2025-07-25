@@ -27,7 +27,7 @@ const SoundManager = {
 
 // Enhanced Team Generator Global Variables
 let currentStep = 1;
-let totalPlayers = 15;
+let totalPlayers = 10; // Changed default from 15 to 10
 let currentPlayerIndex = 0;
 let players = [];
 let generatedTeams = [];
@@ -96,7 +96,7 @@ const attributeDefinitions = {
 
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize team generator if we're on that page
-  const teamGeneratorPage = document.querySelector('.generator-steps');
+  const teamGeneratorPage = document.querySelector('.step-content');
   if (teamGeneratorPage) {
       initializeEnhancedTeamGenerator();
   }
@@ -251,15 +251,15 @@ function updatePlayerCounter() {
       prevBtn.style.visibility = currentPlayerIndex === 0 ? 'hidden' : 'visible';
   }
   
-  // Update save button text
-  const saveBtn = document.querySelector('.save-continue-btn span');
-  if (saveBtn) {
-      if (currentPlayerIndex === totalPlayers - 1) {
-          saveBtn.textContent = 'Gerar Equipas';
-      } else {
-          saveBtn.textContent = 'Salvar & Continuar';
-      }
-  }
+     // Update save button text
+   const saveBtn = document.querySelector('.save-continue-btn span');
+   if (saveBtn) {
+       if (currentPlayerIndex === totalPlayers - 1) {
+           saveBtn.textContent = 'Gerar Equipas';
+       } else {
+           saveBtn.textContent = 'Próximo';
+       }
+   }
 }
 
 function loadPlayerData() {
@@ -440,14 +440,16 @@ function generateEnhancedTeams() {
       ...calculateEnhancedPlayerStats(player)
   }));
   
-  // Determine team configuration
+  // Determine team configuration - Only support 10 or 15 players (2 or 3 teams of 5)
   let teamConfig;
-  if (totalPlayers === 5) {
-      teamConfig = { numTeams: 1, playersPerTeam: 5 };
-  } else if (totalPlayers === 10) {
+  if (totalPlayers === 10) {
       teamConfig = { numTeams: 2, playersPerTeam: 5 };
   } else if (totalPlayers === 15) {
       teamConfig = { numTeams: 3, playersPerTeam: 5 };
+  } else {
+      // Fallback to 10 players if somehow we get a different number
+      console.warn('Invalid player count, defaulting to 10 players (2 teams of 5)');
+      teamConfig = { numTeams: 2, playersPerTeam: 5 };
   }
   
   // Generate balanced teams
@@ -482,6 +484,13 @@ function calculateEnhancedPlayerStats(player) {
           creativityScore *= 1.1;
           teamworkScore *= 1.2;
           break;
+      case 'gr':
+          attackScore *= 0.3;
+          defenseScore *= 1.4;
+          creativityScore *= 0.8;
+          teamworkScore *= 1.0;
+          goalkeeperScore *= 2.5; // Significantly boost goalkeeper ability
+          break;
   }
   
   // Apply attribute modifiers
@@ -514,14 +523,7 @@ function calculateEnhancedPlayerStats(player) {
 function createBalancedTeams(players, teamConfig) {
   const { numTeams, playersPerTeam } = teamConfig;
   
-  if (numTeams === 1) {
-      // Single team mode (5 players)
-      return {
-          'Equipa A': players.slice().sort((a, b) => b.overallScore - a.overallScore)
-      };
-  }
-  
-  // Multi-team balancing algorithm
+  // Always use multi-team balancing algorithm since we only support 10+ players
   let bestTeams = null;
   let bestBalance = Infinity;
   
@@ -530,7 +532,7 @@ function createBalancedTeams(players, teamConfig) {
       const teams = initializeTeams(numTeams);
       const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
       
-      // Distribute players using snake draft method with some randomness
+      // Distribute players using fixed-size snake draft method
       distributePlayersSnakeDraft(shuffledPlayers, teams, playersPerTeam);
       
       // Calculate balance score
@@ -558,27 +560,42 @@ function initializeTeams(numTeams) {
 
 function distributePlayersSnakeDraft(players, teams, playersPerTeam) {
   const teamNames = Object.keys(teams);
-  let currentTeam = 0;
-  let direction = 1; // 1 for forward, -1 for backward
+  const numTeams = teamNames.length;
   
+  // Create a draft order array for snake draft
+  const draftOrder = [];
+  
+  // Create the snake draft order
+  for (let round = 0; round < playersPerTeam; round++) {
+      if (round % 2 === 0) {
+          // Even rounds: normal order
+          for (let i = 0; i < numTeams; i++) {
+              draftOrder.push(i);
+          }
+      } else {
+          // Odd rounds: reverse order
+          for (let i = numTeams - 1; i >= 0; i--) {
+              draftOrder.push(i);
+          }
+      }
+  }
+  
+  // Distribute players according to draft order
   players.forEach((player, index) => {
-      const teamName = teamNames[currentTeam];
-      teams[teamName].push(player);
-      
-      // Move to next team
-      if ((index + 1) % teamNames.length === 0) {
-          // Reverse direction for snake draft
-          direction *= -1;
+      if (index < draftOrder.length) {
+          const teamIndex = draftOrder[index];
+          const teamName = teamNames[teamIndex];
+          
+          // Only add if team doesn't have 5 players yet
+          if (teams[teamName].length < playersPerTeam) {
+              teams[teamName].push(player);
+          }
       }
-      
-      currentTeam += direction;
-      if (currentTeam >= teamNames.length) {
-          currentTeam = teamNames.length - 1;
-          direction = -1;
-      } else if (currentTeam < 0) {
-          currentTeam = 0;
-          direction = 1;
-      }
+  });
+  
+  // Verify each team has exactly 5 players
+  Object.keys(teams).forEach(teamName => {
+      console.log(`${teamName} has ${teams[teamName].length} players`);
   });
 }
 
@@ -589,6 +606,7 @@ function calculateTeamBalance(teams) {
       defense: team.reduce((sum, p) => sum + p.defenseScore, 0),
       creativity: team.reduce((sum, p) => sum + p.creativityScore, 0),
       teamwork: team.reduce((sum, p) => sum + p.teamworkScore, 0),
+      goalkeeper: team.reduce((sum, p) => sum + p.goalkeeperScore, 0),
       positions: countPositions(team),
       attributes: countAttributes(team)
   }));
@@ -608,7 +626,7 @@ function calculateTeamBalance(teams) {
 }
 
 function countPositions(team) {
-  const positions = { atacante: 0, defensor: 0, hibrido: 0 };
+  const positions = { atacante: 0, defensor: 0, hibrido: 0, gr: 0 };
   team.forEach(player => {
       positions[player.position]++;
   });
@@ -634,10 +652,11 @@ function calculateVariance(numbers) {
 function calculatePositionPenalty(teamStats) {
   let penalty = 0;
   
-  // Penalize teams with no defenders or no attackers
+  // Penalize teams with no defenders, no attackers, or no goalkeepers
   teamStats.forEach(stat => {
       if (stat.positions.defensor === 0) penalty += 10;
       if (stat.positions.atacante === 0) penalty += 10;
+      if (stat.positions.gr === 0) penalty += 15; // Higher penalty for missing goalkeeper
   });
   
   return penalty;
@@ -689,7 +708,7 @@ function createTeamCard(teamName, team) {
   teamCard.innerHTML = `
       <div class="team-header">
           <div class="team-name">${teamName}</div>
-          <div class="team-skill">Score Total: ${overallScore.toFixed(1)}</div>
+          <div class="team-skill">Score Total: ${overallScore.toFixed(1)} | ${team.length} jogadores</div>
       </div>
       <ul class="team-players">
           ${team.map(player => `
@@ -719,7 +738,9 @@ function createStatsCard() {
       overall: team.reduce((sum, p) => sum + p.overallScore, 0),
       attack: team.reduce((sum, p) => sum + p.attackScore, 0),
       defense: team.reduce((sum, p) => sum + p.defenseScore, 0),
-      creativity: team.reduce((sum, p) => sum + p.creativityScore, 0)
+      creativity: team.reduce((sum, p) => sum + p.creativityScore, 0),
+      goalkeeper: team.reduce((sum, p) => sum + p.goalkeeperScore, 0),
+      playerCount: team.length
   }));
   
   const maxDifference = Math.max(...teamStats.map(s => s.overall)) - Math.min(...teamStats.map(s => s.overall));
@@ -743,6 +764,9 @@ function createStatsCard() {
               <div class="stat-label">Score Médio</div>
               <div class="stat-value">${(teamStats.reduce((sum, s) => sum + s.overall, 0) / teamStats.length).toFixed(1)}</div>
           </div>
+      </div>
+      <div class="team-size-info" style="margin-top: 10px; text-align: center; color: #666;">
+          Cada equipa tem exatamente 5 jogadores
       </div>
   `;
   
