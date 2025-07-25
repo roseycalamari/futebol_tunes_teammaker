@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Generator - NiteRun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="page active">
+            <div class="page-content">
+                <header class="page-header">
+                    <button class="back-to-home-btn" onclick="window.location.href='index.html'">
+                        <img src="assets/images/arrowicon.png" alt="Back to Home" class="back-arrow-icon">
+                    </button>
+                </header>
+                
+                <div class="page-logo-section">
+                    <div class="logo-container">
+                        <img src="assets/images/logo png.png" alt="NiteRun Logo" id="logo" class="page-main-logo">
+                    </div>
+                </div>
+                
+                <main>
+                    <!-- Player input section -->
+                    <div class="players-container">
+                        <div class="player-count-selector">
+                            <label class="count-label">Número de Jogadores:</label>
+                            <div class="count-buttons">
+                                <button class="count-btn" data-count="10">10 Jogadores</button>
+                                <button class="count-btn active" data-count="15">15 Jogadores</button>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group" id="playersInputs">
+                            <!-- Player inputs will be generated here -->
+                        </div>
+                        <button id="generateTeams" class="generate-btn">
+                            <img src="assets/images/generatebuttoniconcream.png" alt="Generate Teams" class="generate-icon"> Generate Teams
+                        </button>
+                    </div>
+                    
+                    <!-- Football pitch visualization container -->
+                    <div class="pitch-container">
+                        <!-- Team info panels and pitch visualization will be generated here -->
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
