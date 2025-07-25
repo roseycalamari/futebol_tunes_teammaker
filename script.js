@@ -162,6 +162,54 @@ function nextStep() {
       updateProgressBar();
       loadPlayerData();
       SoundManager.play('click');
+  } else if (currentStep === 2) {
+      // Save current player before moving to next step
+      const name = document.getElementById('playerName').value.trim();
+      if (name) {
+          const selectedAttributes = [];
+          document.querySelectorAll('.attribute-btn.active').forEach(btn => {
+              selectedAttributes.push(btn.dataset.attr);
+          });
+          
+          players[currentPlayerIndex] = {
+              name: name,
+              level: parseFloat(document.getElementById('playerLevel').value),
+              position: document.getElementById('playerPosition').value,
+              attributes: selectedAttributes
+          };
+          
+          updatePlayerNavigation();
+          updateProgressBar();
+      }
+      
+      // Move to next player or generate teams
+      if (currentPlayerIndex === totalPlayers - 1) {
+          // Check if all players are configured
+          const allConfigured = players.every(p => p && p.name);
+          if (allConfigured) {
+              // Generate teams and go to step 3
+              generateEnhancedTeams();
+              currentStep = 3;
+              updateStepDisplay();
+              displayGeneratedTeams();
+          } else {
+              // Find first missing player
+              const missingPlayers = players.findIndex(p => !p || !p.name);
+              if (missingPlayers !== -1) {
+                  currentPlayerIndex = missingPlayers;
+                  updatePlayerCounter();
+                  updatePlayerNavigation();
+                  loadPlayerData();
+              }
+          }
+      } else {
+          // Move to next player
+          currentPlayerIndex++;
+          updatePlayerCounter();
+          loadPlayerData();
+      }
+      
+      SoundManager.play('click');
   }
 }
 
@@ -324,17 +372,24 @@ function saveAndContinue() {
   
   // Check if we're done with all players
   if (currentPlayerIndex === totalPlayers - 1) {
-      // Show generate button
-      const generateSection = document.getElementById('generateSection');
-      if (generateSection) {
-          generateSection.classList.remove('hidden');
-      }
-      
       // Check if all players are configured
       const allConfigured = players.every(p => p && p.name);
       if (allConfigured) {
-          // Auto-scroll to generate section
-          generateSection.scrollIntoView({ behavior: 'smooth' });
+          // Show generate button and auto-scroll
+          const generateSection = document.getElementById('generateSection');
+          if (generateSection) {
+              generateSection.classList.remove('hidden');
+              generateSection.scrollIntoView({ behavior: 'smooth' });
+          }
+      } else {
+          // Find first missing player and go to them
+          const missingPlayers = players.findIndex(p => !p || !p.name);
+          if (missingPlayers !== -1) {
+              currentPlayerIndex = missingPlayers;
+              updatePlayerCounter();
+              updatePlayerNavigation();
+              loadPlayerData();
+          }
       }
   } else {
       // Move to next player
