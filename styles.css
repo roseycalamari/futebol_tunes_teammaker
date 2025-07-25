@@ -2677,6 +2677,32 @@ input.error:focus {
   overflow: hidden;
   transition: none;
   min-height: auto;
+  margin-bottom: 2rem;
+}
+
+.team-card.sem-colete {
+  border-color: #ff6b35;
+  background: linear-gradient(135deg, var(--cream) 0%, rgba(255, 107, 53, 0.05) 100%);
+}
+
+.team-card.sem-colete::before {
+  background: linear-gradient(90deg, #ff6b35, #ff8c42);
+}
+
+.sem-colete-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #ff6b35;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0;
+  font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 10;
 }
 
 .team-header {
@@ -3484,15 +3510,39 @@ input.error:focus {
   /* Mobile team display improvements */
   .teams-display {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
     margin-bottom: 2rem;
   }
 
+  .teams-container {
+    padding: 1rem;
+  }
+
+  .teams-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .teams-header h2 {
+    font-size: 1.8rem;
+  }
+
   .team-card {
-    padding: 1.5rem 1.5rem;
+    padding: 1rem 1rem;
     border-radius: 0;
     border: 2px solid var(--primary-color);
     min-height: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .team-card.sem-colete {
+    border-color: #ff6b35;
+  }
+
+  .sem-colete-badge {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
   }
 
   .team-header {
@@ -3501,8 +3551,76 @@ input.error:focus {
   }
 
   .team-name {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     margin-bottom: 0.3rem;
+    padding-right: 4rem; /* Make space for sem-colete badge */
+  }
+
+  .team-skill {
+    font-size: 0.9rem;
+  }
+
+  .team-players {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .team-player {
+    padding: 0.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .player-name-team {
+    font-size: 0.9rem;
+  }
+
+  .player-attributes {
+    font-size: 0.7rem;
+  }
+
+  .player-level-badge {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.3rem;
+  }
+}
+
+/* Extra small screens (iPhone 13 mini, etc.) */
+@media (max-width: 375px) {
+  .team-card {
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .team-name {
+    font-size: 1.2rem;
+    padding-right: 3.5rem;
+  }
+
+  .team-skill {
+    font-size: 0.8rem;
+  }
+
+  .team-player {
+    padding: 0.4rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .player-name-team {
+    font-size: 0.85rem;
+  }
+
+  .player-attributes {
+    font-size: 0.65rem;
+  }
+
+  .player-level-badge {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.25rem;
+  }
+
+  .sem-colete-badge {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.5rem;
   }
 
   .team-skill {
@@ -3515,29 +3633,38 @@ input.error:focus {
   }
 
   .team-player {
-    padding: 0.8rem;
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 0.6rem;
+    flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
+    border: 1px solid rgba(0, 109, 255, 0.1);
+    margin-bottom: 0.3rem;
+    background: rgba(255, 252, 239, 0.5);
   }
 
   .player-info {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
   }
 
   .player-name-team {
-    font-size: 1.1rem;
-    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .player-attributes {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     color: #666;
+    line-height: 1.2;
   }
 
   .player-level-badge {
-    align-self: flex-end;
-    margin-top: 0.5rem;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
 
   .stats-grid {

@@ -671,7 +671,15 @@ function createTeamCard(teamName, team) {
   
   const overallScore = team.reduce((sum, p) => sum + p.overallScore, 0);
   
+  // Determine which team gets "Sem Colete" (no vest) - first team gets it
+  const isSemColete = teamName === 'Equipa A';
+  
+  if (isSemColete) {
+    teamCard.classList.add('sem-colete');
+  }
+  
   teamCard.innerHTML = `
+      ${isSemColete ? '<div class="sem-colete-badge">Sem Colete</div>' : ''}
       <div class="team-header">
           <div class="team-name">${teamName}</div>
           <div class="team-skill">Score Total: ${overallScore.toFixed(1)} | ${team.length} jogadores</div>
