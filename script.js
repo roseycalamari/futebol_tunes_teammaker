@@ -123,7 +123,6 @@ function initializeEnhancedTeamGenerator() {
           btn.classList.add('active');
           // Update player count
           totalPlayers = parseInt(btn.dataset.count);
-          document.getElementById('totalPlayers').textContent = totalPlayers;
           SoundManager.play('click');
       });
   });
@@ -162,54 +161,6 @@ function nextStep() {
       updateProgressBar();
       loadPlayerData();
       SoundManager.play('click');
-  } else if (currentStep === 2) {
-      // Save current player before moving to next step
-      const name = document.getElementById('playerName').value.trim();
-      if (name) {
-          const selectedAttributes = [];
-          document.querySelectorAll('.attribute-btn.active').forEach(btn => {
-              selectedAttributes.push(btn.dataset.attr);
-          });
-          
-          players[currentPlayerIndex] = {
-              name: name,
-              level: parseFloat(document.getElementById('playerLevel').value),
-              position: document.getElementById('playerPosition').value,
-              attributes: selectedAttributes
-          };
-          
-          updatePlayerNavigation();
-          updateProgressBar();
-      }
-      
-      // Move to next player or generate teams
-      if (currentPlayerIndex === totalPlayers - 1) {
-          // Check if all players are configured
-          const allConfigured = players.every(p => p && p.name);
-          if (allConfigured) {
-              // Generate teams and go to step 3
-              generateEnhancedTeams();
-              currentStep = 3;
-              updateStepDisplay();
-              displayGeneratedTeams();
-          } else {
-              // Find first missing player
-              const missingPlayers = players.findIndex(p => !p || !p.name);
-              if (missingPlayers !== -1) {
-                  currentPlayerIndex = missingPlayers;
-                  updatePlayerCounter();
-                  updatePlayerNavigation();
-                  loadPlayerData();
-              }
-          }
-      } else {
-          // Move to next player
-          currentPlayerIndex++;
-          updatePlayerCounter();
-          loadPlayerData();
-      }
-      
-      SoundManager.play('click');
   }
 }
 
@@ -246,13 +197,8 @@ function updatePlayerNavigation() {
 }
 
 function updateProgressBar() {
-  const progressFill = document.getElementById('progressFill');
-  const completedPlayers = players.filter(p => p && p.name).length;
-  const progressPercent = (completedPlayers / totalPlayers) * 100;
-  
-  if (progressFill) {
-      progressFill.style.width = progressPercent + '%';
-  }
+  // Progress bar functionality removed since element doesn't exist in HTML
+  // This function is kept for compatibility but doesn't do anything
 }
 
 function goToStep(step) {
@@ -268,16 +214,6 @@ function goToStep(step) {
 }
 
 function updateStepDisplay() {
-  // Update step indicators
-  const steps = document.querySelectorAll('.step');
-  steps.forEach((step, index) => {
-      if (index + 1 <= currentStep) {
-          step.classList.add('active');
-      } else {
-          step.classList.remove('active');
-      }
-  });
-
   // Show/hide step content
   const stepContents = document.querySelectorAll('.step-content');
   stepContents.forEach((content, index) => {
@@ -290,24 +226,21 @@ function updateStepDisplay() {
 }
 
 function updatePlayerCounter() {
-  document.getElementById('currentPlayerNumber').textContent = currentPlayerIndex + 1;
-  document.getElementById('totalPlayers').textContent = totalPlayers;
-  
   // Update previous button visibility
   const prevBtn = document.querySelector('.prev-player-btn');
   if (prevBtn) {
       prevBtn.style.visibility = currentPlayerIndex === 0 ? 'hidden' : 'visible';
   }
   
-     // Update save button text
-   const saveBtn = document.querySelector('.save-continue-btn span');
-   if (saveBtn) {
-       if (currentPlayerIndex === totalPlayers - 1) {
-           saveBtn.textContent = 'Gerar Equipas';
-       } else {
-           saveBtn.textContent = 'Próximo';
-       }
-   }
+  // Update save button text
+  const saveBtn = document.querySelector('.save-continue-btn span');
+  if (saveBtn) {
+      if (currentPlayerIndex === totalPlayers - 1) {
+          saveBtn.textContent = 'Gerar Equipas';
+      } else {
+          saveBtn.textContent = 'Próximo';
+      }
+  }
 }
 
 function loadPlayerData() {
@@ -431,30 +364,8 @@ function prevPlayer() {
 }
 
 function updatePlayersSummary() {
-  const summaryContainer = document.getElementById('playersSummary');
-  summaryContainer.innerHTML = '';
-  
-  players.forEach((player, index) => {
-      if (player && player.name) {
-          const playerCard = document.createElement('div');
-          playerCard.className = 'summary-player-card';
-          playerCard.onclick = () => goToPlayer(index);
-          
-          const attributeNames = player.attributes.map(attr => 
-              attributeDefinitions[attr]?.name || attr
-          ).join(', ');
-          
-          playerCard.innerHTML = `
-              <div class="player-name">${player.name}</div>
-              <div class="player-details">
-                  Nível: ${player.level} | Pos: ${player.position}<br>
-                  ${attributeNames || 'Sem atributos especiais'}
-              </div>
-          `;
-          
-          summaryContainer.appendChild(playerCard);
-      }
-  });
+  // Players summary functionality removed since element doesn't exist in HTML
+  // This function is kept for compatibility but doesn't do anything
 }
 
 function goToPlayer(index) {
