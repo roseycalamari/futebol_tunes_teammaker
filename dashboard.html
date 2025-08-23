@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NiteRun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-container {
+            min-height: 100vh;
+            background: var(--primary-color);
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dashboard-title {
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .section-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .add-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .item-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .item-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <button class="back-btn" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </button>
+            <h1 class="dashboard-title">Dashboard</h1>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTeams">0</div>
+                <div class="stat-label">Total Teams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalPlayers">0</div>
+                <div class="stat-label">Total Players</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalMatches">0</div>
+                <div class="stat-label">Total Matches</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalGroups">0</div>
+                <div class="stat-label">Total Groups</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Sections -->
+        <div class="dashboard-sections">
+            <!-- Recent Teams -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Recent Teams</h3>
+                    <button class="add-btn" onclick="window.location.href='team-generator.html'">
+                        <i class="fas fa-plus"></i> Generate
+                    </button>
+                </div>
+                <div class="item-list" id="recentTeams">
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>No teams generated yet</p>
+                        <p>Generate your first team to get started!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Players -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Recent Players</h3>
+                    <button class="add-btn" onclick="window.location.href='player-profiles.html'">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+                <div class="item-list" id="recentPlayers">
+                    <div class="empty-state">
+                        <i class="fas fa-user"></i>
+                        <p>No players added yet</p>
+                        <p>Add players to start building teams!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Matches -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Recent Matches</h3>
+                    <button class="add-btn" onclick="window.location.href='match-tracker.html'">
+                        <i class="fas fa-plus"></i> Track
+                    </button>
+                </div>
+                <div class="item-list" id="recentMatches">
+                    <div class="empty-state">
+                        <i class="fas fa-futbol"></i>
+                        <p>No matches tracked yet</p>
+                        <p>Start tracking your matches!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Groups -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Your Groups</h3>
+                    <button class="add-btn" onclick="createGroup()">
+                        <i class="fas fa-plus"></i> Create
+                    </button>
+                </div>
+                <div class="item-list" id="userGroups">
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>No groups created yet</p>
+                        <p>Create a group to organize your teams!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoFoGuzuZHVys-bF02P1mrg6-NbjQj8pY",
+            authDomain: "niterun-sports-app.firebaseapp.com",
+            projectId: "niterun-sports-app",
+            storageBucket: "niterun-sports-app.firebasestorage.app",
+            messagingSenderId: "320354701270",
+            appId: "1:320354701270:web:53302cfe9a63112e95de77",
+            measurementId: "G-VXLNF0KB61"
+        };
+
+        // Initialize Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Dashboard: Firebase initialized successfully!");
+        } catch (error) {
+            console.log("Dashboard: Firebase initialization error:", error);
+        }
+
+        // Check authentication
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                loadDashboardData();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Load dashboard data
+        function loadDashboardData() {
+            // Load data from localStorage
+            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            const players = JSON.parse(localStorage.getItem('players') || '[]');
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const groups = JSON.parse(localStorage.getItem('groups') || '[]');
+
+            // Filter by current user
+            const currentUser = firebase.auth().currentUser;
+            if (currentUser) {
+                const userTeams = teams.filter(team => team.userId === currentUser.uid);
+                const userPlayers = players.filter(player => player.userId === currentUser.uid);
+                const userMatches = matches.filter(match => match.userId === currentUser.uid);
+                const userGroups = groups.filter(group => group.members.includes(currentUser.uid));
+
+                // Update statistics
+                document.getElementById('totalTeams').textContent = userTeams.length;
+                document.getElementById('totalPlayers').textContent = userPlayers.length;
+                document.getElementById('totalMatches').textContent = userMatches.length;
+                document.getElementById('totalGroups').textContent = userGroups.length;
+
+                // Update sections
+                updateSection('recentTeams', userTeams, 'teams');
+                updateSection('recentPlayers', userPlayers, 'players');
+                updateSection('recentMatches', userMatches, 'matches');
+                updateSection('userGroups', userGroups, 'groups');
+            }
+        }
+
+        // Update section content
+        function updateSection(sectionId, items, type) {
+            const section = document.getElementById(sectionId);
+            
+            if (items.length === 0) {
+                return; // Keep empty state
+            }
+
+            // Sort by creation date (newest first)
+            const sortedItems = items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            // Take only the 5 most recent items
+            const recentItems = sortedItems.slice(0, 5);
+
+            let html = '';
+            recentItems.forEach(item => {
+                html += createItemCard(item, type);
+            });
+
+            section.innerHTML = html;
+        }
+
+        // Create item card HTML
+        function createItemCard(item, type) {
+            switch (type) {
+                case 'teams':
+                    return `
+                        <div class="item-card">
+                            <div class="item-title">${item.sport?.name || 'Team'} - ${item.totalPlayers || 0} players</div>
+                            <div class="item-details">Created: ${new Date(item.createdAt).toLocaleDateString()}</div>
+                        </div>
+                    `;
+                case 'players':
+                    return `
+                        <div class="item-card">
+                            <div class="item-title">${item.name}</div>
+                            <div class="item-details">Level: ${item.skillLevel || 'N/A'} | Position: ${item.position || 'N/A'}</div>
+                        </div>
+                    `;
+                case 'matches':
+                    return `
+                        <div class="item-card">
+                            <div class="item-title">${item.team1 || 'Team 1'} vs ${item.team2 || 'Team 2'}</div>
+                            <div class="item-details">Score: ${item.score1 || 0} - ${item.score2 || 0}</div>
+                        </div>
+                    `;
+                case 'groups':
+                    return `
+                        <div class="item-card">
+                            <div class="item-title">${item.name}</div>
+                            <div class="item-details">${item.members?.length || 0} members | Code: ${item.inviteCode}</div>
+                        </div>
+                    `;
+                default:
+                    return '';
+            }
+        }
+
+        // Create a new group
+        function createGroup() {
+            const groupName = prompt('Enter group name:');
+            if (groupName && groupName.trim()) {
+                const groups = JSON.parse(localStorage.getItem('groups') || '[]');
+                const currentUser = firebase.auth().currentUser;
+                
+                const newGroup = {
+                    id: Date.now().toString(),
+                    name: groupName.trim(),
+                    createdAt: new Date().toISOString(),
+                    createdBy: currentUser ? currentUser.uid : 'anonymous',
+                    members: currentUser ? [currentUser.uid] : [],
+                    inviteCode: Math.random().toString(36).substring(2, 8).toUpperCase()
+                };
+                
+                groups.push(newGroup);
+                localStorage.setItem('groups', JSON.stringify(groups));
+                
+                // Reload dashboard
+                loadDashboardData();
+                
+                alert(`Group "${groupName}" created! Invite code: ${newGroup.inviteCode}`);
+            }
+        }
+    </script>
+</body>
+</html>

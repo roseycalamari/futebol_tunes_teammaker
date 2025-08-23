@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - NiteRun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            padding: 2rem;
+        }
+
+        .auth-logo {
+            width: 300px;
+            height: auto;
+            margin-bottom: 2rem;
+            display: block;
+            object-fit: contain;
+        }
+
+        .auth-card {
+            background: #fffcef;
+            backdrop-filter: blur(20px);
+            border: 3px solid var(--primary-color);
+            border-radius: 0;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-title {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .auth-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            font-weight: 400;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .auth-form {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background: #fffcef;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+            background: #fffcef;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .password-strength.weak {
+            color: #e74c3c;
+        }
+
+        .password-strength.medium {
+            color: #f39c12;
+        }
+
+        .password-strength.strong {
+            color: #27ae60;
+        }
+
+        .terms-group {
+            margin: 1.5rem 0;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            margin-top: 0.2rem;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .terms-checkbox a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .auth-btn:hover::before {
+            left: 100%;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.3);
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: white;
+            color: #333;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .google-btn:hover {
+            border-color: #4285f4;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            color: #666;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e1e5e9;
+        }
+
+        .divider span {
+            background: #fffcef;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .auth-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .auth-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #fcc;
+            display: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #363;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #cfc;
+            display: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 1rem;
+            }
+
+            .auth-card {
+                padding: 2rem;
+                max-width: 100%;
+            }
+
+            .auth-title {
+                font-size: 2rem;
+            }
+
+            .auth-logo {
+                width: 220px;
+                height: auto;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 1.5rem;
+            }
+
+            .auth-title {
+                font-size: 1.8rem;
+            }
+
+            .auth-logo {
+                width: 180px;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <img src="assets/images/logo png.png" alt="NiteRun Logo" class="auth-logo">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Join NiteRun</h1>
+                <p class="auth-subtitle">Create your account to get started</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <!-- Google Sign Up Button -->
+            <button class="google-btn" id="googleSignUp">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" class="google-icon">
+                Continue with Google
+            </button>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <!-- Email/Password Sign Up Form -->
+            <form class="auth-form" id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="form-input" placeholder="Enter your first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="form-input" placeholder="Enter your last name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="Choose a username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="password" class="form-input" placeholder="Create a password" required>
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-container">
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                        <button type="button" class="password-toggle" id="confirmPasswordToggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-checkbox">
+                        <input type="checkbox" id="termsCheckbox" required>
+                        <label for="termsCheckbox">
+                            I agree to the <a href="#" id="termsLink">Terms of Service</a> and <a href="#" id="privacyLink">Privacy Policy</a>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn" id="signupBtn">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html" class="auth-link">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoFoGuzuZHVys-bF02P1mrg6-NbjQj8pY",
+            authDomain: "niterun-sports-app.firebaseapp.com",
+            projectId: "niterun-sports-app",
+            storageBucket: "niterun-sports-app.firebasestorage.app",
+            messagingSenderId: "320354701270",
+            appId: "1:320354701270:web:53302cfe9a63112e95de77",
+            measurementId: "G-VXLNF0KB61"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // DOM elements
+        const signupForm = document.getElementById('signupForm');
+        const googleSignUp = document.getElementById('googleSignUp');
+        const firstNameInput = document.getElementById('firstName');
+        const lastNameInput = document.getElementById('lastName');
+        const emailInput = document.getElementById('email');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordToggle = document.getElementById('passwordToggle');
+        const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
+        const signupBtn = document.getElementById('signupBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const termsCheckbox = document.getElementById('termsCheckbox');
+
+        // Password toggle functionality
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        confirmPasswordToggle.addEventListener('click', () => {
+            const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+            confirmPasswordInput.type = type;
+            confirmPasswordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            let feedback = '';
+
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            if (strength < 3) {
+                feedback = 'Weak password';
+                passwordStrength.className = 'password-strength weak';
+            } else if (strength < 5) {
+                feedback = 'Medium strength password';
+                passwordStrength.className = 'password-strength medium';
+            } else {
+                feedback = 'Strong password';
+                passwordStrength.className = 'password-strength strong';
+            }
+
+            passwordStrength.textContent = feedback;
+        }
+
+        passwordInput.addEventListener('input', () => {
+            checkPasswordStrength(passwordInput.value);
+        });
+
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        // Hide messages
+        function hideMessages() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+        }
+
+        // Set loading state
+        function setLoading(loading) {
+            signupBtn.classList.toggle('loading', loading);
+            googleSignUp.classList.toggle('loading', loading);
+            signupBtn.disabled = loading;
+            googleSignUp.disabled = loading;
+        }
+
+        // Validate form
+        function validateForm() {
+            const firstName = firstNameInput.value.trim();
+            const lastName = lastNameInput.value.trim();
+            const email = emailInput.value.trim();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (!firstName || !lastName || !email || !username || !password || !confirmPassword) {
+                showError('Please fill in all fields.');
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Passwords do not match.');
+                return false;
+            }
+
+            if (password.length < 8) {
+                showError('Password must be at least 8 characters long.');
+                return false;
+            }
+
+            if (!termsCheckbox.checked) {
+                showError('Please agree to the Terms of Service and Privacy Policy.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Email/Password signup
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            setLoading(true);
+
+            const firstName = firstNameInput.value.trim();
+            const lastName = lastNameInput.value.trim();
+            const email = emailInput.value.trim();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            try {
+                const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+                
+                // Update user profile
+                await userCredential.user.updateProfile({
+                    displayName: `${firstName} ${lastName}`,
+                    photoURL: null
+                });
+
+                // Store additional user data in Firestore (you'll need to set this up)
+                // await firebase.firestore().collection('users').doc(userCredential.user.uid).set({
+                //     firstName,
+                //     lastName,
+                //     username,
+                //     email,
+                //     createdAt: new Date(),
+                //     skillLevel: '3',
+                //     position: 'híbrido'
+                // });
+
+                showSuccess('Account created successfully! Redirecting...');
+                
+                // Store user data in localStorage
+                localStorage.setItem('user', JSON.stringify({
+                    uid: userCredential.user.uid,
+                    email: userCredential.user.email,
+                    displayName: userCredential.user.displayName,
+                    firstName,
+                    lastName,
+                    username
+                }));
+
+                // Redirect to main app after a short delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Signup error:', error);
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        showError('An account with this email already exists.');
+                        break;
+                    case 'auth/invalid-email':
+                        showError('Please enter a valid email address.');
+                        break;
+                    case 'auth/weak-password':
+                        showError('Password is too weak. Please choose a stronger password.');
+                        break;
+                    case 'auth/operation-not-allowed':
+                        showError('Email/password accounts are not enabled. Please contact support.');
+                        break;
+                    default:
+                        showError('Signup failed. Please try again.');
+                }
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Google Sign Up
+        googleSignUp.addEventListener('click', async () => {
+            hideMessages();
+            setLoading(true);
+
+            const provider = new firebase.auth.GoogleAuthProvider();
+            
+            try {
+                const result = await firebase.auth().signInWithPopup(provider);
+                showSuccess('Account created successfully! Redirecting...');
+                
+                // Extract name from Google account
+                const displayName = result.user.displayName || '';
+                const nameParts = displayName.split(' ');
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || '';
+
+                // Store user data
+                localStorage.setItem('user', JSON.stringify({
+                    uid: result.user.uid,
+                    email: result.user.email,
+                    displayName: result.user.displayName,
+                    photoURL: result.user.photoURL,
+                    firstName,
+                    lastName,
+                    username: result.user.email.split('@')[0]
+                }));
+
+                // Redirect to main app
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Google sign-up error:', error);
+                if (error.code === 'auth/popup-closed-by-user') {
+                    showError('Sign-up was cancelled.');
+                } else {
+                    showError('Google sign-up failed. Please try again.');
+                }
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Check if user is already logged in
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                // User is already logged in, redirect to main app
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Terms and Privacy links (placeholder)
+        document.getElementById('termsLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showError('Terms of Service page coming soon!');
+        });
+
+        document.getElementById('privacyLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showError('Privacy Policy page coming soon!');
+        });
+    </script>
+</body>
+</html>

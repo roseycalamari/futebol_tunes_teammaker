@@ -94,6 +94,337 @@ const attributeDefinitions = {
   }
 };
 
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBoFoGuzuZHVys-bF02P1mrg6-NbjQj8pY",
+  authDomain: "niterun-sports-app.firebaseapp.com",
+  projectId: "niterun-sports-app",
+  storageBucket: "niterun-sports-app.firebasestorage.app",
+  messagingSenderId: "320354701270",
+  appId: "1:320354701270:web:53302cfe9a63112e95de77",
+  measurementId: "G-VXLNF0KB61"
+};
+
+// Initialize Firebase
+try {
+  firebase.initializeApp(firebaseConfig);
+  console.log("Firebase initialized successfully!");
+} catch (error) {
+  console.log("Firebase initialization error:", error);
+}
+
+// Authentication state management
+let currentUser = null;
+
+// Check authentication state on page load
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    currentUser = user;
+    updateUIForAuthenticatedUser(user);
+    console.log("User logged in:", user.displayName || user.email);
+  } else {
+    currentUser = null;
+    updateUIForUnauthenticatedUser();
+  }
+});
+
+// Update UI for authenticated user
+function updateUIForAuthenticatedUser(user) {
+  const userSection = document.getElementById('userSection');
+  const authButtons = document.getElementById('authButtons');
+  
+  if (userSection && authButtons) {
+    userSection.style.display = 'flex';
+    authButtons.style.display = 'none';
+    
+    // Update user info
+    const userName = document.getElementById('userName');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (userName) {
+      userName.textContent = user.displayName || 'User';
+    }
+    
+    if (userAvatar && user.photoURL) {
+      userAvatar.src = user.photoURL;
+    }
+  }
+}
+
+// Update UI for unauthenticated user
+function updateUIForUnauthenticatedUser() {
+  const userSection = document.getElementById('userSection');
+  const authButtons = document.getElementById('authButtons');
+  
+  if (userSection && authButtons) {
+    userSection.style.display = 'none';
+    authButtons.style.display = 'flex';
+  }
+}
+
+// Logout function
+function logout() {
+  firebase.auth().signOut().then(() => {
+    console.log("User logged out");
+    window.location.href = 'login.html';
+  }).catch((error) => {
+    console.error('Logout error:', error);
+    window.location.href = 'login.html';
+  });
+}
+
+// Navigate to feature with authentication check
+function navigateToFeature(featurePath) {
+  if (currentUser) {
+    window.location.href = featurePath;
+  } else {
+    // Redirect to login if not authenticated
+    window.location.href = 'login.html';
+  }
+}
+
+// Data Storage and Management
+const DataManager = {
+  // Save data to localStorage
+  saveToLocal: function(key, data) {
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+      return true;
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+      return false;
+    }
+  },
+
+  // Load data from localStorage
+  loadFromLocal: function(key) {
+    try {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Error loading from localStorage:', error);
+      return null;
+    }
+  },
+
+  // Save team data
+  saveTeam: function(teamData) {
+    const teams = this.loadFromLocal('teams') || [];
+    teamData.id = Date.now(); // Simple ID generation
+    teamData.createdAt = new Date().toISOString();
+    teamData.userId = currentUser ? currentUser.uid : 'anonymous';
+    teams.push(teamData);
+    return this.saveToLocal('teams', teams);
+  },
+
+  // Load user's teams
+  loadUserTeams: function() {
+    const teams = this.loadFromLocal('teams') || [];
+    if (currentUser) {
+      return teams.filter(team => team.userId === currentUser.uid);
+    }
+    return teams;
+  },
+
+  // Save player data
+  savePlayer: function(playerData) {
+    const players = this.loadFromLocal('players') || [];
+    playerData.id = Date.now();
+    playerData.createdAt = new Date().toISOString();
+    playerData.userId = currentUser ? currentUser.uid : 'anonymous';
+    players.push(playerData);
+    return this.saveToLocal('players', players);
+  },
+
+  // Load user's players
+  loadUserPlayers: function() {
+    const players = this.loadFromLocal('players') || [];
+    if (currentUser) {
+      return players.filter(player => player.userId === currentUser.uid);
+    }
+    return players;
+  },
+
+  // Save match data
+  saveMatch: function(matchData) {
+    const matches = this.loadFromLocal('matches') || [];
+    matchData.id = Date.now();
+    matchData.createdAt = new Date().toISOString();
+    matchData.userId = currentUser ? currentUser.uid : 'anonymous';
+    matches.push(matchData);
+    return this.saveToLocal('matches', matches);
+  },
+
+  // Load user's matches
+  loadUserMatches: function() {
+    const matches = this.loadFromLocal('matches') || [];
+    if (currentUser) {
+      return matches.filter(match => match.userId === currentUser.uid);
+    }
+    return matches;
+  }
+};
+
+// Enhanced Team Generator with multiple sports support
+const EnhancedTeamGenerator = {
+  // Sport configurations
+  sports: {
+    football: {
+      name: 'Football',
+      positions: ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'],
+      minPlayers: 10,
+      teamSizes: [5, 5], // 5v5
+      fieldType: 'rectangular'
+    },
+    basketball: {
+      name: 'Basketball',
+      positions: ['Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center'],
+      minPlayers: 10,
+      teamSizes: [5, 5], // 5v5
+      fieldType: 'rectangular'
+    },
+    volleyball: {
+      name: 'Volleyball',
+      positions: ['Setter', 'Outside Hitter', 'Middle Blocker', 'Opposite Hitter', 'Libero'],
+      minPlayers: 12,
+      teamSizes: [6, 6], // 6v6
+      fieldType: 'rectangular'
+    },
+    tennis: {
+      name: 'Tennis',
+      positions: ['Player'],
+      minPlayers: 4,
+      teamSizes: [2, 2], // 2v2
+      fieldType: 'rectangular'
+    }
+  },
+
+  // Generate balanced teams for any sport
+  generateBalancedTeams: function(players, sportType = 'football', teamCount = 2) {
+    const sport = this.sports[sportType] || this.sports.football;
+    
+    if (players.length < sport.minPlayers) {
+      throw new Error(`Need at least ${sport.minPlayers} players for ${sport.name}`);
+    }
+
+    // Sort players by skill level
+    const sortedPlayers = [...players].sort((a, b) => b.skillLevel - a.skillLevel);
+    
+    // Distribute players across teams to balance skill
+    const teams = Array.from({ length: teamCount }, () => []);
+    
+    // Snake draft distribution for better balance
+    for (let i = 0; i < sortedPlayers.length; i++) {
+      const teamIndex = i % teamCount;
+      teams[teamIndex].push(sortedPlayers[i]);
+    }
+
+    // Calculate team stats
+    const teamStats = teams.map(team => ({
+      players: team,
+      totalSkill: team.reduce((sum, player) => sum + player.skillLevel, 0),
+      averageSkill: team.reduce((sum, player) => sum + player.skillLevel, 0) / team.length,
+      positions: this.analyzePositions(team, sport)
+    }));
+
+    return {
+      teams: teamStats,
+      sport: sport,
+      generatedAt: new Date().toISOString(),
+      totalPlayers: players.length
+    };
+  },
+
+  // Analyze player positions for a team
+  analyzePositions: function(players, sport) {
+    const positionCounts = {};
+    sport.positions.forEach(pos => positionCounts[pos] = 0);
+    
+    players.forEach(player => {
+      if (player.position && positionCounts.hasOwnProperty(player.position)) {
+        positionCounts[player.position]++;
+      }
+    });
+
+    return positionCounts;
+  },
+
+  // Export teams to shareable format
+  exportTeams: function(teamData) {
+    const exportData = {
+      ...teamData,
+      shareable: true,
+      exportDate: new Date().toISOString()
+    };
+
+    // Save to local storage
+    DataManager.saveTeam(exportData);
+
+    // Create shareable text
+    let shareText = `🏆 ${teamData.sport.name} Teams\n\n`;
+    
+    teamData.teams.forEach((team, index) => {
+      shareText += `Team ${index + 1}:\n`;
+      team.players.forEach(player => {
+        shareText += `• ${player.name} (${player.position || 'Player'})\n`;
+      });
+      shareText += `\n`;
+    });
+
+    return shareText;
+  }
+};
+
+// Group Management System
+const GroupManager = {
+  // Create a new group
+  createGroup: function(groupData) {
+    const groups = DataManager.loadFromLocal('groups') || [];
+    const newGroup = {
+      id: Date.now().toString(),
+      ...groupData,
+      createdAt: new Date().toISOString(),
+      createdBy: currentUser ? currentUser.uid : 'anonymous',
+      members: currentUser ? [currentUser.uid] : [],
+      inviteCode: this.generateInviteCode()
+    };
+    
+    groups.push(newGroup);
+    DataManager.saveToLocal('groups', groups);
+    return newGroup;
+  },
+
+  // Generate invite code
+  generateInviteCode: function() {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  },
+
+  // Join group by invite code
+  joinGroup: function(inviteCode) {
+    const groups = DataManager.loadFromLocal('groups') || [];
+    const group = groups.find(g => g.inviteCode === inviteCode);
+    
+    if (group && currentUser) {
+      if (!group.members.includes(currentUser.uid)) {
+        group.members.push(currentUser.uid);
+        DataManager.saveToLocal('groups', groups);
+        return group;
+      }
+    }
+    
+    return null;
+  },
+
+  // Get user's groups
+  getUserGroups: function() {
+    const groups = DataManager.loadFromLocal('groups') || [];
+    if (currentUser) {
+      return groups.filter(group => group.members.includes(currentUser.uid));
+    }
+    return [];
+  }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize team generator if we're on that page
   const teamGeneratorPage = document.querySelector('.step-content');
