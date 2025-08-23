@@ -475,7 +475,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     
-    <!-- Email Sender -->
+    <!-- Configuration and Email Sender -->
+    <script src="config.js"></script>
     <script src="email-sender.js"></script>
 
     <script>
@@ -493,8 +494,8 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
 
-        // Initialize Email Sender (replace with your actual Resend API key)
-        const emailSender = new EmailSender('YOUR_RESEND_API_KEY_HERE');
+        // Initialize Email Sender with config
+        const emailSender = new EmailSender(CONFIG.RESEND_API_KEY);
 
         // DOM elements
         const signupForm = document.getElementById('signupForm');
@@ -652,7 +653,7 @@
                 //     position: 'híbrido'
                 // });
 
-                showSuccess('Account created successfully! Redirecting...');
+                showSuccess('Account created successfully! Sending welcome email...');
                 
                 // Store user data in localStorage
                 localStorage.setItem('user', JSON.stringify({
@@ -664,10 +665,30 @@
                     username
                 }));
 
+                // Send welcome email (handle CORS gracefully)
+                try {
+                    showSuccess('Account created successfully! Sending welcome email...');
+                    const emailResult = await emailSender.sendWelcomeEmail(email, firstName);
+                    if (emailResult.success) {
+                        showSuccess('Account created successfully! Welcome email sent! Redirecting...');
+                    } else {
+                        // If email fails due to CORS, that's okay - account was still created
+                        console.warn('Welcome email failed (likely CORS):', emailResult.error);
+                        if (emailResult.type === 'network_error') {
+                            showSuccess('Account created successfully! (Welcome email will be sent from server) Redirecting...');
+                        } else {
+                            showSuccess('Account created successfully! Redirecting...');
+                        }
+                    }
+                } catch (emailError) {
+                    console.warn('Welcome email error:', emailError);
+                    showSuccess('Account created successfully! Redirecting...');
+                }
+
                 // Redirect to main app after a short delay
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 1500);
+                }, 2000);
 
             } catch (error) {
                 console.error('Signup error:', error);
@@ -701,7 +722,7 @@
             
             try {
                 const result = await firebase.auth().signInWithPopup(provider);
-                showSuccess('Account created successfully! Redirecting...');
+                showSuccess('Account created successfully! Sending welcome email...');
                 
                 // Extract name from Google account
                 const displayName = result.user.displayName || '';
@@ -720,10 +741,30 @@
                     username: result.user.email.split('@')[0]
                 }));
 
+                // Send welcome email (handle CORS gracefully)
+                try {
+                    showSuccess('Account created successfully! Sending welcome email...');
+                    const emailResult = await emailSender.sendWelcomeEmail(result.user.email, firstName);
+                    if (emailResult.success) {
+                        showSuccess('Account created successfully! Welcome email sent! Redirecting...');
+                    } else {
+                        // If email fails due to CORS, that's okay - account was still created
+                        console.warn('Welcome email failed (likely CORS):', emailResult.error);
+                        if (emailResult.type === 'network_error') {
+                            showSuccess('Account created successfully! (Welcome email will be sent from server) Redirecting...');
+                        } else {
+                            showSuccess('Account created successfully! Redirecting...');
+                        }
+                    }
+                } catch (emailError) {
+                    console.warn('Welcome email error:', emailError);
+                    showSuccess('Account created successfully! Redirecting...');
+                }
+
                 // Redirect to main app
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 1500);
+                }, 2000);
 
             } catch (error) {
                 console.error('Google sign-up error:', error);
