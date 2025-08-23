@@ -474,6 +474,9 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    
+    <!-- Email Sender -->
+    <script src="email-sender.js"></script>
 
     <script>
         // Firebase configuration
@@ -489,6 +492,9 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+
+        // Initialize Email Sender (replace with your actual Resend API key)
+        const emailSender = new EmailSender('YOUR_RESEND_API_KEY_HERE');
 
         // DOM elements
         const signupForm = document.getElementById('signupForm');
