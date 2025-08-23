@@ -1,27 +1,28 @@
-// Sound Manager (global scope)
+// Sound Manager (global scope) - DISABLED to prevent 404 errors
 const SoundManager = {
   sounds: {
-      click: new Audio('sounds/click.mp3'),
-      generate: new Audio('sounds/generate.mp3'),
-      success: new Audio('sounds/success.mp3'),
-      error: new Audio('sounds/error.mp3'),
-      addPlayer: new Audio('sounds/add_player.mp3'),
-      removePlayer: new Audio('sounds/remove_player.mp3')
+      // click: new Audio('sounds/click.mp3'),
+      // generate: new Audio('sounds/generate.mp3'),
+      // success: new Audio('sounds/success.mp3'),
+      // error: new Audio('sounds/error.mp3'),
+      // addPlayer: new Audio('sounds/add_player.mp3'),
+      // removePlayer: new Audio('sounds/remove_player.mp3')
   },
   
   play: function(soundName) {
-      try {
-          if (this.sounds[soundName]) {
-              // Reset the sound to start
-              this.sounds[soundName].currentTime = 0;
-              // Play the sound
-              this.sounds[soundName].play().catch(error => {
-                  console.log('Sound play failed:', error);
-              });
-          }
-      } catch (error) {
-          console.log('Sound error:', error);
-      }
+      // Sounds disabled to prevent 404 errors
+      // try {
+      //     if (this.sounds[soundName]) {
+      //         // Reset the sound to start
+      //         this.sounds[soundName].currentTime = 0;
+      //         // Play the sound
+      //         this.sounds[soundName].play().catch(error => {
+      //             console.log('Sound play failed:', error);
+      //         });
+      //     }
+      // } catch (error) {
+      //     console.log('Sound error:', error);
+      // }
   }
 };
 

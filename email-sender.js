@@ -21,7 +21,7 @@ class EmailSender {
                     'Accept': 'application/json',
                 },
                 body: JSON.stringify({
-                    from: 'onboarding@resend.dev',
+                    from: 'niterun@niterun.app',
                     to: [userEmail],
                     subject: '⚽ Welcome to NiteRun - Let\'s Build Your Dream Team!',
                     html: personalizedEmail,
