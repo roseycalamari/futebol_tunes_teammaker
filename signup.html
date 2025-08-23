@@ -685,10 +685,10 @@
                     showSuccess('Account created successfully! Redirecting...');
                 }
 
-                // Redirect to main app after a short delay
+                // Redirect to main app after a longer delay so user can read message
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 2000);
+                }, 4000);
 
             } catch (error) {
                 console.error('Signup error:', error);
@@ -761,10 +761,10 @@
                     showSuccess('Account created successfully! Redirecting...');
                 }
 
-                // Redirect to main app
+                // Redirect to main app after a longer delay so user can read message
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 2000);
+                }, 4000);
 
             } catch (error) {
                 console.error('Google sign-up error:', error);
