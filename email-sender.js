@@ -7,50 +7,31 @@ class EmailSender {
 
     async sendWelcomeEmail(userEmail, userName) {
         try {
-            // Get the email template
-            const emailTemplate = await this.getEmailTemplate();
-            
-            // Replace placeholders with user data
-            const personalizedEmail = emailTemplate.replace(/{{USER_NAME}}/g, userName || 'Champion');
-            
-            const response = await fetch(`${this.baseUrl}/emails`, {
+            // Use Vercel serverless function to avoid CORS issues
+            const response = await fetch('/api/send-welcome-email', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${this.apiKey}`,
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
                 },
                 body: JSON.stringify({
-                    from: 'niterun@niterun.app',
-                    to: [userEmail],
-                    subject: '⚽ Welcome to NiteRun - Let\'s Build Your Dream Team!',
-                    html: personalizedEmail,
+                    email: userEmail,
+                    name: userName || 'Champion'
                 })
             });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Resend API error response:', response.status, errorText);
-                
-                // Try to parse error as JSON
-                let errorData;
-                try {
-                    errorData = JSON.parse(errorText);
-                } catch (e) {
-                    errorData = { message: errorText };
-                }
-                
+            const result = await response.json();
+            
+            if (response.ok && result.success) {
+                console.log('Welcome email sent successfully!', result);
+                return { success: true, id: result.id };
+            } else {
+                console.error('Email function error:', result);
                 return { 
                     success: false, 
-                    error: errorData,
-                    status: response.status,
-                    statusText: response.statusText
+                    error: result.error || result,
+                    status: response.status
                 };
             }
-
-            const result = await response.json();
-            console.log('Welcome email sent successfully!', result);
-            return { success: true, id: result.id };
             
         } catch (error) {
             console.error('Email sending error:', error);
