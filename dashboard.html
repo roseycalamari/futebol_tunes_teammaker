@@ -52,24 +52,42 @@
             margin-bottom: 2rem;
         }
 
-        .stat-card {
+        .action-card {
             background: var(--white);
             padding: 1.5rem;
-            border-radius: 12px;
+            border-radius: 0;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
         }
 
-        .stat-number {
-            font-size: 2.5rem;
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem auto;
+            display: block;
+        }
+
+        .action-title {
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
         }
 
-        .stat-label {
+        .action-subtitle {
             color: #666;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
 
         .dashboard-sections {
@@ -176,23 +194,27 @@
             <h1 class="dashboard-title">Dashboard</h1>
         </div>
 
-        <!-- Statistics Cards -->
+        <!-- Action Cards -->
         <div class="dashboard-stats">
-            <div class="stat-card">
-                <div class="stat-number" id="totalTeams">0</div>
-                <div class="stat-label">Total Teams</div>
+            <div class="action-card" onclick="window.location.href='team-generator.html'">
+                <img src="assets/images/teamgeneratoricon.png" alt="Team Generator" class="action-icon">
+                <div class="action-title">Generate Team</div>
+                <div class="action-subtitle">Create balanced teams instantly</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalPlayers">0</div>
-                <div class="stat-label">Total Players</div>
+            <div class="action-card" onclick="window.location.href='player-profiles.html'">
+                <img src="assets/images/profileicon.png" alt="Player Profiles" class="action-icon">
+                <div class="action-title">Manage Players</div>
+                <div class="action-subtitle">Add and organize your players</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalMatches">0</div>
-                <div class="stat-label">Total Matches</div>
+            <div class="action-card" onclick="window.location.href='match-tracker.html'">
+                <img src="assets/images/matchtrackericon.png" alt="Match Tracker" class="action-icon">
+                <div class="action-title">Track Matches</div>
+                <div class="action-subtitle">Record game results and stats</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalGroups">0</div>
-                <div class="stat-label">Total Groups</div>
+            <div class="action-card" onclick="window.location.href='tournament.html'">
+                <img src="assets/images/tournamentsicon.png" alt="Tournaments" class="action-icon">
+                <div class="action-title">Tournaments</div>
+                <div class="action-subtitle">Organize competitive events</div>
             </div>
         </div>
 
@@ -318,11 +340,7 @@
                 const userMatches = matches.filter(match => match.userId === currentUser.uid);
                 const userGroups = groups.filter(group => group.members.includes(currentUser.uid));
 
-                // Update statistics
-                document.getElementById('totalTeams').textContent = userTeams.length;
-                document.getElementById('totalPlayers').textContent = userPlayers.length;
-                document.getElementById('totalMatches').textContent = userMatches.length;
-                document.getElementById('totalGroups').textContent = userGroups.length;
+                // Action cards don't need stat updates - they're navigation buttons
 
                 // Update sections
                 updateSection('recentTeams', userTeams, 'teams');

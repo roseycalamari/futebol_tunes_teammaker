@@ -445,9 +445,9 @@
                     displayName: userCredential.user.displayName
                 }));
 
-                // Redirect to main app after a short delay
+                // Redirect to dashboard after a short delay
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'dashboard.html';
                 }, 1500);
 
             } catch (error) {
@@ -492,9 +492,9 @@
                     photoURL: result.user.photoURL
                 }));
 
-                // Redirect to main app
+                // Redirect to dashboard
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'dashboard.html';
                 }, 1500);
 
             } catch (error) {
@@ -512,8 +512,8 @@
         // Check if user is already logged in
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                // User is already logged in, redirect to main app
-                window.location.href = 'index.html';
+                // User is already logged in, redirect to dashboard
+                window.location.href = 'dashboard.html';
             }
         });
 
