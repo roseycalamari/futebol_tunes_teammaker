@@ -665,23 +665,25 @@
                     username
                 }));
 
-                // Send welcome email (handle CORS gracefully)
+                // Send welcome email for NEW account
                 try {
+                    console.log('📧 Attempting to send welcome email to:', email);
                     const emailResult = await emailSender.sendWelcomeEmail(email, firstName);
+                    
                     if (emailResult.success) {
+                        console.log('✅ Welcome email sent successfully!');
                         showSuccess('Account created successfully! Welcome email sent! Redirecting in 7 seconds...');
                     } else {
-                        // If email fails due to CORS, that's okay - account was still created
-                        console.warn('Welcome email failed (likely CORS):', emailResult.error);
+                        console.error('❌ Welcome email failed:', emailResult.error);
                         if (emailResult.type === 'network_error') {
-                            showSuccess('Account created successfully! (Welcome email will be sent from server) Redirecting in 7 seconds...');
+                            showSuccess('Account created successfully! (Email blocked by browser - check spam folder) Redirecting in 7 seconds...');
                         } else {
-                            showSuccess('Account created successfully! Redirecting in 7 seconds...');
+                            showSuccess('Account created successfully! (Email delivery issue) Redirecting in 7 seconds...');
                         }
                     }
                 } catch (emailError) {
-                    console.warn('Welcome email error:', emailError);
-                    showSuccess('Account created successfully! Redirecting in 7 seconds...');
+                    console.error('❌ Welcome email error:', emailError);
+                    showSuccess('Account created successfully! (Email system error) Redirecting in 7 seconds...');
                 }
 
                 // Redirect to main app after 7 seconds so user can read message
@@ -721,7 +723,22 @@
             
             try {
                 const result = await firebase.auth().signInWithPopup(provider);
-                showSuccess('Account created successfully! Sending welcome email...');
+                
+                // Check if this is a NEW account or existing account
+                const isNewUser = result.additionalUserInfo?.isNewUser;
+                
+                if (!isNewUser) {
+                    // This is an existing account - redirect to login page
+                    showError('Account already exists! Redirecting to login page...');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                    return;
+                }
+                
+                // This is a NEW account - proceed with signup
+                console.log('✅ New Google account created');
+                showSuccess('New account created successfully! Sending welcome email...');
                 
                 // Extract name from Google account
                 const displayName = result.user.displayName || '';
@@ -740,26 +757,28 @@
                     username: result.user.email.split('@')[0]
                 }));
 
-                // Send welcome email (handle CORS gracefully)
+                // Send welcome email for NEW account only
                 try {
+                    console.log('📧 Attempting to send welcome email to:', result.user.email);
                     const emailResult = await emailSender.sendWelcomeEmail(result.user.email, firstName);
+                    
                     if (emailResult.success) {
+                        console.log('✅ Welcome email sent successfully!');
                         showSuccess('Account created successfully! Welcome email sent! Redirecting in 7 seconds...');
                     } else {
-                        // If email fails due to CORS, that's okay - account was still created
-                        console.warn('Welcome email failed (likely CORS):', emailResult.error);
+                        console.error('❌ Welcome email failed:', emailResult.error);
                         if (emailResult.type === 'network_error') {
-                            showSuccess('Account created successfully! (Welcome email will be sent from server) Redirecting in 7 seconds...');
+                            showSuccess('Account created successfully! (Email blocked by browser - check spam folder) Redirecting in 7 seconds...');
                         } else {
-                            showSuccess('Account created successfully! Redirecting in 7 seconds...');
+                            showSuccess('Account created successfully! (Email delivery issue) Redirecting in 7 seconds...');
                         }
                     }
                 } catch (emailError) {
-                    console.warn('Welcome email error:', emailError);
-                    showSuccess('Account created successfully! Redirecting in 7 seconds...');
+                    console.error('❌ Welcome email error:', emailError);
+                    showSuccess('Account created successfully! (Email system error) Redirecting in 7 seconds...');
                 }
 
-                // Redirect to main app after 7 seconds so user can read message
+                // Redirect to main app after 7 seconds
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 7000);
@@ -768,6 +787,8 @@
                 console.error('Google sign-up error:', error);
                 if (error.code === 'auth/popup-closed-by-user') {
                     showError('Sign-up was cancelled.');
+                } else if (error.code === 'auth/account-exists-with-different-credential') {
+                    showError('Account already exists with different credentials. Please use login page.');
                 } else {
                     showError('Google sign-up failed. Please try again.');
                 }
