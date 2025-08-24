@@ -667,28 +667,27 @@
 
                 // Send welcome email (handle CORS gracefully)
                 try {
-                    showSuccess('Account created successfully! Sending welcome email...');
                     const emailResult = await emailSender.sendWelcomeEmail(email, firstName);
                     if (emailResult.success) {
-                        showSuccess('Account created successfully! Welcome email sent! Redirecting...');
+                        showSuccess('Account created successfully! Welcome email sent! Redirecting in 7 seconds...');
                     } else {
                         // If email fails due to CORS, that's okay - account was still created
                         console.warn('Welcome email failed (likely CORS):', emailResult.error);
                         if (emailResult.type === 'network_error') {
-                            showSuccess('Account created successfully! (Welcome email will be sent from server) Redirecting...');
+                            showSuccess('Account created successfully! (Welcome email will be sent from server) Redirecting in 7 seconds...');
                         } else {
-                            showSuccess('Account created successfully! Redirecting...');
+                            showSuccess('Account created successfully! Redirecting in 7 seconds...');
                         }
                     }
                 } catch (emailError) {
                     console.warn('Welcome email error:', emailError);
-                    showSuccess('Account created successfully! Redirecting...');
+                    showSuccess('Account created successfully! Redirecting in 7 seconds...');
                 }
 
-                // Redirect to main app after a longer delay so user can read message
+                // Redirect to main app after 7 seconds so user can read message
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 4000);
+                }, 7000);
 
             } catch (error) {
                 console.error('Signup error:', error);
@@ -743,28 +742,27 @@
 
                 // Send welcome email (handle CORS gracefully)
                 try {
-                    showSuccess('Account created successfully! Sending welcome email...');
                     const emailResult = await emailSender.sendWelcomeEmail(result.user.email, firstName);
                     if (emailResult.success) {
-                        showSuccess('Account created successfully! Welcome email sent! Redirecting...');
+                        showSuccess('Account created successfully! Welcome email sent! Redirecting in 7 seconds...');
                     } else {
                         // If email fails due to CORS, that's okay - account was still created
                         console.warn('Welcome email failed (likely CORS):', emailResult.error);
                         if (emailResult.type === 'network_error') {
-                            showSuccess('Account created successfully! (Welcome email will be sent from server) Redirecting...');
+                            showSuccess('Account created successfully! (Welcome email will be sent from server) Redirecting in 7 seconds...');
                         } else {
-                            showSuccess('Account created successfully! Redirecting...');
+                            showSuccess('Account created successfully! Redirecting in 7 seconds...');
                         }
                     }
                 } catch (emailError) {
                     console.warn('Welcome email error:', emailError);
-                    showSuccess('Account created successfully! Redirecting...');
+                    showSuccess('Account created successfully! Redirecting in 7 seconds...');
                 }
 
-                // Redirect to main app after a longer delay so user can read message
+                // Redirect to main app after 7 seconds so user can read message
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 4000);
+                }, 7000);
 
             } catch (error) {
                 console.error('Google sign-up error:', error);
