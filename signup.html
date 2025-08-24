@@ -496,6 +496,9 @@
 
         // Initialize Email Sender with config
         const emailSender = new EmailSender(CONFIG.RESEND_API_KEY);
+        
+        // Flag to control auto-redirect behavior
+        let isSigningUp = false;
 
         // DOM elements
         const signupForm = document.getElementById('signupForm');
@@ -626,6 +629,7 @@
             }
 
             setLoading(true);
+            isSigningUp = true; // Set flag to prevent auto-redirect
 
             const firstName = firstNameInput.value.trim();
             const lastName = lastNameInput.value.trim();
@@ -711,6 +715,7 @@
                 }
             } finally {
                 setLoading(false);
+                isSigningUp = false; // Reset flag
             }
         });
 
@@ -718,6 +723,7 @@
         googleSignUp.addEventListener('click', async () => {
             hideMessages();
             setLoading(true);
+            isSigningUp = true; // Set flag to prevent auto-redirect
 
             const provider = new firebase.auth.GoogleAuthProvider();
             
@@ -794,14 +800,18 @@
                 }
             } finally {
                 setLoading(false);
+                isSigningUp = false; // Reset flag
             }
         });
 
-        // Check if user is already logged in
+        // Check if user is already logged in (but don't redirect during signup process)
         firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                // User is already logged in, redirect to main app
+            if (user && !isSigningUp) {
+                // User is already logged in and not in signup process, redirect to main app
+                console.log('🔄 User already logged in, redirecting to main app');
                 window.location.href = 'index.html';
+            } else if (user && isSigningUp) {
+                console.log('✅ User authenticated during signup - staying on signup page for email processing');
             }
         });
 
