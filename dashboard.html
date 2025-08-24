@@ -19,37 +19,74 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 2rem;
+            padding: 1rem 0;
         }
 
-        .back-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--white);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+        .header-left {
+            width: 60px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-right {
+            width: 60px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .back-arrow {
+            width: 32px;
+            height: 32px;
             cursor: pointer;
             transition: all 0.3s ease;
+            filter: brightness(0) invert(1);
+        }
+
+        .back-arrow:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .dashboard-logo {
+            height: 50px;
+            width: auto;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
         }
 
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .dashboard-title {
-            color: var(--white);
-            font-size: 2rem;
-            font-weight: 700;
-            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        .user-avatar:hover {
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.6);
         }
 
         .dashboard-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
             margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .action-card {
@@ -88,6 +125,17 @@
             color: #666;
             font-size: 0.9rem;
             line-height: 1.4;
+        }
+
+        .action-card.coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .action-card.coming-soon:hover {
+            transform: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-color: transparent;
         }
 
         .dashboard-sections {
@@ -179,7 +227,41 @@
             }
 
             .dashboard-stats {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                max-width: 400px;
+            }
+
+            .action-card {
+                padding: 1.2rem;
+            }
+
+            .action-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .action-title {
+                font-size: 1.1rem;
+            }
+
+            .action-subtitle {
+                font-size: 0.8rem;
+            }
+
+            .dashboard-logo {
+                height: 40px;
+            }
+
+            .back-arrow {
+                width: 28px;
+                height: 28px;
+            }
+
+            .user-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -187,11 +269,17 @@
 <body>
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <button class="back-btn" onclick="window.location.href='index.html'">
-                <i class="fas fa-arrow-left"></i>
-                Back to Home
-            </button>
-            <h1 class="dashboard-title">Dashboard</h1>
+            <div class="header-left">
+                <img src="assets/images/arrowicon.png" alt="Back" class="back-arrow" onclick="window.location.href='index.html'">
+            </div>
+            <div class="header-center">
+                <img src="assets/images/logos/nr.png" alt="NiteRun" class="dashboard-logo">
+            </div>
+            <div class="header-right">
+                <div class="user-avatar" onclick="openUserProfile()" id="userAvatar">
+                    U
+                </div>
+            </div>
         </div>
 
         <!-- Action Cards -->
@@ -201,20 +289,20 @@
                 <div class="action-title">Generate Team</div>
                 <div class="action-subtitle">Create balanced teams instantly</div>
             </div>
-            <div class="action-card" onclick="window.location.href='player-profiles.html'">
-                <img src="assets/images/profileicon.png" alt="Player Profiles" class="action-icon">
-                <div class="action-title">Manage Players</div>
-                <div class="action-subtitle">Add and organize your players</div>
+            <div class="action-card" onclick="window.location.href='search.html'">
+                <img src="assets/images/profileicon.png" alt="Search Players" class="action-icon">
+                <div class="action-title">Search</div>
+                <div class="action-subtitle">Find and discover players</div>
             </div>
-            <div class="action-card" onclick="window.location.href='match-tracker.html'">
-                <img src="assets/images/matchtrackericon.png" alt="Match Tracker" class="action-icon">
-                <div class="action-title">Track Matches</div>
-                <div class="action-subtitle">Record game results and stats</div>
+            <div class="action-card coming-soon">
+                <img src="assets/images/matchtrackericon.png" alt="Coming Soon" class="action-icon">
+                <div class="action-title">Coming Soon</div>
+                <div class="action-subtitle">New feature in development</div>
             </div>
-            <div class="action-card" onclick="window.location.href='tournament.html'">
-                <img src="assets/images/tournamentsicon.png" alt="Tournaments" class="action-icon">
-                <div class="action-title">Tournaments</div>
-                <div class="action-subtitle">Organize competitive events</div>
+            <div class="action-card coming-soon">
+                <img src="assets/images/tournamentsicon.png" alt="Coming Soon" class="action-icon">
+                <div class="action-title">Coming Soon</div>
+                <div class="action-subtitle">New feature in development</div>
             </div>
         </div>
 
@@ -324,8 +412,36 @@
             }
         });
 
+        // Open user profile (placeholder)
+        function openUserProfile() {
+            alert('User profile coming soon!');
+            // Future: window.location.href = 'profile.html';
+        }
+
+        // Update user avatar with user's initial
+        function updateUserAvatar() {
+            const currentUser = firebase.auth().currentUser;
+            const userAvatar = document.getElementById('userAvatar');
+            
+            if (currentUser) {
+                const displayName = currentUser.displayName || '';
+                const email = currentUser.email || '';
+                
+                // Get first letter of display name or email
+                let initial = 'U';
+                if (displayName) {
+                    initial = displayName.charAt(0).toUpperCase();
+                } else if (email) {
+                    initial = email.charAt(0).toUpperCase();
+                }
+                
+                userAvatar.textContent = initial;
+            }
+        }
+
         // Load dashboard data
         function loadDashboardData() {
+            updateUserAvatar();
             // Load data from localStorage
             const teams = JSON.parse(localStorage.getItem('teams') || '[]');
             const players = JSON.parse(localStorage.getItem('players') || '[]');
