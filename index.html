@@ -372,12 +372,17 @@
             console.log('Page loaded, checking PWA status...');
             console.log('Service Worker support:', 'serviceWorker' in navigator);
             console.log('Beforeinstallprompt support:', 'onbeforeinstallprompt' in window);
+            console.log('User Agent:', navigator.userAgent);
             
             // Check if already installed
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 console.log('App is already running in standalone mode');
             } else {
                 console.log('App is running in browser mode');
+                
+                // Check if Safari
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                console.log('Is Safari:', isSafari);
                 
                 // Fallback: Show install prompt after 3 seconds for testing
                 setTimeout(() => {
@@ -442,6 +447,11 @@
                                     <i class="fas fa-mobile-alt"></i>
                                     <span>App-like experience</span>
                                 </div>
+                            </div>
+                            <div class="install-instructions" id="installInstructions" style="display: none;">
+                                <p style="font-size: 0.9rem; color: var(--primary-color); margin-top: 1rem; padding: 1rem; background: rgba(0, 109, 255, 0.1); border-radius: 8px;">
+                                    <strong>Safari:</strong> Tap the Share button <i class="fas fa-share"></i> then "Add to Home Screen"
+                                </p>
                             </div>
                         </div>
                         <div class="install-prompt-actions">
@@ -601,9 +611,17 @@
             document.body.appendChild(installPrompt);
             installPromptShown = true;
 
+            // Check if Safari and show instructions
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            if (isSafari) {
+                document.getElementById('installInstructions').style.display = 'block';
+                document.getElementById('installAppBtn').textContent = 'Got It!';
+            }
+
             // Add event listeners
             document.getElementById('installAppBtn').addEventListener('click', () => {
                 if (deferredPrompt) {
+                    // Chrome/Android - use native prompt
                     deferredPrompt.prompt();
                     deferredPrompt.userChoice.then((choiceResult) => {
                         if (choiceResult.outcome === 'accepted') {
@@ -611,6 +629,9 @@
                         }
                         deferredPrompt = null;
                     });
+                } else if (isSafari) {
+                    // Safari - just close the prompt (user needs to use Share button)
+                    console.log('Safari detected - user needs to use Share button');
                 }
                 hideInstallPrompt();
             });
