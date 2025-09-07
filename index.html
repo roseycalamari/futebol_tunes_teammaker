@@ -327,6 +327,11 @@
                     <i class="fas fa-user-plus btn-icon"></i>
                     Join NiteRun
                 </a>
+                
+                <!-- Debug button for testing -->
+                <button onclick="showInstallPrompt()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #ff6b6b; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">
+                    Test Install Popup
+                </button>
             </div>
         </div>
         
@@ -383,6 +388,14 @@
                 // Check if Safari
                 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
                 console.log('Is Safari:', isSafari);
+                
+                // Force show on Safari immediately
+                if (isSafari) {
+                    console.log('Safari detected - forcing install prompt');
+                    setTimeout(() => {
+                        showInstallPrompt();
+                    }, 1000);
+                }
                 
                 // Fallback: Show install prompt after 3 seconds for testing
                 setTimeout(() => {
@@ -648,6 +661,10 @@
                 prompt.remove();
             }
         }
+
+        // Make functions globally accessible for debugging
+        window.showInstallPrompt = showInstallPrompt;
+        window.hideInstallPrompt = hideInstallPrompt;
     </script>
 </body>
 </html>
