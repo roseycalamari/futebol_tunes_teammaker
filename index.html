@@ -290,6 +290,220 @@
                     });
             });
         }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        let installPromptShown = false;
+
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Show our custom install prompt
+            showInstallPrompt();
+        });
+
+        // Show custom install prompt
+        function showInstallPrompt() {
+            // Don't show if already shown or user dismissed it
+            if (installPromptShown || localStorage.getItem('installPromptDismissed') === 'true') {
+                return;
+            }
+
+            // Create the install prompt popup
+            const installPrompt = document.createElement('div');
+            installPrompt.id = 'installPrompt';
+            installPrompt.innerHTML = `
+                <div class="install-prompt-overlay">
+                    <div class="install-prompt-card">
+                        <div class="install-prompt-header">
+                            <img src="assets/images/logo png.png" alt="NiteRun" class="install-prompt-logo">
+                            <h3>Install NiteRun App</h3>
+                        </div>
+                        <div class="install-prompt-content">
+                            <p>Get instant match notifications and work offline - never miss a game!</p>
+                            <div class="install-prompt-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Match notifications</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-wifi"></i>
+                                    <span>Works offline</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>App-like experience</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="install-prompt-actions">
+                            <button id="installAppBtn" class="install-btn-primary">Install App</button>
+                            <button id="notNowBtn" class="install-btn-secondary">Not Now</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .install-prompt-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                    padding: 1rem;
+                }
+                
+                .install-prompt-card {
+                    background: var(--cream);
+                    border-radius: 0;
+                    padding: 2rem;
+                    max-width: 400px;
+                    width: 100%;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                    text-align: center;
+                }
+                
+                .install-prompt-header {
+                    margin-bottom: 1.5rem;
+                }
+                
+                .install-prompt-logo {
+                    height: 60px;
+                    width: auto;
+                    margin-bottom: 1rem;
+                }
+                
+                .install-prompt-header h3 {
+                    color: var(--primary-color);
+                    font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    margin: 0;
+                }
+                
+                .install-prompt-content p {
+                    color: var(--primary-color);
+                    font-size: 1rem;
+                    margin-bottom: 1.5rem;
+                    line-height: 1.5;
+                }
+                
+                .install-prompt-features {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.75rem;
+                    margin-bottom: 2rem;
+                }
+                
+                .feature-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    color: var(--primary-color);
+                    font-size: 0.9rem;
+                }
+                
+                .feature-item i {
+                    color: var(--accent-color);
+                    width: 20px;
+                }
+                
+                .install-prompt-actions {
+                    display: flex;
+                    gap: 1rem;
+                }
+                
+                .install-btn-primary {
+                    flex: 1;
+                    background: var(--primary-color);
+                    color: var(--cream);
+                    border: none;
+                    padding: 1rem 1.5rem;
+                    border-radius: 0;
+                    font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+                    font-weight: 700;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                
+                .install-btn-primary:hover {
+                    background: #0056b3;
+                    transform: scale(0.98);
+                }
+                
+                .install-btn-secondary {
+                    flex: 1;
+                    background: transparent;
+                    color: var(--primary-color);
+                    border: 2px solid var(--primary-color);
+                    padding: 1rem 1.5rem;
+                    border-radius: 0;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                
+                .install-btn-secondary:hover {
+                    background: var(--primary-color);
+                    color: var(--cream);
+                }
+                
+                @media (max-width: 480px) {
+                    .install-prompt-card {
+                        padding: 1.5rem;
+                        margin: 0.5rem;
+                    }
+                    
+                    .install-prompt-actions {
+                        flex-direction: column;
+                    }
+                }
+            `;
+
+            document.head.appendChild(style);
+            document.body.appendChild(installPrompt);
+            installPromptShown = true;
+
+            // Add event listeners
+            document.getElementById('installAppBtn').addEventListener('click', () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the install prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+                hideInstallPrompt();
+            });
+
+            document.getElementById('notNowBtn').addEventListener('click', () => {
+                localStorage.setItem('installPromptDismissed', 'true');
+                hideInstallPrompt();
+            });
+        }
+
+        function hideInstallPrompt() {
+            const prompt = document.getElementById('installPrompt');
+            if (prompt) {
+                prompt.remove();
+            }
+        }
     </script>
 </body>
 </html>
