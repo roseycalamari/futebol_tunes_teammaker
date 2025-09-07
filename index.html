@@ -297,6 +297,7 @@
 
         // Listen for the beforeinstallprompt event
         window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt event fired!');
             // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
             // Stash the event so it can be triggered later
@@ -305,12 +306,44 @@
             showInstallPrompt();
         });
 
+        // Debug: Check if PWA is installable
+        window.addEventListener('load', function() {
+            console.log('Page loaded, checking PWA status...');
+            console.log('Service Worker support:', 'serviceWorker' in navigator);
+            console.log('Beforeinstallprompt support:', 'onbeforeinstallprompt' in window);
+            
+            // Check if already installed
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('App is already running in standalone mode');
+            } else {
+                console.log('App is running in browser mode');
+                
+                // Fallback: Show install prompt after 3 seconds for testing
+                setTimeout(() => {
+                    if (!deferredPrompt && !installPromptShown) {
+                        console.log('Fallback: Showing install prompt after delay');
+                        showInstallPrompt();
+                    }
+                }, 3000);
+            }
+        });
+
         // Show custom install prompt
         function showInstallPrompt() {
-            // Don't show if already shown or user dismissed it
-            if (installPromptShown || localStorage.getItem('installPromptDismissed') === 'true') {
+            // Only show on mobile devices
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (!isMobile) {
+                console.log('Not mobile device, skipping install prompt');
                 return;
             }
+
+            // Don't show if already shown or user dismissed it
+            if (installPromptShown || localStorage.getItem('installPromptDismissed') === 'true') {
+                console.log('Install prompt already shown or dismissed');
+                return;
+            }
+
+            console.log('Showing install prompt...');
 
             // Create the install prompt popup
             const installPrompt = document.createElement('div');
