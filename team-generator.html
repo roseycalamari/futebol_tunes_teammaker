@@ -4,228 +4,4830 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Generator - NiteRun</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#006dff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="NiteRun">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+
+        
+        .team-generator-container {
+            min-height: 100vh;
+            background: var(--primary-color);
+            padding: 3rem;
+        }
+
+        .team-generator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 1.5rem 0;
+            position: relative;
+        }
+
+        .header-left {
+            width: 120px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-arrow {
+            width: auto;
+            height: auto;
+            max-width: 80px;
+            max-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: brightness(0) invert(1);
+            object-fit: contain;
+        }
+
+        .back-arrow:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .team-generator-logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .header-right {
+            width: 120px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: var(--white);
+            border: 3px solid transparent;
+            color: var(--primary-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            transform: scale(0.95);
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn i {
+            font-size: 1rem;
+        }
+
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .settings-btn:hover {
+            transform: scale(0.95);
+        }
+
+        .settings-icon {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(2000%) hue-rotate(220deg) brightness(100%) contrast(100%);
+        }
+
+        .team-generator-main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Step Content Styles */
+        .step-content {
+            background: var(--cream);
+            padding: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border-radius: 0;
+        }
+
+        .step-content.hidden {
+            display: none;
+        }
+
+        .step-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        /* Sport Selection Styles */
+        .sport-selector {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sport-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto 3rem auto;
+        }
+
+                 .sport-card {
+             background: var(--cream);
+             border: 3px solid var(--primary-color);
+             width: 250px;
+             min-height: 250px;
+             border-radius: 0;
+             cursor: pointer;
+             transition: all 0.3s ease;
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             justify-content: center;
+             gap: 1.5rem;
+             font-family: 'Poppins', sans-serif;
+             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+             margin: 0 auto;
+             padding-bottom: 2rem;
+         }
+
+
+
+        .sport-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 109, 255, 0.25);
+            border-color: var(--accent-color);
+        }
+
+        .sport-card.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.3);
+        }
+
+        .sport-card.active .sport-name {
+            color: white;
+        }
+
+        .sport-card.active .sport-description {
+            color: white;
+            opacity: 0.9;
+        }
+
+        .sport-card.active .option-group label {
+            color: white;
+        }
+
+        .sport-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .sport-card.active .sport-icon {
+            filter: brightness(0) invert(1);
+        }
+
+        .sport-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            color: var(--primary-color);
+        }
+
+        .sport-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .coming-soon-sports {
+            text-align: center;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .coming-soon-text {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            opacity: 0.6;
+            font-style: italic;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+
+        /* Step 1: Player Count Selection */
+        .player-count-selector {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .count-label {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: block;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .count-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .count-btn {
+            background: white;
+            border: 2px solid var(--primary-color);
+            padding: 2rem 1.5rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .count-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .count-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .count-btn-icon {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .count-btn span {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .count-btn small {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+                 .next-step-btn {
+             background: var(--primary-color);
+             color: white;
+             border: 2px solid transparent;
+             padding: 1.2rem 2.5rem;
+             border-radius: 0;
+             font-size: 1.1rem;
+             font-weight: 600;
+             cursor: pointer;
+             transition: all 0.3s ease;
+             font-family: 'Poppins', sans-serif;
+             display: flex;
+             align-items: center;
+             gap: 0.8rem;
+             margin: 0 auto;
+         }
+
+                 .next-step-btn:hover {
+             background: var(--cream);
+             color: var(--primary-color);
+             border: 2px solid var(--primary-color);
+         }
+
+        /* Step 2: Team and Player Configuration */
+        .config-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-align: center;
+        }
+        
+                         .team-config-section {
+            background: var(--cream);
+            padding: 2rem;
+            border: 1px solid rgba(0, 109, 255, 0.2);
+            margin-bottom: 2rem;
+            border-radius: 0;
+        }
+         
+                 .sport-reminder {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0, 109, 255, 0.1);
+            border: 1px solid rgba(0, 109, 255, 0.2);
+            border-radius: 0;
+            margin-bottom: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+         
+         .sport-reminder span {
+             font-size: 1rem;
+             color: var(--primary-color);
+             font-weight: 500;
+         }
+         
+         .sport-reminder strong {
+             font-size: 1.1rem;
+             color: var(--primary-color);
+             font-weight: 700;
+             text-transform: capitalize;
+         }
+        
+        .config-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+            align-items: end;
+        }
+        
+        .config-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .config-group label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Custom Dropdown Styles */
+        .custom-dropdown {
+            position: relative;
+            min-width: 180px;
+            z-index: 999999;
+        }
+        
+        .dropdown-trigger {
+            padding: 1.2rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            background: white;
+            color: var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+        
+        .dropdown-trigger:hover {
+            border-color: var(--accent-color);
+        }
+        
+        .dropdown-arrow {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.8rem;
+        }
+        
+        .custom-dropdown.open .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--cream);
+            border: 2px solid var(--primary-color);
+            border-top: none;
+            border-radius: 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            transform: translateY(-20px);
+            transform-origin: top;
+            transition: all 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            width: 100%;
+            pointer-events: none;
+        }
+        
+        .custom-dropdown.open .dropdown-options {
+            transform: translateY(0);
+            max-height: 300px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .dropdown-option {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 109, 255, 0.1);
+            background: var(--cream);
+            opacity: 1;
+            transform: none;
+        }
+        
+        .dropdown-option:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-option:hover {
+            background: rgba(0, 109, 255, 0.1);
+            transform: translateY(-3px) scale(1.02);
+        }
+        
+        .dropdown-option.selected {
+            background: rgba(0, 109, 255, 0.15);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+
+        
+
+        
+        .config-select {
+            display: none; /* Hide the old select elements by default */
+        }
+        
+        /* Show native selects on mobile, hide custom dropdowns */
+        @media (max-width: 768px) {
+            .config-select {
+                display: block !important; /* Show native selects on mobile */
+                width: 100%;
+                padding: 1.2rem 1.5rem;
+                border: 2px solid var(--primary-color);
+                border-radius: 0;
+                background: white;
+                color: var(--primary-color);
+                font-family: 'Poppins', sans-serif;
+                font-size: 1rem;
+                font-weight: 500;
+                margin-bottom: 1rem;
+            }
+            
+            .custom-dropdown {
+                display: none !important; /* Hide custom dropdowns on mobile */
+            }
+            
+            /* Mobile button sizing */
+            .config-actions {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .back-to-sport-btn,
+            .next-to-players-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+        
+        /* Ensure native selects are hidden on desktop */
+        @media (min-width: 769px) {
+            .config-select {
+                display: none !important;
+            }
+            
+            .custom-dropdown {
+                display: block !important;
+            }
+            
+            /* Desktop dropdown fixes */
+            .dropdown-options {
+                position: absolute !important;
+                top: 100% !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            .custom-dropdown {
+                position: relative !important;
+                z-index: 1000 !important;
+            }
+        }
+        
+
+        
+        .total-players-display {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(0, 109, 255, 0.05);
+            border: 1px solid rgba(0, 109, 255, 0.1);
+            border-radius: 0;
+        }
+        
+        .total-players-display span {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .total-players-display strong {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .config-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+                                            .back-to-sport-btn,
+                  .next-to-players-btn {
+             background: var(--primary-color);
+             color: white;
+             border: 2px solid transparent;
+             padding: 1rem 2rem;
+             border-radius: 0;
+             font-size: 1rem;
+             font-weight: 600;
+             cursor: pointer;
+             transition: all 0.3s ease;
+             font-family: 'Poppins', sans-serif;
+             display: flex;
+             align-items: center;
+             gap: 0.8rem;
+         }
+        
+                 .back-to-sport-btn:hover,
+                  .next-to-players-btn:hover {
+             background: var(--cream);
+             color: var(--primary-color);
+             border: 2px solid var(--primary-color);
+         }
+        
+        .back-to-sport-btn {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .back-to-sport-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+                /* Step 3: Player Configuration */
+        .config-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 2.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .player-navigation h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        .players-list {
+            background: transparent;
+            border: none;
+            margin-bottom: 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .players-list-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.3rem;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.2);
+        }
+
+        .players-count {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.2rem;
+            padding: 0.5rem;
+        }
+
+        .player-row:last-child {
+            border-bottom: none;
+        }
+
+        .player-row:hover {
+            background: rgba(0, 109, 255, 0.03);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 109, 255, 0.1);
+        }
+
+        .player-row:hover:not(.editing) {
+            border-left-color: var(--accent-color);
+        }
+
+        .player-row:hover:not(.editing) .player-number {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .player-row.active {
+            background: rgba(0, 109, 255, 0.08);
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0, 109, 255, 0.15);
+        }
+
+        .player-row.active .player-number {
+            color: var(--primary-color);
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(0, 109, 255, 0.3);
+        }
+
+        .player-row.active .player-name-display {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-shadow: 0 0 5px rgba(0, 109, 255, 0.2);
+        }
+
+        .player-row.active .player-level,
+        .player-row.active .player-position {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .player-row.active .player-status {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .player-row.active .player-actions {
+            transform: scale(1.05);
+        }
+
+        .player-row.active .player-action-btn {
+            background: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 109, 255, 0.3);
+        }
+
+        .player-row.active .player-action-btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 109, 255, 0.4);
+        }
+
+        .player-row.active .player-action-btn:active {
+            transform: scale(0.95) translateY(-1px);
+        }
+
+        .player-row.active .player-action-btn:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        .player-row.active .player-action-btn:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        .player-row.active .player-action-btn:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Essential mobile responsive fixes */
+        @media (max-width: 768px) {
+            .player-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .inline-edit-input,
+            .inline-edit-select {
+            text-align: center;
+                font-size: 1rem;
+                padding: 0.6rem;
+            }
+        }
+
+        .player-row.active .player-action-btn:focus-visible:hover {
+            outline-color: var(--primary-color);
+        }
+
+        .player-row.completed {
+            background: rgba(0, 255, 0, 0.03);
+            border-left: 4px solid #22c55e;
+            position: relative;
+        }
+
+        .player-row.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: #22c55e;
+            font-size: 1.2rem;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .player-row.completed .player-name-display {
+            color: #22c55e;
+            font-weight: 600;
+            text-shadow: 0 0 5px rgba(34, 197, 94, 0.2);
+        }
+
+        .player-row.pending {
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+
+        .player-row.pending::after {
+            content: '⋯';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: #f59e0b;
+            font-size: 1.2rem;
+            font-weight: bold;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .player-row.pending .player-name-display {
+            color: #f59e0b;
+            font-style: italic;
+            text-shadow: 0 0 5px rgba(245, 158, 11, 0.2);
+        }
+
+        .player-row.editing {
+            background: rgba(255, 193, 7, 0.05);
+            border-left: 4px solid #ffc107;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
+            position: relative;
+        }
+
+        .player-row.editing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ffc107, #ff9800);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .player-row.editing .inline-edit-input,
+        .player-row.editing .inline-edit-select {
+            border-color: #ffc107;
+            box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.1);
+        }
+
+        .player-row.editing .player-number {
+            color: #ffc107;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+        }
+
+        /* New Step-by-Step Player Configuration Design */
+        .player-progress {
+            background: white;
+            border: 2px solid rgba(0, 109, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .progress-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .progress-subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .player-dots {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .player-dot {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            background: white;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .player-dot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 109, 255, 0.2);
+        }
+
+        .player-dot.active {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 109, 255, 0.3);
+        }
+
+        .player-dot.completed {
+            background: #22c55e;
+            border-color: #22c55e;
+            color: white;
+        }
+
+        .player-dot.completed::after {
+            content: '✓';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #22c55e;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        .player-dot.pending {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            color: #6b7280;
+        }
+
+        .player-dot.pending:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Player Configuration - New Simple Design */
+        .player-config-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .player-config-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .player-config-subtitle {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .player-count-display {
+            text-align: center;
+            margin: 0 auto 2rem auto;
+            padding: 1rem;
+            background: var(--cream);
+            border: 3px solid var(--primary-color);
+            border-radius: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 800px;
+            min-height: auto;
+        }
+
+        .player-count-display span {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .player-count-display strong {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .player-form-card {
+            background: var(--cream);
+            border: 3px solid var(--primary-color);
+            width: 800px;
+            min-height: 400px;
+            margin: 0 auto 2rem auto;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .player-form-fields {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .player-form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            grid-column: 1 / -1;
+            justify-content: center;
+        }
+
+        .player-form-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .player-form-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+            padding: 16px;
+            border-radius: 50%;
+        }
+
+        .player-form-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+        }
+
+        .player-form-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .player-form-subtitle {
+            font-size: 1rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+
+
+        .player-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            text-align: left;
+        }
+
+        .player-form-group label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .player-form-input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 3px solid var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: white;
+            color: var(--primary-color);
+            box-sizing: border-box;
+            font-weight: 500;
+            transition: none;
+        }
+
+        .player-form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(0, 109, 255, 0.1);
+        }
+        
+        .player-form-input::placeholder {
+            color: var(--primary-color);
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        .player-form-select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 3px solid var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: white;
+            color: var(--primary-color);
+            cursor: pointer;
+            box-sizing: border-box;
+            font-weight: 500;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006dff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+            padding-right: 3rem;
+        }
+
+        .player-form-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(0, 109, 255, 0.1);
+        }
+
+        .player-form-select option {
+            padding: 0.5rem;
+            background: white;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .player-form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .add-player-btn {
+            background: var(--primary-color);
+            color: var(--cream);
+            border: 3px solid var(--primary-color);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .add-player-btn:hover {
+            background: var(--cream);
+            color: var(--primary-color);
+        }
+
+        .add-player-btn:disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .add-player-btn:disabled:hover {
+            background: #ccc;
+            color: #666;
+        }
+
+        .clear-form-btn {
+            background: var(--cream);
+            color: var(--primary-color);
+            border: 3px solid var(--primary-color);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .clear-form-btn:hover {
+            background: var(--primary-color);
+            color: var(--cream);
+        }
+
+        .players-list {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .players-list-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .player-item {
+            background: white;
+            border: 1px solid rgba(0, 109, 255, 0.2);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .player-number {
+            width: 35px;
+            height: 35px;
+            background: var(--primary-color);
+            color: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .player-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .player-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            margin-bottom: 0.2rem;
+        }
+
+        .player-meta {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .remove-player-btn {
+            background: #ff4757;
+            color: white;
+            border: 2px solid #ff4757;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .generate-teams-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .generate-teams-btn {
+            background: var(--primary-color);
+            color: var(--cream);
+            border: 2px solid var(--primary-color);
+            padding: 1.2rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0 auto 1rem auto;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .generate-teams-btn:hover {
+            background: var(--cream);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 109, 255, 0.2);
+        }
+
+        .generate-teams-btn:disabled {
+            background: #ccc;
+            color: #666;
+            border-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .generate-teams-btn:disabled:hover {
+            background: #ccc;
+            color: #666;
+        }
+
+        .generate-teams-note {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            opacity: 0.7;
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* Teams Results Styles */
+        .teams-results-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .teams-results-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .teams-results-subtitle {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 500;
+        }
+
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .team-card {
+            background: var(--cream);
+            border: 3px solid var(--primary-color);
+            padding: 1.5rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .team-stats {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        .team-players {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .team-player {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: white;
+            border: 2px solid var(--primary-color);
+        }
+
+        .player-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .player-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .player-details {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        .player-number {
+            background: var(--primary-color);
+            color: var(--cream);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .teams-actions {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .regenerate-btn,
+        .back-to-players-btn {
+            background: var(--primary-color);
+            color: var(--cream);
+            border: 3px solid var(--primary-color);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .regenerate-btn:hover,
+        .back-to-players-btn:hover {
+            background: var(--cream);
+            color: var(--primary-color);
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .attribute-btn {
+            background: white;
+            border: 2px solid rgba(0, 109, 255, 0.15);
+            padding: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'Poppins', sans-serif;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .attribute-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 109, 255, 0.15);
+        }
+
+        .attribute-btn.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 109, 255, 0.25);
+        }
+
+        .attribute-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .attribute-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .attribute-content span {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .attribute-content small {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            gap: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(0, 109, 255, 0.1);
+        }
+
+        .nav-btn {
+            background: var(--cream);
+            color: var(--primary-color);
+            border: 4px solid var(--primary-color);
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            min-width: 160px;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-color);
+            color: var(--cream);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-btn:disabled:hover {
+            background: var(--cream);
+            color: var(--primary-color);
+            transform: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .save-btn {
+            background: var(--primary-color);
+            color: var(--cream);
+            border: 4px solid var(--primary-color);
+            padding: 1.2rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .save-btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 109, 255, 0.3);
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(0, 109, 255, 0.1);
+        }
+
+        .player-number {
+            background: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .player-title {
+            flex: 1;
+        }
+
+        .player-title h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .player-title small {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .player-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .field-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .player-input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 2px solid rgba(0, 109, 255, 0.2);
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            background: white;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .player-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .player-input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .player-select {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 2px solid rgba(0, 109, 255, 0.2);
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            background: white;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .player-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .player-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .player-action-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        .player-action-btn.primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .player-action-btn.primary:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 109, 255, 0.3);
+        }
+
+        .player-action-btn.secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .player-action-btn.secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .player-action-btn.success {
+            background: #22c55e;
+            color: white;
+        }
+
+        .player-action-btn.success:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .player-action-btn.danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .player-action-btn.danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Status badge styling */
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.completed {
+            background: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status-badge.pending {
+            background: #f3f4f6;
+            color: #6b7280;
+            border: 1px solid #d1d5db;
+        }
+
+        .player-action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            min-width: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-action-btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .player-action-btn.edit {
+            background: #3b82f6;
+        }
+
+        .player-action-btn.edit:hover {
+            background: #2563eb;
+        }
+
+        .player-action-btn.edit:active {
+            transform: scale(0.95);
+            background: #1d4ed8;
+        }
+
+        .player-action-btn.complete {
+            background: #22c55e;
+        }
+
+        .player-action-btn.complete:hover {
+            background: #16a34a;
+        }
+
+        .player-action-btn.complete:active {
+            transform: scale(0.95);
+            background: #15803d;
+        }
+
+        .player-action-btn.confirm {
+            background: #22c55e;
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        .player-action-btn.confirm:active {
+            transform: scale(0.95);
+            background: #16a34a;
+        }
+
+        .player-action-btn.confirm:hover {
+            background: #16a34a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .player-action-btn.cancel {
+            background: #ef4444;
+            animation: pulse 0.6s ease-out;
+        }
+
+        .player-action-btn.cancel:active {
+            transform: scale(0.95);
+            background: #dc2626;
+        }
+
+        .player-action-btn.cancel:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .player-action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .player-action-btn:disabled:hover {
+            background: var(--primary-color);
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Loading state for buttons */
+        .player-action-btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .player-action-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .player-row.editing .inline-edit-input,
+        .player-row.editing .inline-edit-select {
+            animation: slideIn 0.3s ease-out;
+            background: #fff8e1;
+            border-color: #ffc107;
+        }
+
+        .player-row.editing .inline-edit-input::placeholder {
+            color: #ff9800;
+            font-style: italic;
+        }
+
+        /* Inline editing styles */
+        .inline-edit-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            background: white;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            min-height: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .inline-edit-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(0, 109, 255, 0.1);
+            transform: translateY(-1px);
+            transition: all 0.2s ease;
+        }
+
+        .inline-edit-select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            background: white;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .inline-edit-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(0, 109, 255, 0.1);
+            transform: translateY(-1px);
+            transition: all 0.2s ease;
+        }
+
+        .attributes-preview {
+            display: flex;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .attribute-tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0;
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .attributes-edit-container {
+            position: relative;
+        }
+
+        .attributes-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .attributes-dropdown.show {
+            display: block;
+        }
+
+        .attribute-option {
+            padding: 0.5rem;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 109, 255, 0.1);
+            transition: background 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .attribute-option:hover {
+            background: rgba(0, 109, 255, 0.1);
+        }
+
+        .attribute-option.selected {
+            background: rgba(0, 109, 255, 0.2);
+            font-weight: 600;
+        }
+
+        .attributes-toggle {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+        }
+
+        .attributes-toggle:hover {
+            background: var(--accent-color);
+        }
+
+        /* Remove the old player config card styles */
+        .player-config-card {
+            display: none;
+        }
+
+        .back-to-step1-section {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .back-to-step1-btn {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 1.2rem 2.5rem;
+            border-radius: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0 auto;
+        }
+
+        .back-to-step1-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 109, 255, 0.2);
+        }
+
+        .generate-section {
+            text-align: center;
+            margin: 3rem 0;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .generate-section.hidden {
+            display: none;
+        }
+
+        .final-generate-btn {
+            background: var(--primary-color);
+            color: white;
+            border: 2px solid transparent;
+            padding: 1.8rem 3.5rem;
+            border-radius: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0 auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .final-generate-btn:hover {
+            background: var(--cream);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 109, 255, 0.2);
+        }
+
+        /* Step 3: Team Generation and Display */
+        .teams-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        .teams-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Teams Results Container */
+        .teams-results-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .teams-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .teams-title {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .teams-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Quick Stats */
+        .teams-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: rgba(0, 109, 255, 0.05);
+            border: 2px solid rgba(0, 109, 255, 0.1);
+            border-radius: 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Teams Grid */
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .team-card {
+            background: var(--cream);
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 109, 255, 0.1);
+        }
+
+        .team-name {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .team-info {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Hide team info on mobile to center team name */
+        @media (max-width: 768px) {
+            .team-info {
+                display: none;
+            }
+        }
+
+        .team-players-count, .team-avg-level {
+            font-weight: 600;
+        }
+
+        .team-players {
+            list-style: none;
+        }
+
+        .team-player {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0, 109, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .team-player:hover {
+            background: rgba(0, 109, 255, 0.05);
+            transform: translateX(3px);
+        }
+
+        .team-player:last-child {
+            border-bottom: none;
+        }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .player-details {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .player-level, .player-position {
+            font-weight: 600;
+        }
+
+        .remove-player-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .remove-player-btn:hover {
+            background: #ff5252;
+            transform: scale(1.1);
+        }
+
+        /* Action Buttons */
+        .teams-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 0;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .edit-teams-btn {
+            background: var(--primary-color);
+            color: var(--cream);
+        }
+
+        .edit-teams-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .regenerate-btn {
+            background: var(--accent-color);
+            color: var(--cream);
+        }
+
+        .regenerate-btn:hover {
+            background: #0077cc;
+            transform: translateY(-2px);
+        }
+
+        .save-teams-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .save-teams-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            background: var(--cream);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .back-btn:hover {
+            background: var(--primary-color);
+            color: var(--cream);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Responsive for Teams */
+        @media (max-width: 768px) {
+            .teams-results-container {
+                padding: 1rem;
+            }
+
+            .teams-title {
+                font-size: 2rem;
+            }
+
+            .teams-stats {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.6rem;
+            }
+
+            .teams-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .team-card {
+                padding: 1.2rem;
+            }
+
+            .team-name {
+                font-size: 1.5rem;
+            }
+
+
+
+            .teams-actions {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .action-btn {
+                padding: 0.8rem 1.2rem;
+                font-size: 0.85rem;
+                justify-content: center;
+            }
+        }
+
+        .team-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        .team-players {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .team-player {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 109, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .team-player:last-child {
+            border-bottom: none;
+        }
+
+        .player-name {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .player-details {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        .action-buttons-bottom {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .regenerate-btn,
+        .back-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .regenerate-btn:hover,
+        .back-btn:hover {
+            transform: scale(0.98);
+            background: var(--accent-color);
+        }
+
+        .teams-stats {
+            background: white;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 109, 255, 0.2);
+            margin-top: 2rem;
+        }
+
+        .stats-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0, 109, 255, 0.05);
+            border: 1px solid rgba(0, 109, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        /* Footer Styles */
+        .app-footer {
+            background: transparent;
+            border-top: 1px solid rgba(255, 252, 239, 0.05);
+            padding: 1.5rem 0 1rem 0;
+            margin-top: 4rem;
+            margin-bottom: 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .footer-brand-text {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--cream);
+            letter-spacing: 0.5px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .footer-brand-text:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            transition: color 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .footer-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-social {
+            display: flex;
+            align-items: center;
+        }
+        
+        .social-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .social-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .social-link i {
+            font-size: 0.9rem;
+        }
+        
+        .footer-copyright {
+            text-align: center;
+        }
+        
+        .footer-copyright p {
+            color: var(--cream);
+            font-size: 0.75rem;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .footer-copyright p:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+
+        .registered-tm {
+            font-size: 0.6em;
+            vertical-align: super;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-left: 1px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .team-generator-container {
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+
+            .team-generator-header {
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            .header-left, .header-right {
+                width: 100px;
+            }
+            
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .settings-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .logout-btn {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                min-width: 50px;
+                justify-content: center;
+            }
+            
+            .logout-btn .logout-text {
+                display: none;
+            }
+            
+            .logout-btn i {
+                font-size: 1rem;
+                margin: 0;
+            }
+            
+            .team-generator-logo {
+                height: 80px;
+            }
+            
+            /* Mobile dropdown fixes */
+            .custom-dropdown {
+                display: none !important;
+            }
+            
+            .config-select {
+                display: block !important;
+            }
+
+            .step-content {
+                padding: 1.5rem;
+            }
+
+            .step-title {
+                font-size: 1.3rem;
+            }
+
+            .sport-cards {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                max-width: 100%;
+            }
+
+            .sport-card {
+                width: 320px;
+                min-height: 200px;
+            }
+
+            .sport-icon {
+                width: 70px;
+                height: 70px;
+                margin-top: 1.5rem;
+            }
+
+            .count-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .config-row {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+              
+            .config-select {
+                min-width: 100%;
+                font-size: 1rem;
+                padding: 1rem 1.2rem;
+                padding-right: 2.5rem;
+            }
+             
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .attributes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .teams-display {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons-bottom {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .config-actions {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            /* Mobile Player Configuration Styles */
+            .config-header h2 {
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .player-navigation h3 {
+                font-size: 1.3rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .players-list {
+                margin-bottom: 2rem;
+                max-width: 100%;
+                border-radius: 0;
+            }
+
+            .players-list-header {
+                padding: 1.2rem 1.5rem;
+                font-size: 1rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .player-row {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+                padding: 1.2rem 1.5rem;
+                text-align: center;
+            }
+
+            .player-number {
+                font-size: 1rem;
+                order: 1;
+            }
+
+            .player-name {
+                order: 2;
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+
+            .player-level {
+                order: 3;
+            }
+
+            .player-position {
+                order: 4;
+            }
+
+            .player-status {
+                order: 5;
+            }
+
+            .player-actions {
+                order: 6;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .player-action-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                min-width: 80px;
+            }
+
+        /* Mobile inline editing adjustments */
+        .inline-edit-input,
+        .inline-edit-select {
+            font-size: 0.9rem;
+            padding: 0.4rem;
+        }
+
+        /* Mobile responsive styles for new player configuration */
+        @media (max-width: 768px) {
+            .team-generator-container {
+                padding: 1.5rem;
+                padding-top: 2rem;
+            }
+            
+            .player-config-title {
+                font-size: 1.7rem;
+                margin-bottom: 1rem;
+            }
+            
+            .player-config-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .player-count-display {
+                width: 100%;
+                max-width: 350px;
+                margin: 0 auto 2rem auto;
+                padding: 2rem 1.5rem;
+            }
+            
+            .player-form-card {
+                width: 100%;
+                max-width: 350px;
+                min-height: 450px;
+                padding: 2rem 1.5rem;
+                margin: 0 auto 2rem auto;
+            }
+            
+            .player-form-fields {
+                display: flex;
+                flex-direction: column;
+                gap: 1.2rem;
+            }
+            
+            .player-form-actions {
+                grid-column: unset;
+                flex-direction: column;
+                gap: 0.8rem;
+                margin-top: 1.5rem;
+            }
+            
+            .player-form-icon {
+                width: 70px;
+                height: 70px;
+                padding: 14px;
+            }
+            
+            .player-form-title {
+                font-size: 1.5rem;
+            }
+            
+            .player-form-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .player-form-fields {
+                gap: 1.2rem;
+            }
+            
+            .player-form-group {
+                gap: 0.6rem;
+            }
+            
+            .player-form-group label {
+                font-size: 1rem;
+            }
+            
+            .player-form-input,
+            .player-form-select {
+                padding: 0.9rem 1rem;
+                font-size: 0.95rem;
+            }
+            
+            .player-form-select {
+                padding-right: 2.5rem;
+                background-size: 0.9rem;
+                background-position: right 0.8rem center;
+            }
+            
+            .player-form-actions {
+                flex-direction: column;
+                gap: 0.8rem;
+                margin-top: 1.5rem;
+            }
+            
+            .add-player-btn,
+            .clear-form-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.9rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .players-list {
+                margin: 1.5rem auto;
+                padding: 0 1rem;
+            }
+            
+            .players-list-title {
+                font-size: 1.5rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .player-item {
+                padding: 1.2rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .player-info {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .player-number {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .player-name {
+                font-size: 1.1rem;
+            }
+            
+            .player-meta {
+                font-size: 0.85rem;
+            }
+            
+            .remove-player-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .team-generator-container {
+                padding: 1rem;
+                padding-top: 1.5rem;
+            }
+
+            .header-left, .header-right {
+                width: 80px;
+            }
+            
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .settings-icon {
+                width: 26px;
+                height: 26px;
+            }
+            
+            .logout-btn {
+                padding: 0.7rem;
+                font-size: 0.75rem;
+                min-width: 45px;
+            }
+            
+            .logout-btn i {
+                font-size: 0.9rem;
+            }
+            
+            .team-generator-logo {
+                height: 70px;
+            }
+            
+            .player-config-title {
+                font-size: 1.5rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .player-config-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .player-count-display {
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto 1.5rem auto;
+                padding: 1.5rem 1.2rem;
+            }
+            
+            .player-count-display span {
+                font-size: 1rem;
+            }
+            
+            .player-count-display strong {
+                font-size: 1.1rem;
+            }
+            
+            .player-form-card {
+                width: 100%;
+                max-width: 320px;
+                min-height: 400px;
+                padding: 1.5rem 1.2rem;
+                margin: 0 auto 1.5rem auto;
+            }
+            
+            .player-form-fields {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .player-form-actions {
+                grid-column: unset;
+                flex-direction: column;
+                gap: 0.6rem;
+                margin-top: 1.2rem;
+            }
+            
+            .player-form-icon {
+                width: 60px;
+                height: 60px;
+                padding: 12px;
+            }
+            
+            .player-form-title {
+                font-size: 1.3rem;
+            }
+            
+            .player-form-subtitle {
+                font-size: 0.85rem;
+            }
+            
+            .player-form-fields {
+                gap: 1rem;
+            }
+            
+            .player-form-group {
+                gap: 0.5rem;
+            }
+            
+            .player-form-group label {
+                font-size: 0.95rem;
+            }
+            
+            .player-form-input,
+            .player-form-select {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .player-form-select {
+                padding-right: 2.2rem;
+                background-size: 0.8rem;
+                background-position: right 0.7rem center;
+            }
+            
+            .player-form-actions {
+                gap: 0.6rem;
+                margin-top: 1.2rem;
+            }
+            
+            .add-player-btn,
+            .clear-form-btn {
+                padding: 0.8rem 1.2rem;
+                font-size: 0.95rem;
+            }
+            
+            .players-list {
+                margin: 1.2rem auto;
+                padding: 0 0.5rem;
+            }
+            
+            .players-list-title {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+            
+            .player-item {
+                padding: 0.8rem;
+            }
+            
+            .player-info {
+                gap: 0.8rem;
+            }
+            
+            .player-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+            
+            .player-name {
+                font-size: 0.9rem;
+            }
+            
+            .player-meta {
+                font-size: 0.8rem;
+            }
+            
+            .remove-player-btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+            
+            .teams-results-title {
+                font-size: 2rem;
+            }
+            
+            .teams-results-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .teams-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .teams-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .regenerate-btn,
+            .back-to-players-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .attributes-preview {
+            justify-content: center;
+            gap: 0.2rem;
+        }
+
+        .attribute-tag {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+        }
+
+            .player-config-card {
+                padding: 2rem 1.5rem;
+                margin-bottom: 2rem;
+                max-width: 100%;
+            }
+
+            .player-form {
+                gap: 1.5rem;
+            }
+
+            .form-group {
+                gap: 0.6rem;
+            }
+
+            .form-row {
+                gap: 1.5rem;
+            }
+
+            .form-group label {
+                font-size: 0.95rem;
+            }
+
+            .player-name-input,
+            .level-select,
+            .position-select {
+                padding: 0.9rem 1rem;
+                font-size: 0.95rem;
+            }
+
+            .attributes-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+                margin-top: 0.8rem;
+            }
+
+            .attribute-btn {
+                padding: 1.2rem;
+                gap: 1rem;
+            }
+
+            .attribute-icon {
+                width: 45px;
+                height: 45px;
+            }
+
+            .attribute-btn .content span {
+                font-size: 0.95rem;
+            }
+
+            .attribute-btn .content small {
+                font-size: 0.8rem;
+            }
+
+            .form-actions {
+                margin-top: 2rem;
+                gap: 1.5rem;
+                flex-direction: column;
+            }
+
+            .prev-player-btn,
+            .save-continue-btn {
+                padding: 1rem 1.5rem;
+                font-size: 0.95rem;
+                min-width: 100%;
+                max-width: 300px;
+            }
+
+            .back-to-step1-section {
+                margin: 2rem 0;
+            }
+
+            .back-to-step1-btn {
+                padding: 1rem 2rem;
+                font-size: 0.95rem;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .generate-section {
+                margin: 2rem 0;
+            }
+
+            .final-generate-btn {
+                padding: 1.5rem 2.5rem;
+                font-size: 1.1rem;
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .app-footer {
+                padding: 1rem 0 0.8rem 0;
+                margin-top: 3rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+                padding: 0 1rem;
+            }
+            
+            .footer-links {
+                gap: 1.5rem;
+            }
+            
+            .footer-brand {
+                justify-content: center;
+            }
+            
+            .footer-social {
+                justify-content: center;
+            }
+        }
+        
+                 @media (max-width: 480px) {
+                                        .sport-card {
+                 width: 300px;
+                 min-height: 180px;
+             }
+
+                         .sport-icon {
+                 width: 60px;
+                 height: 60px;
+                 margin-top: 1.2rem;
+             }
+
+                         .sport-name {
+                 font-size: 1.3rem;
+             }
+             
+
+             
+             .config-select {
+                 min-width: 120px;
+                 font-size: 0.9rem;
+                 padding: 0.8rem;
+             }
+ 
+             .count-btn {
+                 padding: 1.5rem 1rem;
+             }
+
+            .count-btn-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .next-step-btn,
+            .final-generate-btn {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .footer-content {
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="page active">
-            <div class="page-content">
-                <header class="page-header">
-                    <button class="back-to-home-btn" onclick="window.location.href='index.html'">
-                        <img src="assets/images/arrowicon.png" alt="Back to Home" class="back-arrow-icon">
-                    </button>
-                </header>
+    <div class="team-generator-container">
+        <div class="team-generator-header">
+            <div class="header-left">
+                <button class="settings-btn" onclick="window.location.href='dashboard.html'">
+                    <img src="assets/images/arrowicon.png" alt="Back" class="settings-icon">
+                </button>
+            </div>
+            <div class="header-center">
+                <img src="assets/images/logo png.png" alt="NiteRun" class="team-generator-logo">
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span class="logout-text">Logout</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="team-generator-main">
+            <!-- Step 1: Sport Selection -->
+            <div class="step-content" id="step1">
+                <h1 class="step-title">Select Your Sport</h1>
+                <div class="sport-selector">
+                                         <div class="sport-cards">
+                                                                            <div class="sport-card active" data-sport="football">
+                             <img src="assets/images/icons/football.png" alt="Football" class="sport-icon">
+                             <span class="sport-name">Football</span>
+                             <small class="sport-description">Create balanced teams</small>
+                         </div>
+                     </div>
+                     
+                     <div class="coming-soon-sports">
+                         <p class="coming-soon-text">Coming Soon: Padel, Basketball, Volleyball, Tennis</p>
+                     </div>
+                     
+                     <button class="next-step-btn" onclick="nextStep()">
+                         <span>Next</span>
+                         <i class="fas fa-arrow-right"></i>
+                     </button>
+                </div>
+            </div>
+
+                                      <!-- Step 2: Team and Player Configuration -->
+             <div class="step-content hidden" id="step2">
+                 <div class="config-header">
+                     <h2>Configure Teams and Players</h2>
+                 </div>
+                 
+                                   <div class="team-config-section">
+                      <div class="sport-reminder">
+                          <span>Creating a <strong id="selectedSportDisplay">Football</strong> game</span>
+                      </div>
+                                             <div class="config-row">
+                           <div class="config-group">
+                               <label>Number of Teams:</label>
+                                                               <div class="custom-dropdown" id="teamsDropdown">
+                                    <div class="dropdown-trigger" onclick="toggleDropdown('teamsDropdown')">
+                                        <span class="dropdown-value" id="teamsValue">2 Teams</span>
+                                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                    </div>
+                                    <div class="dropdown-options" id="teamsOptions">
+                                        <div class="dropdown-option" data-value="2" onclick="selectOption('teamsDropdown', 2, '2 Teams', event)">2 Teams</div>
+                                        <div class="dropdown-option" data-value="3" onclick="selectOption('teamsDropdown', 3, '3 Teams', event)">3 Teams</div>
+                                        <div class="dropdown-option" data-value="4" onclick="selectOption('teamsDropdown', 4, '4 Teams', event)">4 Teams</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Native select for mobile -->
+                                <select id="teamsSelect" class="config-select">
+                                    <option value="2">2 Teams</option>
+                                    <option value="3">3 Teams</option>
+                                    <option value="4">4 Teams</option>
+                                </select>
+                           </div>
+                           
+                           <div class="config-group">
+                               <label>Players per Team:</label>
+                                                               <div class="custom-dropdown" id="playersDropdown">
+                                    <div class="dropdown-trigger" onclick="toggleDropdown('playersDropdown')">
+                                        <span class="dropdown-value" id="playersValue">7 Players</span>
+                                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                    </div>
+                                    <div class="dropdown-options" id="playersOptions">
+                                        <!-- Options will be populated based on selected sport -->
+                                    </div>
+                                </div>
+                                
+                                <!-- Native select for mobile -->
+                                <select id="playersPerTeamSelect" class="config-select">
+                                    <!-- Options will be populated based on selected sport -->
+                                </select>
+                           </div>
+                       </div>
+                     
+                     <div class="total-players-display">
+                         <span>Total Players: <strong id="totalPlayers">10</strong></span>
+                     </div>
+                 </div>
+                 
+                 <div class="config-actions">
+                     <button class="back-to-sport-btn" onclick="goToStep(1)">
+                         <i class="fas fa-arrow-left"></i>
+                         <span>Back to Sport Selection</span>
+                     </button>
+                     
+                     <button class="next-to-players-btn" onclick="nextToPlayerConfig()">
+                         <span>Configure Players</span>
+                         <i class="fas fa-arrow-right"></i>
+                     </button>
+                     
+
+                 </div>
+             </div>
+
+             <!-- Step 3: Player Configuration -->
+             <div class="step-content hidden" id="step3">
+                 <div class="player-config-container">
+                     <h1 class="player-config-title">Add Players</h1>
+                     <p class="player-config-subtitle">Add each player one by one to create your teams</p>
+                     
+                     <!-- Player Count Display -->
+                     <div class="player-count-display">
+                         <span>Players Added: <strong id="playerCountDisplay">0 / 10</strong></span>
+                     </div>
+                     
+                     <!-- Player Form Card -->
+                     <div class="player-form-card">
+                         <div class="player-form-header">
+                             <div class="player-form-icon">
+                                 <img src="assets/images/profileicon.png" alt="Player Icon">
+                             </div>
+                             <h3 class="player-form-title">Add New Player</h3>
+                             <p class="player-form-subtitle">Fill in the player's details</p>
+                         </div>
+                         
+                         <form class="player-form-fields" id="playerForm" onsubmit="addPlayer(); return false;">
+                             <div class="player-form-group">
+                                 <label for="playerName">Player Name</label>
+                                 <input type="text" id="playerName" class="player-form-input" placeholder="Enter player name" required>
+                             </div>
+                             
+                             <div class="player-form-group">
+                                 <label for="playerLevel">Skill Level</label>
+                                 <select id="playerLevel" class="player-form-select" required>
+                                     <option value="">Select skill level</option>
+                                     <option value="1-">1-</option>
+                                     <option value="1">1</option>
+                                     <option value="1+">1+</option>
+                                     <option value="2-">2-</option>
+                                     <option value="2">2</option>
+                                     <option value="2+">2+</option>
+                                     <option value="3-">3-</option>
+                                     <option value="3">3</option>
+                                     <option value="3+">3+</option>
+                                     <option value="4-">4-</option>
+                                     <option value="4">4</option>
+                                     <option value="4+">4+</option>
+                                     <option value="5-">5-</option>
+                                     <option value="5">5</option>
+                                     <option value="5+">5+</option>
+                                 </select>
+                             </div>
+                             
+                             <div class="player-form-group">
+                                 <label for="playerPosition">Position</label>
+                                                                 <select id="playerPosition" class="player-form-select" required>
+                                    <option value="">Select position</option>
+                                    <option value="attacker">Attacker</option>
+                                    <option value="defender">Defender</option>
+                                    <option value="goalkeeper">Goalkeeper</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                             </div>
+                             
+                             <div class="player-form-actions">
+                                 <button type="submit" class="add-player-btn">
+                                     <i class="fas fa-plus"></i>
+                                     <span>Add Player</span>
+                                 </button>
+                                 <button type="button" class="clear-form-btn" onclick="clearForm()">
+                                     <i class="fas fa-eraser"></i>
+                                     <span>Clear</span>
+                                 </button>
+                             </div>
+                         </form>
+                     </div>
+                     
+                     <!-- Players List -->
+                     <div class="players-list" id="playersList">
+                         <h3 class="players-list-title">Added Players</h3>
+                         <div id="playersContainer">
+                             <!-- Players will be added here -->
+                         </div>
+                     </div>
+                     
+                     <!-- Generate Teams Button -->
+                     <div class="generate-teams-section">
+                         <button class="generate-teams-btn" id="generateTeamsBtn" onclick="generateTeams()">
+                             <i class="fas fa-magic"></i>
+                             <span>Generate Teams</span>
+                         </button>
+                         <p class="generate-teams-note">All players must be added before generating teams</p>
+                     </div>
+                 </div>
                 
-                <div class="page-logo-section">
-                    <div class="logo-container">
-                        <img src="assets/images/logo png.png" alt="NiteRun Logo" id="logo" class="page-main-logo">
+                <!-- Step 4: Generated Teams -->
+                <div class="step-content hidden" id="step4">
+                    <div class="teams-results-container">
+                        <div class="teams-header">
+                            <h2 class="teams-title">Generated Teams</h2>
+                            <p class="teams-subtitle">Your balanced teams are ready to play!</p>
+                        </div>
+                        
+                        <!-- Quick Stats -->
+                        <div class="teams-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalPlayersCount">0</span>
+                                <span class="stat-label">Players</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="teamsCount">0</span>
+                                <span class="stat-label">Teams</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="balanceScore">0%</span>
+                                <span class="stat-label">Balance</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Teams Display -->
+                        <div class="teams-grid" id="teamsGrid">
+                            <!-- Teams will be generated here -->
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="teams-actions">
+                            <button class="action-btn edit-teams-btn" onclick="editTeams()">
+                                <i class="fas fa-edit"></i>
+                                <span>Edit Teams</span>
+                            </button>
+                            <button class="action-btn regenerate-btn" onclick="regenerateTeams()">
+                                <i class="fas fa-redo"></i>
+                                <span>Regenerate</span>
+                            </button>
+                            <button class="action-btn save-teams-btn" onclick="saveTeams()">
+                                <i class="fas fa-save"></i>
+                                <span>Save Teams</span>
+                            </button>
+                            <button class="action-btn back-btn" onclick="goToStep(3)">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Back to Players</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
-                <main>
-                    <!-- Step 1: Player Count Selection -->
-                    <div class="step-content" id="step1">
-                        <div class="players-container">
-                            <div class="player-count-selector">
-                                <label class="count-label">Número de Jogadores:</label>
-                                <div class="count-buttons">
-                                    <button class="count-btn active" data-count="10">
-                                        <img src="assets/images/temasicon.png" alt="Players Icon" class="count-btn-icon">
-                                        <span>10 Jogadores</span>
-                                        <small>2 Equipas de 5</small>
-                                    </button>
-                                    <button class="count-btn" data-count="15">
-                                        <img src="assets/images/temasicon.png" alt="Players Icon" class="count-btn-icon">
-                                        <span>15 Jogadores</span>
-                                        <small>3 Equipas de 5</small>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <div class="generation-options">
-                                <button class="next-step-btn" onclick="nextStep()">
-                                    <span>Próximo</span>
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Player attributes data for inline editing -->
+                <div id="attributesData" style="display: none;">
+                    <div class="attribute-data" data-attr="malabarista" data-name="Malabarista" data-desc="Dribbler, flashy, good shot"></div>
+                    <div class="attribute-data" data-attr="muralha" data-name="A Muralha" data-desc="Strong marking, excellent defense"></div>
+                    <div class="attribute-data" data-attr="sweeper" data-name="Sweeper" data-desc="Versatile goalkeeper + field"></div>
+                    <div class="attribute-data" data-attr="luva" data-name="Luva D'or" data-desc="Excellent natural goalkeeper"></div>
+                    <div class="attribute-data" data-attr="sr90" data-name="Sr. 90 Minutos" data-desc="Complete, creative, hard worker"></div>
+                    <div class="attribute-data" data-attr="arquiteto" data-name="O Arquiteto" data-desc="Great pass, controls rhythm"></div>
+                    <div class="attribute-data" data-attr="matador" data-name="El Matador" data-desc="Elite finisher, low defense"></div>
+                </div>
 
-                    <!-- Step 2: Player Configuration -->
-                    <div class="step-content hidden" id="step2">
-                        <div class="players-config-container">
-                            <div class="config-header">
-                                <h2>Configurar Jogadores</h2>
-                            </div>
+                <!-- Back to Step 1 Button -->
+                <div class="back-to-step1-section">
+                    <button class="back-to-step1-btn" onclick="goToStep(1)">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Selector</span>
+                    </button>
+                </div>
 
-                            <!-- Player Navigation List -->
-                            <div class="player-navigation">
-                                <h3>Lista de Jogadores</h3>
-                                <div class="players-grid" id="playersGrid">
-                                    <!-- Player navigation buttons will be generated here -->
-                                </div>
-                            </div>
-                            
-                            <div class="player-config-card">
-                                <div class="player-form">
-                                    <div class="form-group">
-                                        <label>Nome do Jogador:</label>
-                                        <input type="text" id="playerName" placeholder="Digite o nome..." class="player-name-input">
-                                    </div>
+                <!-- Generate Teams Button (shown when all players are configured) -->
+                <div class="generate-section hidden" id="generateSection">
+                    <button class="final-generate-btn" onclick="generateFinalTeams()">
+                        <img src="assets/images/teamgeneratoricon.png" alt="Team Generator" style="width: 24px; height: 24px;">
+                        <span>Generate Teams</span>
+                    </button>
+                </div>
+            </div>
 
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label>Nível:</label>
-                                            <select id="playerLevel" class="level-select">
-                                                <option value="0.7">1-</option>
-                                                <option value="1">1</option>
-                                                <option value="1.3">1+</option>
-                                                <option value="1.7">2-</option>
-                                                <option value="2">2</option>
-                                                <option value="2.3">2+</option>
-                                                <option value="2.7">3-</option>
-                                                <option value="3" selected>3</option>
-                                                <option value="3.3">3+</option>
-                                                <option value="3.7">4-</option>
-                                                <option value="4">4</option>
-                                                <option value="4.3">4+</option>
-                                                <option value="4.7">5-</option>
-                                                <option value="5">5</option>
-                                                <option value="5.3">5+</option>
-                                            </select>
-                                        </div>
+                         <!-- Step 4: Team Generation and Display -->
+             <div class="step-content hidden" id="step4">
+                <div class="teams-header">
+                    <h2>Generated Teams</h2>
+                </div>
 
-                                        <div class="form-group">
-                                            <label>Posição:</label>
-                                            <select id="playerPosition" class="position-select">
-                                                <option value="atacante">Atacante</option>
-                                                <option value="hibrido" selected>Híbrido</option>
-                                                <option value="defensor">Defensor</option>
-                                                <option value="gr">GR</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                <div class="teams-display" id="teamsDisplay">
+                    <!-- Generated teams will be displayed here -->
+                </div>
 
-                                    <div class="form-group">
-                                        <label>Atributos Especiais:</label>
-                                        <div class="attributes-grid">
-                                            <button type="button" class="attribute-btn" data-attr="malabarista">
-                                                <img src="assets/images/malabaristaicon.png" alt="Malabarista" class="attribute-icon">
-                                                <div class="content">
-                                                    <span>Malabarista</span>
-                                                    <small>Dribbler, flashy, bom remate</small>
-                                                </div>
-                                            </button>
-                                            <button type="button" class="attribute-btn" data-attr="muralha">
-                                                <img src="assets/images/muralhaicon.png" alt="A Muralha" class="attribute-icon">
-                                                <div class="content">
-                                                    <span>A Muralha</span>
-                                                    <small>Forte na marcação, excelente defesa</small>
-                                                </div>
-                                            </button>
-                                            <button type="button" class="attribute-btn" data-attr="sweeper">
-                                                <img src="assets/images/sweepericon.png" alt="Sweeper" class="attribute-icon">
-                                                <div class="content">
-                                                    <span>Sweeper</span>
-                                                    <small>Versátil guarda-redes + campo</small>
-                                                </div>
-                                            </button>
-                                            <button type="button" class="attribute-btn" data-attr="luva">
-                                                <img src="assets/images/luvadoricon.png" alt="Luva D'or" class="attribute-icon">
-                                                <div class="content">
-                                                    <span>Luva D'or</span>
-                                                    <small>Excelente guarda-redes nato</small>
-                                                </div>
-                                            </button>
-                                            <button type="button" class="attribute-btn" data-attr="sr90">
-                                                <img src="assets/images/sr90minutos.png" alt="Sr. 90 Minutos" class="attribute-icon">
-                                                <div class="content">
-                                                    <span>Sr. 90 Minutos</span>
-                                                    <small>Completo, criativo, trabalhador</small>
-                                                </div>
-                                            </button>
-                                            <button type="button" class="attribute-btn" data-attr="arquiteto">
-                                                <img src="assets/images/arquitetoicon.png" alt="O Arquiteto" class="attribute-icon">
-                                                <div class="content">
-                                                    <span>O Arquiteto</span>
-                                                    <small>Ótimo passe, controla ritmo</small>
-                                                </div>
-                                            </button>
-                                            <button type="button" class="attribute-btn" data-attr="matador">
-                                                <img src="assets/images/elmatadoricon.png" alt="El Matador" class="attribute-icon">
-                                                <div class="content">
-                                                    <span>El Matador</span>
-                                                    <small>Finalizador elite, baixa defesa</small>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                <div class="action-buttons-bottom">
+                    <button class="regenerate-btn" onclick="regenerateTeams()">
+                        <i class="fas fa-redo"></i>
+                        <span>Generate Again</span>
+                    </button>
+                                         <button class="back-btn" onclick="goToStep(3)">
+                         <i class="fas fa-edit"></i>
+                         <span>Edit Players</span>
+                     </button>
+                </div>
 
-                                <div class="form-actions">
-                                    <button class="prev-player-btn" onclick="prevPlayer()">
-                                        <i class="fas fa-arrow-left"></i>
-                                        <span>Anterior</span>
-                                    </button>
-                                    <button class="save-continue-btn" onclick="saveAndContinue()">
-                                        <span>Próximo</span>
-                                        <i class="fas fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Back to Step 1 Button -->
-                            <div class="back-to-step1-section">
-                                <button class="back-to-step1-btn" onclick="goToStep(1)">
-                                    <i class="fas fa-arrow-left"></i>
-                                    <span>Voltar ao Seletor</span>
-                                </button>
-                            </div>
-
-                            <!-- Generate Teams Button (shown when all players are configured) -->
-                            <div class="generate-section hidden" id="generateSection">
-                                <button class="final-generate-btn" onclick="generateFinalTeams()">
-                                    <img src="assets/images/teamgeneratoricon.png" alt="Team Generator" style="width: 24px; height: 24px;">
-                                    <span>Gerar Equipas</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Team Generation and Display -->
-                    <div class="step-content hidden" id="step3">
-                        <div class="teams-container">
-                            <div class="teams-header">
-                                <h2>Equipas Geradas</h2>
-                            </div>
-
-                            <div class="teams-display" id="teamsDisplay">
-                                <!-- Generated teams will be displayed here -->
-                            </div>
-
-                            <div class="action-buttons-bottom">
-                                <button class="regenerate-btn" onclick="regenerateTeams()">
-                                    <i class="fas fa-redo"></i>
-                                    <span>Gerar Novamente</span>
-                                </button>
-                                <button class="back-btn" onclick="goToStep(2)">
-                                    <i class="fas fa-edit"></i>
-                                    <span>Editar Jogadores</span>
-                                </button>
-                            </div>
-
-                            <div class="teams-stats" id="teamsStats">
-                                <!-- Team statistics will be displayed here -->
-                            </div>
-                        </div>
-                    </div>
-                </main>
+                <div class="teams-stats" id="teamsStats">
+                    <!-- Team statistics will be displayed here -->
+                </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-brand-text">NiteRun<sup class="registered-tm">®</sup></span>
+                </div>
+                <div class="footer-links">
+                    <a href="about.html" class="footer-link">About</a>
+                    <a href="support.html" class="footer-link">Support</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://instagram.com/niterun.app" target="_blank" class="social-link" title="Follow us on Instagram">
+                        Follow us on Instagram <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 NiteRun<sup class="registered-tm">®</sup>. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+                 // Team Generator JavaScript functionality
+         let currentStep = 1;
+
+         // Logout function (placeholder)
+         function logout() {
+             alert('Logout functionality coming soon!');
+         }
+         let selectedSport = 'football';
+         let selectedTeams = 2;
+         let selectedPlayersPerTeam = 5;
+         let currentPlayerIndex = 0;
+         let players = [];
+         let selectedAttributes = {};
+
+                         // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSportSelection();
+            setupTeamConfig();
+            loadSavedTeamsFromHash();
+        });
+
+        // Load saved teams if hash is present
+        function loadSavedTeamsFromHash() {
+            if (window.location.hash === '#step4') {
+                const savedTeams = JSON.parse(localStorage.getItem('generatedTeams') || '[]');
+                if (savedTeams.length > 0) {
+                    displayTeams(savedTeams);
+                    goToStep(4);
+                }
+            }
+        }
+         
+                                         // Setup team configuration
+            function setupTeamConfig() {
+                // Initialize custom dropdowns
+                setupCustomDropdowns();
+                
+                // Setup native selects for mobile
+                setupNativeSelects();
+                
+                                 // Set initial values
+                 selectedTeams = 2;
+                 selectedPlayersPerTeam = 5;
+                
+                // Populate initial player options for football (default sport)
+                updatePlayerOptions();
+                updateTotalPlayers();
+            }
+           
+                       // Setup custom dropdowns
+            function setupCustomDropdowns() {
+                // Close dropdowns when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.custom-dropdown')) {
+                        document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                            dropdown.classList.remove('open');
+                        });
+                    }
+                });
+            }
+            
+            // Setup native selects for mobile
+            function setupNativeSelects() {
+                const teamsSelect = document.getElementById('teamsSelect');
+                const playersSelect = document.getElementById('playersPerTeamSelect');
+                
+                // Teams select change handler
+                teamsSelect.addEventListener('change', function() {
+                    selectedTeams = parseInt(this.value);
+                    updateTotalPlayers();
+                });
+                
+                // Players select change handler
+                playersSelect.addEventListener('change', function() {
+                    selectedPlayersPerTeam = parseInt(this.value);
+                    updateTotalPlayers();
+                });
+            }
+           
+           // Toggle dropdown
+           function toggleDropdown(dropdownId) {
+               console.log('toggleDropdown called:', dropdownId); // Debug log
+               
+               const dropdown = document.getElementById(dropdownId);
+               const isOpen = dropdown.classList.contains('open');
+               
+               console.log('Dropdown isOpen:', isOpen); // Debug log
+               
+               // Close all other dropdowns
+               document.querySelectorAll('.custom-dropdown').forEach(d => {
+                   d.classList.remove('open');
+               });
+               
+               // Toggle current dropdown
+               if (!isOpen) {
+                   dropdown.classList.add('open');
+                   console.log('Dropdown opened:', dropdownId); // Debug log
+               }
+           }
+           
+           // Select option from dropdown
+           function selectOption(dropdownId, value, text, event) {
+               console.log('selectOption called:', dropdownId, value, text); // Debug log
+               
+               const dropdown = document.getElementById(dropdownId);
+               const valueElement = dropdown.querySelector('.dropdown-value');
+               
+               // Update display
+               valueElement.textContent = text;
+               
+               // Update selected state
+               dropdown.querySelectorAll('.dropdown-option').forEach(option => {
+                   option.classList.remove('selected');
+               });
+               
+               if (event && event.target) {
+                   event.target.classList.add('selected');
+               }
+               
+               // Close dropdown
+               dropdown.classList.remove('open');
+               
+               // Update variables and total
+               if (dropdownId === 'teamsDropdown') {
+                   selectedTeams = value;
+               } else if (dropdownId === 'playersDropdown') {
+                   selectedPlayersPerTeam = value;
+               }
+               
+               updateTotalPlayers();
+           }
+
+                 // Setup sport selection
+         function setupSportSelection() {
+             const sportCards = document.querySelectorAll('.sport-card');
+             
+             sportCards.forEach(card => {
+                 // Handle sport card click
+                 card.addEventListener('click', function() {
+                     // Remove active class from all cards
+                     sportCards.forEach(c => c.classList.remove('active'));
+                     
+                                       // Add active class to clicked card
+                      this.classList.add('active');
+                      selectedSport = this.dataset.sport;
+                      
+                      // Update sport reminder display
+                      updateSportReminder();
+                      
+                      // Update player options based on selected sport
+                      updatePlayerOptions();
+                 });
+             });
+         }
+         
+                               // Update player options based on selected sport
+           function updatePlayerOptions() {
+               const playersOptions = document.getElementById('playersOptions');
+               const playersValue = document.getElementById('playersValue');
+               const playersSelect = document.getElementById('playersPerTeamSelect');
+               playersOptions.innerHTML = '';
+               playersSelect.innerHTML = '';
+               
+               let options = [];
+               
+               switch(selectedSport) {
+                   case 'football':
+                       options = [
+                           { value: 5, text: '5 Players' }
+                       ];
+                       break;
+                   case 'basketball':
+                       options = [
+                           { value: 3, text: '3 Players' },
+                           { value: 5, text: '5 Players' }
+                       ];
+                       break;
+                   case 'volleyball':
+                       options = [
+                           { value: 3, text: '3 Players' },
+                           { value: 5, text: '5 Players' },
+                           { value: 6, text: '6 Players' }
+                       ];
+                       break;
+               }
+               
+               options.forEach(option => {
+                   // Add to custom dropdown
+                   const optionElement = document.createElement('div');
+                   optionElement.className = 'dropdown-option';
+                   optionElement.setAttribute('data-value', option.value);
+                   optionElement.onclick = (event) => selectOption('playersDropdown', option.value, option.text, event);
+                   optionElement.textContent = option.text;
+                   
+                   // Add to native select
+                   const selectOptionElement = document.createElement('option');
+                   selectOptionElement.value = option.value;
+                   selectOptionElement.textContent = option.text;
+                   playersSelect.appendChild(selectOptionElement);
+                   
+                   // Set default selection
+                   if (selectedSport === 'football' && option.value === 5) {
+                       // 5 players is the default for football
+                       optionElement.classList.add('selected');
+                       selectedPlayersPerTeam = 5;
+                       playersValue.textContent = option.text;
+                       playersSelect.value = option.value;
+                   } else if (selectedSport === 'basketball' && option.value === 5) {
+                       // 5 players is the default for basketball
+                       optionElement.classList.add('selected');
+                       selectedPlayersPerTeam = 5;
+                       playersValue.textContent = option.text;
+                       playersSelect.value = option.value;
+                   } else if (selectedSport === 'volleyball' && option.value === 5) {
+                       // 5 players is the default for volleyball
+                       optionElement.classList.add('selected');
+                       selectedPlayersPerTeam = 5;
+                       playersValue.textContent = option.text;
+                       playersSelect.value = option.value;
+                   }
+                   
+                   playersOptions.appendChild(optionElement);
+               });
+               
+               // Update total players display
+               updateTotalPlayers();
+           }
+         
+                   // Update total players display
+          function updateTotalPlayers() {
+              const totalPlayers = selectedTeams * selectedPlayersPerTeam;
+              document.getElementById('totalPlayers').textContent = totalPlayers;
+          }
+          
+          // Update sport reminder display
+          function updateSportReminder() {
+              const sportDisplay = document.getElementById('selectedSportDisplay');
+              if (sportDisplay) {
+                  sportDisplay.textContent = selectedSport.charAt(0).toUpperCase() + selectedSport.slice(1);
+              }
+          }
+
+        
+
+        // Get default position based on sport
+        function getDefaultPosition(sport) {
+            switch(sport) {
+                case 'football':
+                    return 'hibrido';
+                case 'basketball':
+                    return 'hibrido';
+                case 'volleyball':
+                    return 'hibrido';
+                default:
+                    return 'hibrido';
+            }
+        }
+
+                 // Navigate to next step
+         function nextStep() {
+             if (currentStep === 1) {
+                 // Sport selected, go to team configuration
+                 goToStep(2);
+             }
+         }
+         
+                 // Navigate to player configuration
+        function nextToPlayerConfig() {
+            // Initialize empty players array for the new simple design
+            players = [];
+            
+            // Clear any existing players in the container
+            const playersContainer = document.getElementById('playersContainer');
+            if (playersContainer) {
+                playersContainer.innerHTML = '';
+            }
+            
+            // Clear the form
+            clearForm();
+            
+            // Initialize player count display
+            updatePlayerCountDisplay();
+            
+            // Go to step 3
+            goToStep(3);
+        }
+
+        // Clear the player form
+        function clearForm() {
+            document.getElementById('playerName').value = '';
+            document.getElementById('playerLevel').value = '';
+            document.getElementById('playerPosition').value = '';
+        }
+
+        // Add a new player
+        function addPlayer() {
+            const name = document.getElementById('playerName').value.trim();
+            const level = document.getElementById('playerLevel').value;
+            const position = document.getElementById('playerPosition').value;
+            
+            // Check if all fields are filled
+            if (!name || !level || !position) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Check if we've reached the player limit
+            const totalPlayersAllowed = selectedTeams * selectedPlayersPerTeam;
+            if (players.length >= totalPlayersAllowed) {
+                alert(`You can only add ${totalPlayersAllowed} players for this game configuration.`);
+                return;
+            }
+            
+            // Create new player object
+            const newPlayer = {
+                id: players.length,
+                name: name,
+                level: level,
+                position: position,
+                attributes: []
+            };
+            
+            // Add to players array
+            players.push(newPlayer);
+            
+            // Add to UI
+            addPlayerToUI(newPlayer);
+            
+            // Update player count display
+            updatePlayerCountDisplay();
+            
+            // Clear form
+            clearForm();
+        }
+
+        // Add player to the UI list
+        function addPlayerToUI(player) {
+            const playersContainer = document.getElementById('playersContainer');
+            
+            const playerItem = document.createElement('div');
+            playerItem.className = 'player-item';
+            playerItem.innerHTML = `
+                <div class="player-info">
+                    <div class="player-number">${player.id + 1}</div>
+                    <div class="player-details">
+                        <div class="player-name">${player.name}</div>
+                        <div class="player-meta">${player.level} • ${player.position}</div>
+                    </div>
+                </div>
+                <button class="remove-player-btn" onclick="removePlayer(${player.id})">
+                    <i class="fas fa-trash"></i>
+                    Remove
+                </button>
+            `;
+            
+            playersContainer.appendChild(playerItem);
+        }
+
+        // Remove a player
+        function removePlayer(playerId) {
+            // Remove from players array
+            players = players.filter(player => player.id !== playerId);
+            
+            // Re-render the players list
+            const playersContainer = document.getElementById('playersContainer');
+            playersContainer.innerHTML = '';
+            
+            // Re-add all players with updated IDs
+            players.forEach((player, index) => {
+                player.id = index;
+                addPlayerToUI(player);
+            });
+            
+            // Update player count display
+            updatePlayerCountDisplay();
+        }
+        
+        // Update player count display
+        function updatePlayerCountDisplay() {
+            const totalPlayersAllowed = selectedTeams * selectedPlayersPerTeam;
+            const currentCount = players.length;
+            
+            // Update the count display
+            const countDisplay = document.getElementById('playerCountDisplay');
+            if (countDisplay) {
+                countDisplay.textContent = `${currentCount} / ${totalPlayersAllowed}`;
+            }
+            
+            // Enable/disable add button based on limit
+            const addButton = document.querySelector('.add-player-btn');
+            if (addButton) {
+                if (currentCount >= totalPlayersAllowed) {
+                    addButton.disabled = true;
+                    addButton.textContent = 'Limit Reached';
+                    addButton.style.opacity = '0.6';
+                } else {
+                    addButton.disabled = false;
+                    addButton.innerHTML = '<i class="fas fa-plus"></i> Add Player';
+                    addButton.style.opacity = '1';
+                }
+            }
+            
+            // Enable/disable generate teams button
+            const generateButton = document.getElementById('generateTeamsBtn');
+            if (generateButton) {
+                if (currentCount === totalPlayersAllowed) {
+                    generateButton.disabled = false;
+                    generateButton.style.opacity = '1';
+                } else {
+                    generateButton.disabled = true;
+                    generateButton.style.opacity = '0.6';
+                }
+            }
+        }
+
+                 // Go to specific step
+         function goToStep(step) {
+             document.querySelectorAll('.step-content').forEach(content => {
+                 content.classList.add('hidden');
+             });
+             
+             const targetStep = document.getElementById(`step${step}`);
+             if (targetStep) {
+                 targetStep.classList.remove('hidden');
+             }
+             
+             currentStep = step;
+         }
+
+        // Generate player navigation with card-based layout
+        function generatePlayerNavigation() {
+            const playerDots = document.getElementById('playerDots');
+            
+            // Clear existing dots
+            playerDots.innerHTML = '';
+            
+            // Generate player dots
+            players.forEach((player, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'player-dot';
+                dot.setAttribute('data-player-index', index);
+                
+                // Set status classes
+                if (player.name) {
+                    dot.classList.add('completed');
+                } else {
+                    dot.classList.add('pending');
+                }
+                
+                // Set as active if it's the first player
+                if (index === 0) {
+                    dot.classList.add('active');
+                }
+                
+                dot.textContent = index + 1;
+                dot.onclick = () => selectPlayer(index);
+                
+                playerDots.appendChild(dot);
+            });
+            
+            // Load first player by default
+            if (players.length > 0) {
+                loadPlayerData(0);
+            }
+        }
+
+        // Save player data
+        function savePlayer(index) {
+            const card = document.querySelector(`[data-player-index="${index}"]`);
+            if (!card) return;
+            
+            const nameInput = card.querySelector('.player-name-input');
+            const levelSelect = card.querySelector('.player-level-select');
+            const positionSelect = card.querySelector('.player-position-select');
+            
+            const playerName = nameInput.value.trim();
+            if (!playerName) {
+                alert('Please enter a player name');
+                nameInput.focus();
+                return;
+            }
+            
+            // Save player data
+            players[index] = {
+                id: index,
+                name: playerName,
+                level: parseFloat(levelSelect.value),
+                position: positionSelect.value,
+                attributes: players[index].attributes || []
+            };
+            
+            // Update card status and UI
+            updateCardStatus(card, players[index]);
+            updatePlayerTitle(card, players[index]);
+            
+            // Check if all players are configured
+            checkAllPlayersConfigured();
+            
+            // Show success feedback
+            showSaveFeedback(card, true);
+        }
+
+        // Reset player data
+        function resetPlayer(index) {
+            const card = document.querySelector(`[data-player-index="${index}"]`);
+            if (!card) return;
+            
+                const player = players[index];
+            const nameInput = card.querySelector('.player-name-input');
+            const levelSelect = card.querySelector('.player-level-select');
+            const positionSelect = card.querySelector('.player-position-select');
+            
+            // Reset to original values
+            nameInput.value = player.name || '';
+            levelSelect.value = player.level || 3;
+            positionSelect.value = player.position || 'hibrido';
+            
+            // Update card status
+            updateCardStatus(card, player);
+            updatePlayerTitle(card, player);
+            
+            // Show reset feedback
+            showSaveFeedback(card, false);
+        }
+
+        // Save inline edit
+        function saveInlineEdit(index) {
+            const row = document.querySelector(`[data-player-index="${index}"]`);
+            if (!row) return;
+            
+            const nameInput = row.querySelector('.player-name-input');
+            const levelSelect = row.querySelector('.player-level-select');
+            const positionSelect = row.querySelector('.player-position-select');
+            
+            const playerName = nameInput.value.trim();
+            if (!playerName) {
+                alert('Please enter a player name');
+                return;
+            }
+
+            // Save player data
+            players[index] = {
+                id: index,
+                name: playerName,
+                level: parseFloat(levelSelect.value),
+                position: positionSelect.value,
+                attributes: players[index].attributes || []
+            };
+            
+            // Exit edit mode
+            exitInlineEdit(index);
+            
+            // Update navigation
+            updatePlayerNavigation();
+
+            // Check if all players are configured
+            checkAllPlayersConfigured();
+        }
+
+        // Cancel inline edit
+        function cancelInlineEdit(index) {
+            const row = document.querySelector(`[data-player-index="${index}"]`);
+            if (!row) return;
+            
+            // Reset to original values
+            const player = players[index];
+            const nameInput = row.querySelector('.player-name-input');
+            const levelSelect = row.querySelector('.player-level-select');
+            const positionSelect = row.querySelector('.player-position-select');
+            
+            if (nameInput) nameInput.value = player.name || '';
+            if (levelSelect) levelSelect.value = player.level || 3;
+            if (positionSelect) positionSelect.value = player.position || 'hibrido';
+            
+            // Exit edit mode
+            exitInlineEdit(index);
+        }
+
+        // Update card status based on player data
+        function updateCardStatus(card, player) {
+            card.classList.remove('completed', 'pending', 'editing');
+            
+            if (player.name && player.name.trim()) {
+                card.classList.add('completed');
+            } else {
+                card.classList.add('pending');
+            }
+        }
+
+        // Update player title in card
+        function updatePlayerTitle(card, player) {
+            const titleElement = card.querySelector('.player-title h4');
+            const statusElement = card.querySelector('.player-title small');
+            
+            if (titleElement) {
+                titleElement.textContent = player.name || `Player ${player.id + 1}`;
+            }
+            
+            if (statusElement) {
+                const status = player.name ? 'Complete' : 'Pending';
+                statusElement.textContent = status;
+            }
+        }
+
+        // Show save/reset feedback
+        function showSaveFeedback(card, isSave) {
+            const originalBackground = card.style.background;
+            const originalTransform = card.style.transform;
+            
+            if (isSave) {
+                card.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)';
+                card.style.transform = 'scale(1.02)';
+            } else {
+                card.style.background = 'linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)';
+            }
+            
+            setTimeout(() => {
+                card.style.background = originalBackground;
+                card.style.transform = originalTransform;
+            }, 500);
+        }
+
+        // Step-by-step player configuration functions
+
+        // Select a player to configure
+        function selectPlayer(index) {
+            // Remove active class from all dots
+            document.querySelectorAll('.player-dot').forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            // Add active class to selected dot
+            const selectedDot = document.querySelector(`[data-player-index="${index}"]`);
+            if (selectedDot) {
+                selectedDot.classList.add('active');
+            }
+            
+            // Update current player index
+            currentPlayerIndex = index;
+            
+            // Load player data into form
+            loadPlayerData(index);
+        }
+
+        // Load player data into the configuration form
+        function loadPlayerData(index) {
+            const player = players[index];
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubtitle = document.getElementById('modalSubtitle');
+            const nameInput = document.getElementById('playerName');
+            const levelSelect = document.getElementById('playerLevel');
+            const positionSelect = document.getElementById('playerPosition');
+            const attributeSelect = document.getElementById('playerAttribute');
+            
+            // Update modal title and subtitle
+            modalTitle.textContent = `Player ${index + 1}`;
+            modalSubtitle.textContent = player.name ? `Editing ${player.name}` : 'Fill in the player\'s details below';
+            
+            // Set form values
+            nameInput.value = player.name || '';
+            levelSelect.value = player.level || '';
+            positionSelect.value = player.position || '';
+            attributeSelect.value = player.attribute || '';
+            
+            // Update attribute details
+            updateAttributeDetails(player.attribute);
+            
+            // Update navigation buttons
+            updateNavigationButtons();
+        }
+
+        // Update attribute details display
+        function updateAttributeDetails(attributeType) {
+            const attributesGrid = document.getElementById('attributesGrid');
+            if (!attributeType) {
+                attributesGrid.innerHTML = '<p style="text-align: center; color: #666;">Select an attribute to see details</p>';
+                return;
+            }
+            
+            const attributeData = {
+                malabarista: { name: 'Malabarista', desc: 'Dribbler, flashy, good shot', icon: 'assets/images/malabaristaicon.png' },
+                muralha: { name: 'A Muralha', desc: 'Strong marking, excellent defense', icon: 'assets/images/muralhaicon.png' },
+                sweeper: { name: 'Sweeper', desc: 'Versatile goalkeeper + field', icon: 'assets/images/sweepericon.png' },
+                luva: { name: 'Luva D\'or', desc: 'Excellent natural goalkeeper', icon: 'assets/images/luvadoricon.png' },
+                sr90: { name: 'Sr. 90 Minutos', desc: 'Complete, creative, hard worker', icon: 'assets/images/sr90minutos.png' },
+                arquiteto: { name: 'O Arquiteto', desc: 'Great pass, controls rhythm', icon: 'assets/images/arquitetoicon.png' },
+                matador: { name: 'El Matador', desc: 'Elite finisher, low defense', icon: 'assets/images/elmatadoricon.png' }
+            };
+            
+            const selectedAttr = attributeData[attributeType];
+            if (selectedAttr) {
+                attributesGrid.innerHTML = `
+                    <div class="attribute-btn selected">
+                        <img src="${selectedAttr.icon}" alt="${selectedAttr.name}" class="attribute-icon">
+                        <div class="attribute-content">
+                            <span>${selectedAttr.name}</span>
+                            <small>${selectedAttr.desc}</small>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Update navigation buttons state
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevPlayerBtn');
+            const nextBtn = document.getElementById('nextPlayerBtn');
+            
+            prevBtn.disabled = currentPlayerIndex === 0;
+            nextBtn.disabled = currentPlayerIndex === players.length - 1;
+        }
+
+        // Navigate to previous player
+        function previousPlayer() {
+            if (currentPlayerIndex > 0) {
+                selectPlayer(currentPlayerIndex - 1);
+            }
+        }
+
+        // Navigate to next player
+        function nextPlayer() {
+            if (currentPlayerIndex < players.length - 1) {
+                selectPlayer(currentPlayerIndex + 1);
+            }
+        }
+
+        // Generate balanced teams
+        function generateTeams() {
+            
+            const totalPlayers = players.length;
+            const numTeams = selectedTeams;
+            const playersPerTeam = Math.floor(totalPlayers / numTeams);
+            const extraPlayers = totalPlayers % numTeams;
+            
+            // Create teams array
+            const teams = [];
+            for (let i = 0; i < numTeams; i++) {
+                teams.push({
+                    name: `Team ${i + 1}`,
+                    players: [],
+                    totalLevel: 0,
+                    positions: {
+                        goalkeeper: 0,
+                        defender: 0,
+                        attacker: 0,
+                        hybrid: 0
+                    }
+                });
+            }
+            
+            // Sort players by level (descending) for better distribution
+            const sortedPlayers = [...players].sort((a, b) => {
+                const levelA = parseInt(a.level.replace(/[^0-9]/g, ''));
+                const levelB = parseInt(b.level.replace(/[^0-9]/g, ''));
+                return levelB - levelA;
+            });
+            
+            // Distribute players to teams using round-robin for balance
+            sortedPlayers.forEach((player, index) => {
+                const teamIndex = index % numTeams;
+                teams[teamIndex].players.push(player);
+                
+                // Calculate team level
+                const playerLevel = parseInt(player.level.replace(/[^0-9]/g, ''));
+                teams[teamIndex].totalLevel += playerLevel;
+                
+                // Count positions
+                teams[teamIndex].positions[player.position]++;
+            });
+            
+            // Save teams and players data to localStorage
+            localStorage.setItem('generatedTeams', JSON.stringify(teams));
+            localStorage.setItem('players', JSON.stringify(players));
+            
+            // Display teams and go to step 4
+            displayTeams(teams);
+            goToStep(4);
+        }
+        
+        // Display generated teams
+        function displayTeams(teams) {
+            const teamsGrid = document.getElementById('teamsGrid');
+            teamsGrid.innerHTML = '';
+            
+            teams.forEach((team, index) => {
+                const teamCard = document.createElement('div');
+                teamCard.className = 'team-card';
+                
+                // Calculate average level
+                const avgLevel = (team.totalLevel / team.players.length).toFixed(1);
+                
+                teamCard.innerHTML = `
+                    <div class="team-header">
+                        <h3 class="team-name">${team.name}</h3>
+                        <div class="team-info">
+                            <span class="team-players-count">${team.players.length} players</span>
+                            <span class="team-avg-level">Avg: ${avgLevel}</span>
+                        </div>
+                    </div>
+                    <div class="team-players">
+                        ${team.players.map((player, playerIndex) => `
+                            <div class="player-item">
+                                <div class="player-info">
+                                    <div class="player-number">${String.fromCharCode(65 + playerIndex)}</div>
+                                    <div class="player-details">
+                                        <div class="player-name">${player.name}</div>
+                                        <div class="player-meta">${player.level} • ${player.position}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                teamsGrid.appendChild(teamCard);
+            });
+            
+            // Update stats
+            updateTeamStats(teams);
+        }
+
+        // Update team statistics
+        function updateTeamStats(teams) {
+            const totalPlayers = teams.reduce((sum, team) => sum + team.players.length, 0);
+            const teamsCount = teams.length;
+            
+            // Calculate balance score
+            const teamLevels = teams.map(team => team.totalLevel);
+            const avgLevel = teamLevels.reduce((sum, level) => sum + level, 0) / teamLevels.length;
+            const maxDiff = Math.max(...teamLevels) - Math.min(...teamLevels);
+            const balanceScore = Math.max(0, 100 - (maxDiff / avgLevel * 100));
+            
+            document.getElementById('totalPlayersCount').textContent = totalPlayers;
+            document.getElementById('teamsCount').textContent = teamsCount;
+            document.getElementById('balanceScore').textContent = `${balanceScore.toFixed(0)}%`;
+        }
+        
+        // Regenerate teams with different algorithm
+        function regenerateTeams() {
+            generateTeams();
+        }
+
+        // Edit teams functionality
+        function editTeams() {
+            // Go back to step 3 to edit players
+            goToStep(3);
+        }
+
+        // Remove player from team
+        function removePlayer(teamIndex, playerIndex) {
+            if (confirm('Remove this player from the team?')) {
+                // Get current teams from localStorage
+                const savedTeams = JSON.parse(localStorage.getItem('generatedTeams') || '[]');
+                
+                if (savedTeams[teamIndex] && savedTeams[teamIndex].players[playerIndex]) {
+                    // Remove player
+                    savedTeams[teamIndex].players.splice(playerIndex, 1);
+                    
+                    // Recalculate team stats
+                    savedTeams[teamIndex].totalLevel = savedTeams[teamIndex].players.reduce((sum, player) => {
+                        return sum + parseInt(player.level.replace(/[^0-9]/g, ''));
+                    }, 0);
+                    
+                    // Reset position counts
+                    savedTeams[teamIndex].positions = {
+                        goalkeeper: 0,
+                        defender: 0,
+                        attacker: 0,
+                        hybrid: 0
+                    };
+                    
+                    // Recalculate positions
+                    savedTeams[teamIndex].players.forEach(player => {
+                        savedTeams[teamIndex].positions[player.position]++;
+                    });
+                    
+                    // Save updated teams
+                    localStorage.setItem('generatedTeams', JSON.stringify(savedTeams));
+                    
+                    // Redisplay teams
+                    displayTeams(savedTeams);
+                }
+            }
+        }
+
+        // Save teams functionality
+        function saveTeams() {
+            const savedTeams = JSON.parse(localStorage.getItem('generatedTeams') || '[]');
+            const savedPlayers = JSON.parse(localStorage.getItem('players') || '[]');
+            
+            // Create a saved team entry
+            const savedTeamEntry = {
+                id: Date.now().toString(),
+                name: `Teams - ${new Date().toLocaleDateString()}`,
+                teams: savedTeams,
+                players: savedPlayers,
+                createdAt: new Date().toISOString(),
+                totalPlayers: savedPlayers.length
+            };
+            
+            // Get existing saved teams
+            const existingSavedTeams = JSON.parse(localStorage.getItem('savedTeams') || '[]');
+            existingSavedTeams.push(savedTeamEntry);
+            
+            // Save to localStorage
+            localStorage.setItem('savedTeams', JSON.stringify(existingSavedTeams));
+            
+            // Show success message
+            alert('Teams saved successfully! You can access them from the dashboard.');
+        }
+
+        // Save player data from form
+        function savePlayerData() {
+            const nameInput = document.getElementById('playerName');
+            const levelSelect = document.getElementById('playerLevel');
+            const positionSelect = document.getElementById('playerPosition');
+            const attributeSelect = document.getElementById('playerAttribute');
+            
+            const playerName = nameInput.value.trim();
+            if (!playerName) {
+                alert('Please enter a player name');
+                return;
+            }
+            
+            if (!levelSelect.value) {
+                alert('Please select a level');
+                return;
+            }
+            
+            if (!positionSelect.value) {
+                alert('Please select a position');
+                return;
+            }
+            
+            if (!attributeSelect.value) {
+                alert('Please select an attribute');
+                return;
+            }
+            
+            // Save player data
+            players[currentPlayerIndex] = {
+                id: currentPlayerIndex,
+                name: playerName,
+                level: levelSelect.value,
+                position: positionSelect.value,
+                attribute: attributeSelect.value,
+                attributes: [attributeSelect.value]
+            };
+            
+            // Update dot status
+            updateDotStatus(currentPlayerIndex, true);
+            
+            // Check if all players are configured
+            checkAllPlayersConfigured();
+            
+            // Show success message
+            showSaveSuccess();
+        }
+
+        // Update dot status
+        function updateDotStatus(index, isCompleted) {
+            const dot = document.querySelector(`[data-player-index="${index}"]`);
+            if (dot) {
+                dot.classList.remove('pending', 'completed');
+                if (isCompleted) {
+                    dot.classList.add('completed');
+                } else {
+                    dot.classList.add('pending');
+                }
+            }
+        }
+
+        // Show save success feedback
+        function showSaveSuccess() {
+            const modal = document.getElementById('playerConfigModal');
+            modal.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)';
+            modal.style.borderColor = '#22c55e';
+            
+            setTimeout(() => {
+                modal.style.background = '';
+                modal.style.borderColor = '';
+            }, 1000);
+        }
+
+        // Update player navigation to show completed players
+        function updatePlayerNavigation() {
+            document.querySelectorAll('.player-card').forEach((card, index) => {
+                const player = players[index];
+                updateCardStatus(card, player);
+                updatePlayerTitle(card, player);
+            });
+        }
+
+        // Check if all players are configured
+        function checkAllPlayersConfigured() {
+            const allConfigured = players.every(player => player.name && player.name.trim());
+            if (allConfigured) {
+                document.getElementById('generateSection').classList.remove('hidden');
+            }
+        }
+
+                 // Generate final teams
+         function generateFinalTeams() {
+             // Simple team generation algorithm
+             const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
+             const teams = [];
+             
+             for (let i = 0; i < selectedTeams; i++) {
+                 const startIndex = i * selectedPlayersPerTeam;
+                 const endIndex = startIndex + selectedPlayersPerTeam;
+                 teams.push(shuffledPlayers.slice(startIndex, endIndex));
+             }
+ 
+             displayTeams(teams);
+             goToStep(4);
+         }
+
+
+
+        // Display team statistics
+        function displayTeamStats(teams) {
+            const teamsStats = document.getElementById('teamsStats');
+            teamsStats.innerHTML = '';
+            
+            const statsTitle = document.createElement('div');
+            statsTitle.className = 'stats-title';
+            statsTitle.textContent = 'Team Statistics';
+            
+            const statsGrid = document.createElement('div');
+            statsGrid.className = 'stats-grid';
+            
+            teams.forEach((team, index) => {
+                const totalLevel = team.reduce((sum, player) => sum + player.level, 0);
+                const avgLevel = (totalLevel / team.length).toFixed(1);
+                
+                const statItem = document.createElement('div');
+                statItem.className = 'stat-item';
+                statItem.innerHTML = `
+                    <div class="stat-number">${avgLevel}</div>
+                    <div class="stat-label">Team ${index + 1} Avg</div>
+                `;
+                statsGrid.appendChild(statItem);
+            });
+            
+            teamsStats.appendChild(statsTitle);
+            teamsStats.appendChild(statsGrid);
+        }
+
+                 // Regenerate teams
+         function regenerateTeams() {
+             const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
+             const teams = [];
+             
+             for (let i = 0; i < selectedTeams; i++) {
+                 const startIndex = i * selectedPlayersPerTeam;
+                 const endIndex = startIndex + selectedPlayersPerTeam;
+                 teams.push(shuffledPlayers.slice(startIndex, endIndex));
+             }
+ 
+             displayTeams(teams);
+         }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup is already handled in the main initialization
+            
+            // Add form submission event listener
+            const playerConfigForm = document.getElementById('playerConfigForm');
+            if (playerConfigForm) {
+                playerConfigForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    savePlayerData();
+                });
+            }
+        });
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html> 

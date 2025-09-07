@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Generator Test - NiteRun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .team-generator-container {
+            min-height: 100vh;
+            background: var(--primary-color);
+            padding: 3rem;
+        }
+
+        .team-generator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 1.5rem 0;
+            position: relative;
+        }
+
+        .header-left {
+            width: 120px;
+        }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header-right {
+            width: 120px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .settings-btn {
+            background: var(--white);
+            border: 3px solid transparent;
+            color: var(--primary-color);
+            padding: 0.8rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+        }
+
+        .settings-btn:hover {
+            transform: scale(0.95);
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(2000%) hue-rotate(220deg) brightness(100%) contrast(100%);
+        }
+
+        .team-generator-logo {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(2000%) hue-rotate(220deg) brightness(100%) contrast(100%);
+        }
+
+        .logout-btn {
+            background: var(--white);
+            border: 3px solid transparent;
+            color: var(--primary-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            transform: scale(0.95);
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn i {
+            font-size: 1rem;
+        }
+
+        .team-generator-main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Step Content Styles */
+        .step-content {
+            background: var(--cream);
+            padding: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border-radius: 0;
+        }
+
+        .step-content.hidden {
+            display: none;
+        }
+
+        /* Teams Results Container */
+        .teams-results-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .teams-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .teams-title {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .teams-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Quick Stats */
+        .teams-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: rgba(0, 109, 255, 0.05);
+            border: 2px solid rgba(0, 109, 255, 0.1);
+            border-radius: 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Teams Grid */
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .team-card {
+            background: var(--cream);
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+                 .team-header {
+             text-align: center;
+             margin-bottom: 1.5rem;
+             padding-bottom: 1rem;
+             border-bottom: 1px solid rgba(0, 109, 255, 0.1);
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+         }
+
+        .team-name {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .team-info {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .team-players-count, .team-avg-level {
+            font-weight: 600;
+        }
+
+        .team-players {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .player-item {
+            background: white;
+            border: 1px solid rgba(0, 109, 255, 0.2);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .player-number {
+            background: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .player-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .player-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .player-meta {
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .teams-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: 2px solid transparent;
+            padding: 1rem 2rem;
+            border-radius: 0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background: var(--cream);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.3);
+        }
+
+        .edit-teams-btn {
+            background: var(--accent-color);
+        }
+
+        .edit-teams-btn:hover {
+            background: var(--cream);
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .regenerate-btn {
+            background: #28a745;
+        }
+
+        .regenerate-btn:hover {
+            background: var(--cream);
+            color: #28a745;
+            border: 2px solid #28a745;
+        }
+
+        .save-teams-btn {
+            background: #6c757d;
+        }
+
+        .save-teams-btn:hover {
+            background: var(--cream);
+            color: #6c757d;
+            border: 2px solid #6c757d;
+        }
+
+        .back-btn {
+            background: #dc3545;
+        }
+
+        .back-btn:hover {
+            background: var(--cream);
+            color: #dc3545;
+            border: 2px solid #dc3545;
+        }
+
+        /* Team Download Button */
+        .team-download-btn {
+            background: var(--accent-color);
+            color: white;
+            border: 2px solid transparent;
+            padding: 0.8rem 1rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .team-download-btn:hover {
+            background: var(--cream);
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Tablet Responsive */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .teams-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .team-generator-container {
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+
+            .team-generator-header {
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            .header-left, .header-right {
+                width: 100px;
+            }
+            
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+            }
+
+            .step-content {
+                padding: 1.5rem;
+            }
+
+            .teams-results-container {
+                padding: 1rem;
+            }
+
+            .teams-title {
+                font-size: 2rem;
+            }
+
+            .teams-stats {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.6rem;
+            }
+
+            .teams-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                max-width: none;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .team-card {
+                padding: 1.2rem;
+                width: 100%;
+            }
+
+            .team-name {
+                font-size: 1.5rem;
+                text-align: center;
+                width: 100%;
+            }
+
+            .team-info {
+                display: none;
+            }
+
+            .teams-actions {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .action-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .player-item {
+                padding: 1.2rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .player-info {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .team-generator-container {
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+
+            .header-left, .header-right {
+                width: 80px;
+            }
+            
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .step-content {
+                padding: 1.5rem;
+            }
+
+            .teams-results-container {
+                padding: 1rem;
+            }
+
+            .teams-title {
+                font-size: 1.8rem;
+            }
+
+            .teams-stats {
+                padding: 0.8rem;
+            }
+
+            .stat-number {
+                font-size: 1.4rem;
+            }
+
+            .team-card {
+                padding: 1rem;
+                width: 100%;
+            }
+
+            .team-name {
+                font-size: 1.3rem;
+                text-align: center;
+                width: 100%;
+            }
+
+            .player-item {
+                padding: 0.8rem;
+            }
+
+            .player-info {
+                gap: 0.8rem;
+            }
+
+            .player-number {
+                width: 25px;
+                height: 25px;
+                font-size: 0.8rem;
+            }
+
+            .player-name {
+                font-size: 0.9rem;
+            }
+
+            .player-meta {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="team-generator-container">
+        <div class="team-generator-header">
+            <div class="header-left">
+                <button class="settings-btn" onclick="window.location.href='dashboard.html'">
+                    <img src="assets/images/arrowicon.png" alt="Back" class="settings-icon">
+                </button>
+            </div>
+            <div class="header-center">
+                <img src="assets/images/logo png.png" alt="NiteRun" class="team-generator-logo">
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="alert('Logout functionality')">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="team-generator-main">
+            <!-- Step 4: Generated Teams -->
+            <div class="step-content" id="step4">
+                <div class="teams-results-container">
+                    <div class="teams-header">
+                        <h2 class="teams-title">Generated Teams</h2>
+                        <p class="teams-subtitle">Your balanced teams are ready to play!</p>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="teams-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">15</span>
+                            <span class="stat-label">Players</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">Teams</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">92%</span>
+                            <span class="stat-label">Balance</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Teams Display -->
+                    <div class="teams-grid">
+                        <!-- Team 1 -->
+                        <div class="team-card" id="team-alpha">
+                            <div class="team-header">
+                                                                 <h3 class="team-name">Team A</h3>
+                                <div class="team-info">
+                                    <span class="team-players-count">5 players</span>
+                                    <span class="team-avg-level">Avg: 7.2</span>
+                                </div>
+                            </div>
+                            <div class="team-players">
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">João Silva</div>
+                                            <div class="player-meta">8 • Forward</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Pedro Santos</div>
+                                            <div class="player-meta">7 • Midfielder</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Carlos Oliveira</div>
+                                            <div class="player-meta">6 • Defender</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Miguel Costa</div>
+                                            <div class="player-meta">8 • Goalkeeper</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Rafael Lima</div>
+                                            <div class="player-meta">7 • Midfielder</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                                         <button class="team-download-btn" onclick="downloadTeamAsJPEG('team-alpha', 'Team A')">
+                                <i class="fas fa-download"></i>
+                                <span>Download Team</span>
+                            </button>
+                        </div>
+
+                        <!-- Team 2 -->
+                        <div class="team-card" id="team-beta">
+                            <div class="team-header">
+                                                                 <h3 class="team-name">Team B</h3>
+                                <div class="team-info">
+                                    <span class="team-players-count">5 players</span>
+                                    <span class="team-avg-level">Avg: 7.0</span>
+                                </div>
+                            </div>
+                            <div class="team-players">
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Lucas Rodrigues</div>
+                                            <div class="player-meta">7 • Forward</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Gabriel Alves</div>
+                                            <div class="player-meta">8 • Midfielder</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Bruno Pereira</div>
+                                            <div class="player-meta">6 • Defender</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Diego Martins</div>
+                                            <div class="player-meta">7 • Goalkeeper</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Felipe Nunes</div>
+                                            <div class="player-meta">7 • Midfielder</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                                         <button class="team-download-btn" onclick="downloadTeamAsJPEG('team-beta', 'Team B')">
+                                <i class="fas fa-download"></i>
+                                <span>Download Team</span>
+                            </button>
+                        </div>
+
+                        <!-- Team 3 -->
+                        <div class="team-card" id="team-gamma">
+                            <div class="team-header">
+                                                                 <h3 class="team-name">Team C</h3>
+                                <div class="team-info">
+                                    <span class="team-players-count">5 players</span>
+                                    <span class="team-avg-level">Avg: 7.4</span>
+                                </div>
+                            </div>
+                            <div class="team-players">
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Thiago Rocha</div>
+                                            <div class="player-meta">7 • Forward</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">André Ferreira</div>
+                                            <div class="player-meta">8 • Midfielder</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Rodrigo Silva</div>
+                                            <div class="player-meta">7 • Defender</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Marcos Santos</div>
+                                            <div class="player-meta">8 • Goalkeeper</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="player-item">
+                                    <div class="player-info">
+                                        <div class="player-details">
+                                            <div class="player-name">Eduardo Costa</div>
+                                            <div class="player-meta">7 • Midfielder</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                                         <button class="team-download-btn" onclick="downloadTeamAsJPEG('team-gamma', 'Team C')">
+                                <i class="fas fa-download"></i>
+                                <span>Download Team</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="teams-actions">
+                        <button class="action-btn edit-teams-btn">
+                            <i class="fas fa-edit"></i>
+                            <span>Edit Teams</span>
+                        </button>
+                        <button class="action-btn regenerate-btn">
+                            <i class="fas fa-redo"></i>
+                            <span>Regenerate</span>
+                        </button>
+                        <button class="action-btn save-teams-btn">
+                            <i class="fas fa-save"></i>
+                            <span>Save Teams</span>
+                        </button>
+                        <button class="action-btn back-btn">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Back to Players</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // Add some interactive functionality for demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for action buttons
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    alert(`${action} functionality would be implemented here`);
+                });
+            });
+
+            // Add hover effects to team cards
+            const teamCards = document.querySelectorAll('.team-card');
+            teamCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 8px 25px rgba(0, 109, 255, 0.2)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+                });
+            });
+        });
+
+        // Function to download team as JPEG
+        async function downloadTeamAsJPEG(teamId, teamName) {
+            try {
+                const teamElement = document.getElementById(teamId);
+                if (!teamElement) {
+                    alert('Team not found!');
+                    return;
+                }
+
+                // Show loading state
+                const downloadBtn = teamElement.querySelector('.team-download-btn');
+                const originalContent = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                downloadBtn.disabled = true;
+
+                // Create canvas from team element
+                const canvas = await html2canvas(teamElement, {
+                    backgroundColor: '#f8f6f0', // cream background
+                    scale: 2, // Higher quality
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    width: teamElement.offsetWidth,
+                    height: teamElement.offsetHeight
+                });
+
+                // Convert to JPEG and download
+                const link = document.createElement('a');
+                link.download = `${teamName.replace(/\s+/g, '_')}_Team.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Reset button state
+                downloadBtn.innerHTML = originalContent;
+                downloadBtn.disabled = false;
+
+                // Show success message
+                showDownloadSuccess(teamName);
+
+            } catch (error) {
+                console.error('Error generating JPEG:', error);
+                alert('Error generating JPEG. Please try again.');
+                
+                // Reset button state
+                const downloadBtn = teamElement.querySelector('.team-download-btn');
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                downloadBtn.disabled = false;
+            }
+        }
+
+        // Show download success message
+        function showDownloadSuccess(teamName) {
+            // Create success notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                z-index: 10000;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                ${teamName} downloaded successfully!
+            `;
+
+            // Add animation styles
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(notification);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                    if (style.parentNode) {
+                        style.parentNode.removeChild(style);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

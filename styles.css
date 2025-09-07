@@ -3035,7 +3035,7 @@ input.error:focus {
   }
 
   .config-header h2 {
-    font-size: 2rem;
+    font-size: 1.8rem !important;
     margin-bottom: 1.5rem;
   }
 
@@ -3357,7 +3357,7 @@ input.error:focus {
   }
 
   .config-header h2 {
-    font-size: 1.6rem;
+    font-size: 1.4rem !important;
   }
 
   .player-counter {
@@ -3532,7 +3532,7 @@ input.error:focus {
   }
 
   .config-header h2 {
-    font-size: 2rem;
+    font-size: 1.8rem !important;
     margin-bottom: 1.5rem;
     font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
   }
@@ -3780,9 +3780,78 @@ input.error:focus {
   }
 
   .config-header h2 {
-    font-size: 1.6rem;
+    font-size: 1.2rem !important;
     font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
   }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+  .config-header h2 {
+    font-size: 1.1rem !important;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Force mobile title size - maximum specificity */
+@media (max-width: 768px) {
+  #step2 .config-header h2 {
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  #step2 .config-header {
+    margin-bottom: 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #step2 .config-header h2 {
+    font-size: 1.8rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+  
+  #step2 .config-header {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media (max-width: 360px) {
+  #step2 .config-header h2 {
+    font-size: 1.6rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  #step2 .config-header {
+    margin-bottom: 0.8rem !important;
+  }
+}
+
+/* Consistent step title sizes on mobile */
+@media (max-width: 768px) {
+  .step-title,
+  .player-config-title,
+  .teams-title {
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .step-title,
+  .player-config-title,
+  .teams-title {
+    font-size: 1.8rem !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .step-title,
+  .player-config-title,
+  .teams-title {
+    font-size: 1.6rem !important;
+  }
+}
 
   .player-counter {
     font-size: 1rem;

@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - NiteRun</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#006dff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="NiteRun">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .profile-container {
+            min-height: 100vh;
+            background: var(--primary-color);
+            padding: 3rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 1.5rem 0;
+            position: relative;
+        }
+
+        .header-left {
+            width: 120px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-arrow {
+            width: auto;
+            height: auto;
+            max-width: 80px;
+            max-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: brightness(0) invert(1);
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .back-arrow {
+                max-width: 60px;
+                max-height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-arrow {
+                max-width: 50px;
+                max-height: 50px;
+            }
+        }
+
+        .back-arrow:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .profile-logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .header-right {
+            width: 120px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: var(--white);
+            border: 3px solid transparent;
+            color: var(--primary-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            transform: scale(0.95);
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn i {
+            font-size: 1rem;
+        }
+
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .settings-btn:hover {
+            transform: scale(0.95);
+        }
+
+        .settings-icon {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(2000%) hue-rotate(220deg) brightness(100%) contrast(100%);
+        }
+
+        .profile-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            margin-bottom: 0;
+        }
+
+        .profile-sidebar {
+            background: var(--cream);
+            border-radius: 0;
+            padding: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            margin-bottom: 0;
+            position: sticky;
+            top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-sidebar {
+                position: static;
+                top: auto;
+            }
+        }
+
+        .profile-avatar-large {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-photo-large {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .profile-username {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .profile-stats-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: transparent;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Main Content Area */
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .content-section {
+            background: var(--cream);
+            border-radius: 0;
+            padding: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--accent-color);
+        }
+
+        /* Personal Info Section */
+        .personal-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.75rem;
+            background: transparent;
+            border-radius: 0;
+            border: 1px solid rgba(0, 109, 255, 0.2);
+        }
+
+        /* Achievements Section */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .achievement-card {
+            background: transparent;
+            border: 1px solid rgba(0, 109, 255, 0.2);
+            border-radius: 0;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-desc {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        /* Recent Activity Section */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: transparent;
+            border-radius: 0;
+            border: 1px solid rgba(0, 109, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(0, 109, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        /* Edit Profile Button */
+        .edit-profile-btn {
+            background: #fffcef;
+            color: #006dff;
+            border: 2px solid #006dff;
+            padding: 1rem 2rem;
+            border-radius: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .edit-profile-btn:hover {
+            transform: scale(0.98);
+        }
+
+        .edit-profile-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer Styles */
+        .app-footer {
+            background: transparent;
+            border-top: 1px solid rgba(255, 252, 239, 0.05);
+            padding: 1.5rem 0 1rem 0;
+            margin-top: 4rem;
+            margin-bottom: 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .footer-brand-text {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--cream);
+            letter-spacing: 0.5px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .footer-brand-text:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            transition: color 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .footer-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-social {
+            display: flex;
+            align-items: center;
+        }
+        
+        .social-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .social-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .social-link i {
+            font-size: 0.9rem;
+        }
+        
+        .footer-copyright {
+            text-align: center;
+        }
+        
+        .footer-copyright p {
+            color: var(--cream);
+            font-size: 0.75rem;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .footer-copyright p:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+
+        .registered-tm {
+            font-size: 0.6em;
+            vertical-align: super;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-left: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+
+            .profile-header {
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            .header-left, .header-right {
+                width: 100px;
+            }
+            
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .settings-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .logout-btn {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                min-width: 50px;
+                justify-content: center;
+            }
+            
+            .logout-btn .logout-text {
+                display: none;
+            }
+            
+            .logout-btn i {
+                font-size: 1rem;
+                margin: 0;
+            }
+            
+            .profile-logo {
+                height: 80px;
+            }
+
+            .profile-main {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .profile-sidebar {
+                position: static;
+                top: auto;
+                z-index: auto;
+            }
+
+            .profile-avatar-large {
+                width: 100px;
+                height: 100px;
+            }
+
+            .avatar-photo-large {
+                width: 100px;
+                height: 100px;
+            }
+
+            .content-section {
+                padding: 2rem;
+            }
+
+            .personal-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .app-footer {
+                padding: 1rem 0 0.8rem 0;
+                margin-top: 3rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+                padding: 0 1rem;
+            }
+            
+            .footer-links {
+                gap: 1.5rem;
+            }
+            
+            .footer-brand {
+                justify-content: center;
+            }
+            
+            .footer-social {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-left, .header-right {
+                width: 80px;
+            }
+            
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .settings-icon {
+                width: 26px;
+                height: 26px;
+            }
+            
+            .logout-btn {
+                padding: 0.7rem;
+                font-size: 0.75rem;
+                min-width: 45px;
+            }
+            
+            .logout-btn i {
+                font-size: 0.9rem;
+            }
+            
+            .profile-logo {
+                height: 70px;
+            }
+
+            .profile-sidebar {
+                padding: 1.5rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .footer-content {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="header-left">
+                <button class="settings-btn" onclick="window.location.href='dashboard.html'">
+                    <img src="assets/images/arrowicon.png" alt="Back" class="settings-icon">
+                </button>
+            </div>
+            <div class="header-center">
+                <img src="assets/images/logo png.png" alt="NiteRun" class="profile-logo">
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span class="logout-text">Logout</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="profile-main">
+            <!-- Profile Sidebar -->
+            <div class="profile-sidebar">
+                <div class="profile-avatar-large">
+                    <div class="avatar-photo-large">
+                        <img src="assets/images/Imagem WhatsApp 2025-08-25 às 01.06.35_bb018055.jpg" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </div>
+                <h2 class="profile-name">Ruben Rosa</h2>
+                <p class="profile-username">@rubenrosa</p>
+                
+                <div class="profile-stats-summary">
+                    <div class="stat-item">
+                        <div class="stat-number" id="games-played">0</div>
+                        <div class="stat-label">Games</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="mvps">0</div>
+                        <div class="stat-label">MVP</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="wins">0</div>
+                        <div class="stat-label">Wins</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="losses">0</div>
+                        <div class="stat-label">Losses</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="profile-content">
+                <div class="content-section">
+                    <h3 class="section-title"><i class="fas fa-user"></i> Personal Info</h3>
+                    <div class="personal-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">Ruben Rosa</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Username</span>
+                            <span class="info-value">@rubenrosa</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">ruben.rosa@email.com</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone</span>
+                            <span class="info-value">+351 912 345 678</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">Lisboa, Portugal</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Member Since</span>
+                            <span class="info-value">January 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3 class="section-title"><i class="fas fa-trophy"></i> Achievements</h3>
+                    <div class="achievements-grid" id="achievements-grid">
+                        <div class="achievement-card" style="text-align: center; padding: 2rem;">
+                            <div class="achievement-icon" style="margin: 0 auto 1rem auto;"><i class="fas fa-trophy"></i></div>
+                            <h4 class="achievement-title">No achievements yet</h4>
+                            <p class="achievement-desc">Play games and earn badges to unlock achievements!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3 class="section-title"><i class="fas fa-history"></i> Recent Activity</h3>
+                    <div class="activity-list" id="activity-list">
+                        <div class="activity-item" style="text-align: center; padding: 2rem;">
+                            <div class="activity-icon" style="margin: 0 auto 1rem auto;"><i class="fas fa-futbol"></i></div>
+                            <div class="activity-content">
+                                <p class="activity-text" style="font-size: 1.1rem; margin-bottom: 0.5rem;">No recent activity</p>
+                                <p class="activity-time">Start playing games to see your activity here!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="edit-profile-btn">Edit Profile</button>
+            </div>
+
+            <!-- Footer -->
+            <footer class="app-footer">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <span class="footer-brand-text">NiteRun<sup class="registered-tm">®</sup></span>
+                    </div>
+                    <div class="footer-links">
+                        <a href="about.html" class="footer-link">About</a>
+                        <a href="support.html" class="footer-link">Support</a>
+                        <a href="privacy.html" class="footer-link">Privacy</a>
+                    </div>
+                    <div class="footer-social">
+                        <a href="https://instagram.com/niterun.app" target="_blank" class="social-link" title="Follow us on Instagram">
+                            Follow us on Instagram <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                    <div class="footer-copyright">
+                        <p>&copy; 2025 NiteRun<sup class="registered-tm">®</sup>. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoFoGuzuZHVys-bF02P1mrg6-NbjQj8pY",
+            authDomain: "niterun-sports-app.firebaseapp.com",
+            projectId: "niterun-sports-app",
+            storageBucket: "niterun-sports-app.firebasestorage.app",
+            messagingSenderId: "320354701270",
+            appId: "1:320354701270:web:53302cfe9a63112e95de77",
+            measurementId: "G-VXLNF0KB61"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Check if user is logged in
+        function checkAuth() {
+            const user = localStorage.getItem('user');
+            if (!user) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Load and display user profile data
+        function loadUserProfile() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                // Update profile photo
+                const profilePhoto = document.querySelector('.avatar-photo-large img');
+                if (profilePhoto && user.photoURL) {
+                    profilePhoto.src = user.photoURL;
+                    profilePhoto.alt = user.displayName + "'s Profile Photo";
+                }
+
+                // Update profile name
+                const profileName = document.querySelector('.profile-name');
+                if (profileName) {
+                    profileName.textContent = user.displayName || 'User';
+                }
+
+                // Update username (create from email if no display name)
+                const username = document.querySelector('.profile-username');
+                if (username) {
+                    const usernameText = user.displayName ? 
+                        '@' + user.displayName.toLowerCase().replace(/\s+/g, '') : 
+                        '@' + user.email.split('@')[0];
+                    username.textContent = usernameText;
+                }
+
+                // Update personal info
+                updatePersonalInfo(user);
+            }
+        }
+
+        // Update personal information section
+        function updatePersonalInfo(user) {
+            // Full Name
+            const fullNameElement = document.querySelector('.info-item:nth-child(1) .info-value');
+            if (fullNameElement) {
+                fullNameElement.textContent = user.displayName || 'Not provided';
+            }
+
+            // Username
+            const usernameElement = document.querySelector('.info-item:nth-child(2) .info-value');
+            if (usernameElement) {
+                const usernameText = user.displayName ? 
+                    '@' + user.displayName.toLowerCase().replace(/\s+/g, '') : 
+                    '@' + user.email.split('@')[0];
+                usernameElement.textContent = usernameText;
+            }
+
+            // Email
+            const emailElement = document.querySelector('.info-item:nth-child(3) .info-value');
+            if (emailElement) {
+                emailElement.textContent = user.email || 'Not provided';
+            }
+
+            // Member Since
+            const memberSinceElement = document.querySelector('.info-item:nth-child(6) .info-value');
+            if (memberSinceElement) {
+                const joinDate = new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long' 
+                });
+                memberSinceElement.textContent = joinDate;
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Firestore functions
+        async function loadUserStats(userId) {
+            try {
+                const userDoc = await db.collection("users").doc(userId).get();
+                if (userDoc.exists) {
+                    return userDoc.data();
+                } else {
+                    // Create new user stats if doesn't exist
+                    const newStats = {
+                        gamesPlayed: 0,
+                        wins: 0,
+                        losses: 0,
+                        mvps: 0,
+                        joinDate: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    await saveUserStats(userId, newStats);
+                    return newStats;
+                }
+            } catch (error) {
+                console.error("Error loading user stats:", error);
+                return {
+                    gamesPlayed: 0,
+                    wins: 0,
+                    losses: 0,
+                    mvps: 0,
+                    joinDate: new Date()
+                };
+            }
+        }
+
+        async function saveUserStats(userId, stats) {
+            try {
+                await db.collection("users").doc(userId).set({
+                    ...stats,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                console.log("User stats saved successfully");
+            } catch (error) {
+                console.error("Error saving user stats:", error);
+            }
+        }
+
+        // Update profile stats with real data
+        async function updateProfileStats() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                const stats = await loadUserStats(user.uid);
+                
+                // Update stats display
+                document.getElementById('games-played').textContent = stats.gamesPlayed || 0;
+                document.getElementById('wins').textContent = stats.wins || 0;
+                document.getElementById('losses').textContent = stats.losses || 0;
+                document.getElementById('mvps').textContent = stats.mvps || 0;
+                
+                console.log("Profile stats updated:", stats);
+            }
+        }
+
+        // Load profile data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth()) {
+                loadUserProfile();
+                updateProfileStats();
+            }
+        });
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

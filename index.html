@@ -3,112 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NiteRun</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>NiteRun - Football Team Management</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#006dff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="NiteRun">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            background: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background Pattern */
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 252, 239, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 252, 239, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 252, 239, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .auth-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .auth-logo {
+            height: 120px;
+            width: auto;
+            margin-bottom: 2.5rem;
+            filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.2));
+        }
+
+        .auth-subtitle {
+            font-size: 1rem;
+            color: rgba(255, 252, 239, 0.8);
+            margin-bottom: 2.5rem;
+            line-height: 1.4;
+            font-weight: 300;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .auth-buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-btn {
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            min-width: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .auth-btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--cream);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: var(--white);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-icon {
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        .auth-footer {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 2;
+        }
+
+        .footer-social-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 300;
+            font-family: 'Poppins', sans-serif;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        
+        .footer-social-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-social-link i {
+            font-size: 1rem;
+        }
+
+        /* Desktop Optimizations */
+        @media (min-width: 1200px) {
+            .auth-container {
+                padding: 2rem;
+            }
+            
+            .auth-logo {
+                height: 100px;
+                margin-bottom: 2rem;
+            }
+            
+            .auth-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 2rem;
+                max-width: 250px;
+            }
+            
+            .auth-btn {
+                padding: 0.8rem 1.8rem;
+                font-size: 0.95rem;
+                min-width: 130px;
+            }
+            
+            .btn-icon {
+                font-size: 0.95rem;
+            }
+            
+            .footer-social-link {
+                font-size: 0.9rem;
+            }
+            
+            .footer-social-link i {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 1rem;
+            }
+
+            .auth-logo {
+                height: 140px;
+                margin-bottom: 2rem;
+            }
+
+            .auth-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 3rem;
+            }
+
+            .auth-btn {
+                padding: 0.9rem 2.5rem;
+                font-size: 1rem;
+                min-width: 220px;
+            }
+
+            .auth-footer {
+                bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-subtitle {
+                font-size: 1rem;
+            }
+
+            .auth-btn {
+                min-width: 200px;
+                padding: 0.8rem 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Homepage -->
-        <div id="homepage" class="page active">
-            <header>
-                <div class="logo-container">
-                    <img src="assets/images/logo png.png" alt="NiteRun Logo" id="logo">
-                </div>
-                
-                <!-- User Authentication Section -->
-                <div class="user-section" id="userSection" style="display: none;">
-                    <div class="user-info">
-                        <img src="assets/images/profileicon.png" alt="Profile" class="user-avatar" id="userAvatar">
-                        <span class="user-name" id="userName">User</span>
-                    </div>
-                    <button class="logout-btn" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
-                    </button>
-                </div>
-                
-                <!-- Login Button (shown when not authenticated) -->
-                <div class="auth-buttons" id="authButtons">
-                    <button class="login-btn" onclick="window.location.href='login.html'">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Login
-                    </button>
-                    <button class="signup-btn" onclick="window.location.href='signup.html'">
-                        <i class="fas fa-user-plus"></i>
-                        Sign Up
-                    </button>
-                </div>
-            </header>
+    <div class="auth-container">
+        <!-- Main Content -->
+        <div class="auth-content">
+            <!-- Logo -->
+            <img src="assets/images/logo png.png" alt="NiteRun Logo" class="auth-logo">
             
-            <main class="homepage-main">
-                <div class="app-features">
-                    <div class="feature-card" onclick="navigateToFeature('team-generator.html')">
-                        <div class="feature-icon">
-                            <img src="assets/images/teamgeneratoricon.png" alt="Team Generator" class="feature-image">
-                        </div>
-                        <h3>Team Generator</h3>
-                        <p>Create balanced teams for any sport automatically</p>
-                    </div>
-                    
-                    <div class="feature-card" onclick="navigateToFeature('player-stats.html')">
-                        <div class="feature-icon">
-                            <img src="assets/images/playerstatsicon.png" alt="Player Stats" class="feature-image">
-                        </div>
-                        <h3>Player Stats</h3>
-                        <p>Track and manage player statistics</p>
-                    </div>
-                    
-                    <div class="feature-card" onclick="navigateToFeature('match-tracker.html')">
-                        <div class="feature-icon">
-                            <img src="assets/images/matchtrackericon.png" alt="Match Tracker" class="feature-image">
-                        </div>
-                        <h3>Match Tracker</h3>
-                        <p>Keep track of match results and scores</p>
-                    </div>
-                    
-                    <div class="feature-card" onclick="navigateToFeature('tournament.html')">
-                        <div class="feature-icon">
-                            <img src="assets/images/tournamentsicon.png" alt="Tournament" class="feature-image">
-                        </div>
-                        <h3>Tournament</h3>
-                        <p>Organize and manage tournaments</p>
-                    </div>
-                    
-                    <div class="feature-card" onclick="navigateToFeature('player-profiles.html')">
-                        <div class="feature-icon">
-                            <img src="assets/images/profileicon.png" alt="Player Profiles" class="feature-image">
-                        </div>
-                        <h3>Player Profiles</h3>
-                        <p>Manage detailed player information</p>
-                    </div>
-                    
-                    <div class="feature-card" onclick="navigateToFeature('dashboard.html')">
-                        <div class="feature-icon">
-                            <img src="assets/images/profileicon.png" alt="Dashboard" class="feature-image">
-                        </div>
-                        <h3>Dashboard</h3>
-                        <p>View your stats and recent activity</p>
-                    </div>
-                    
-                    <div class="feature-card" onclick="navigateToFeature('settings.html')">
-                        <div class="feature-icon">
-                            <img src="assets/images/settingsicon.png" alt="Settings" class="feature-image">
-                        </div>
-                        <h3>Settings</h3>
-                        <p>Customize app preferences</p>
-                    </div>
-                </div>
-            </main>
+            <!-- Subtitle -->
+            <p class="auth-subtitle">
+                Organize weekly team sports with smart tools.
+            </p>
+            
+            <!-- Action Buttons -->
+            <div class="auth-buttons">
+                <a href="login.html" class="auth-btn btn-primary">
+                    <i class="fas fa-sign-in-alt btn-icon"></i>
+                    Sign In
+                </a>
+                
+                <a href="signup.html" class="auth-btn btn-secondary">
+                    <i class="fas fa-user-plus btn-icon"></i>
+                    Join NiteRun
+                </a>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="auth-footer">
+            <a href="https://instagram.com/niterun.app" target="_blank" class="footer-social-link">
+                Follow us on Instagram <i class="fab fa-instagram"></i>
+            </a>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-
-    <script src="script.js"></script>
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

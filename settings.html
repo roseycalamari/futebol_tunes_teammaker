@@ -4,37 +4,1017 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - NiteRun</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .settings-container {
+            min-height: 100vh;
+            background: var(--primary-color);
+            padding: 3rem;
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 1.5rem 0;
+            position: relative;
+        }
+
+        .header-left {
+            width: 120px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-arrow {
+            width: auto;
+            height: auto;
+            max-width: 80px;
+            max-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: brightness(0) invert(1);
+            object-fit: contain;
+        }
+
+        .back-arrow:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .settings-logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .header-right {
+            width: 120px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: var(--white);
+            border: 3px solid transparent;
+            color: var(--primary-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            transform: scale(0.95);
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn i {
+            font-size: 1rem;
+        }
+
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .settings-btn:hover {
+            transform: scale(0.95);
+        }
+
+        .settings-icon {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(2000%) hue-rotate(220deg) brightness(100%) contrast(100%);
+        }
+
+        .settings-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+        }
+
+        .settings-sidebar {
+            background: var(--cream);
+            border-radius: 0;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .settings-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .settings-nav-item {
+            margin-bottom: 1rem;
+        }
+
+        .settings-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 0;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border: 2px solid transparent;
+        }
+
+        .settings-nav-link:hover,
+        .settings-nav-link.active {
+            background: var(--primary-light);
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .settings-nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .settings-content {
+            background: var(--cream);
+            border-radius: 0;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 109, 255, 0.1);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .setting-description {
+            color: rgba(0, 109, 255, 0.7);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .setting-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: rgba(0, 109, 255, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(25px);
+        }
+
+        .select-dropdown {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            background: white;
+            color: var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+        .select-dropdown:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .button-control {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .button-control:hover {
+            background: var(--primary-hover);
+            transform: scale(0.95);
+        }
+
+        .button-control.secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .button-control.secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .danger-zone {
+            border: 2px solid #ff4757;
+            border-radius: 0;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .danger-zone .section-title {
+            color: #ff4757;
+            border-bottom-color: #ff4757;
+        }
+
+        .danger-button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .danger-button:hover {
+            background: #ff3742;
+            transform: scale(0.95);
+        }
+
+        /* Footer Styles */
+        .app-footer {
+            background: transparent;
+            border-top: 1px solid rgba(255, 252, 239, 0.05);
+            padding: 1.5rem 0 1rem 0;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .footer-brand-text {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--cream);
+            letter-spacing: 0.5px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .footer-brand-text:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            transition: color 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .footer-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-social {
+            display: flex;
+            align-items: center;
+        }
+        
+        .social-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .social-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .social-link i {
+            font-size: 0.9rem;
+        }
+        
+        .footer-copyright {
+            text-align: center;
+        }
+        
+        .footer-copyright p {
+            color: var(--cream);
+            font-size: 0.75rem;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .footer-copyright p:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+
+        .registered-tm {
+            font-size: 0.6em;
+            vertical-align: super;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-left: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .settings-container {
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+
+            .settings-header {
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            .header-left, .header-right {
+                width: 100px;
+            }
+            
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .settings-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .logout-btn {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                min-width: 50px;
+                justify-content: center;
+            }
+            
+            .logout-btn .logout-text {
+                display: none;
+            }
+            
+            .logout-btn i {
+                font-size: 1rem;
+                margin: 0;
+            }
+            
+            .settings-logo {
+                height: 80px;
+            }
+
+            .settings-main {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .back-arrow {
+                max-width: 60px;
+                max-height: 60px;
+            }
+
+            .danger-zone {
+                padding: 1.2rem;
+                margin-top: 1.5rem;
+            }
+
+            .danger-zone .section-title {
+                font-size: 1.3rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .setting-item {
+                padding: 1.2rem 0;
+            }
+
+            .setting-label {
+                font-size: 0.95rem;
+            }
+
+            .setting-description {
+                font-size: 0.85rem;
+            }
+
+            .danger-button {
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .app-footer {
+                padding: 1rem 0 0.8rem 0;
+                margin-top: 3rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+                padding: 0 1rem;
+            }
+            
+            .footer-links {
+                gap: 1.5rem;
+            }
+            
+            .footer-brand {
+                justify-content: center;
+            }
+            
+            .footer-social {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-left, .header-right {
+                width: 80px;
+            }
+            
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .settings-icon {
+                width: 26px;
+                height: 26px;
+            }
+            
+            .logout-btn {
+                padding: 0.7rem;
+                font-size: 0.75rem;
+                min-width: 45px;
+            }
+            
+            .logout-btn i {
+                font-size: 0.9rem;
+            }
+            
+            .settings-logo {
+                height: 70px;
+            }
+
+            .back-arrow {
+                max-width: 50px;
+                max-height: 50px;
+            }
+
+            .danger-zone {
+                padding: 1rem;
+                margin-top: 1.2rem;
+            }
+
+            .danger-zone .section-title {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .setting-item {
+                padding: 1rem 0;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+
+            .setting-control {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .danger-button {
+                padding: 0.7rem 1rem;
+                font-size: 0.85rem;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .footer-content {
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="page active">
-            <div class="page-content">
-                <header class="page-header">
-                    <button class="back-to-home-btn" onclick="window.location.href='index.html'">
-                        <img src="assets/images/arrowicon.png" alt="Back to Home" class="back-arrow-icon">
-                    </button>
-                </header>
-                
-                <div class="page-logo-section">
-                    <div class="logo-container">
-                        <img src="assets/images/logo png.png" alt="NiteRun Logo" id="logo" class="page-main-logo">
-                    </div>
-                </div>
-                
-                <main>
-                    <div class="coming-soon">
-                        <img src="assets/images/settingsicon.png" alt="Settings" class="coming-soon-icon">
-                        <h2>Coming Soon</h2>
-                        <p>Settings feature is under development</p>
-                    </div>
-                </main>
+    <div class="settings-container">
+        <div class="settings-header">
+            <div class="header-left">
+                <button class="settings-btn" onclick="window.location.href='dashboard.html'">
+                    <img src="assets/images/arrowicon.png" alt="Back" class="settings-icon">
+                </button>
+            </div>
+            <div class="header-center">
+                <img src="assets/images/logo png.png" alt="NiteRun" class="settings-logo">
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span class="logout-text">Logout</span>
+                </button>
             </div>
         </div>
+
+        <div class="settings-main">
+            <!-- Settings Sidebar -->
+            <div class="settings-sidebar">
+                <nav class="settings-nav">
+                    <div class="settings-nav-item">
+                        <a href="#profile" class="settings-nav-link active" onclick="showSection('profile')">
+                            <i class="fas fa-user"></i>
+                            Profile
+                        </a>
+                    </div>
+                    <div class="settings-nav-item">
+                        <a href="#notifications" class="settings-nav-link" onclick="showSection('notifications')">
+                            <i class="fas fa-bell"></i>
+                            Notifications
+                        </a>
+                    </div>
+                    <div class="settings-nav-item">
+                        <a href="#privacy" class="settings-nav-link" onclick="showSection('privacy')">
+                            <i class="fas fa-shield-alt"></i>
+                            Privacy & Security
+                        </a>
+                    </div>
+                    <div class="settings-nav-item">
+                        <a href="#appearance" class="settings-nav-link" onclick="showSection('appearance')">
+                            <i class="fas fa-palette"></i>
+                            Appearance
+                        </a>
+                    </div>
+                    <div class="settings-nav-item">
+                        <a href="#data" class="settings-nav-link" onclick="showSection('data')">
+                            <i class="fas fa-database"></i>
+                            Data & Storage
+                        </a>
+                    </div>
+                    <div class="settings-nav-item">
+                        <a href="#about" class="settings-nav-link" onclick="showSection('about')">
+                            <i class="fas fa-info-circle"></i>
+                            About
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Settings Content -->
+            <div class="settings-content">
+                <!-- Profile Settings -->
+                <div id="profile" class="settings-section">
+                    <h2 class="section-title">Profile Settings</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Profile Visibility</div>
+                            <div class="setting-description">Control who can see your profile information</div>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select-dropdown">
+                                <option value="public">Public</option>
+                                <option value="friends">Friends Only</option>
+                                <option value="private">Private</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Show Online Status</div>
+                            <div class="setting-description">Let others know when you're active</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Game History</div>
+                            <div class="setting-description">Display your match history to other players</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Settings -->
+                <div id="notifications" class="settings-section" style="display: none;">
+                    <h2 class="section-title">Notification Preferences</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Push Notifications</div>
+                            <div class="setting-description">Receive notifications on your device</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Game Invites</div>
+                            <div class="setting-description">Get notified when someone invites you to play</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Match Results</div>
+                            <div class="setting-description">Receive updates about your game outcomes</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">News & Updates</div>
+                            <div class="setting-description">Stay informed about app features and events</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy & Security Settings -->
+                <div id="privacy" class="settings-section" style="display: none;">
+                    <h2 class="section-title">Privacy & Security</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Two-Factor Authentication</div>
+                            <div class="setting-description">Add an extra layer of security to your account</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="button-control secondary">Enable</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Location Sharing</div>
+                            <div class="setting-description">Allow the app to access your location for nearby games</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Data Collection</div>
+                            <div class="setting-description">Help improve the app by sharing usage data</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div id="appearance" class="settings-section" style="display: none;">
+                    <h2 class="section-title">Appearance</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Theme</div>
+                            <div class="setting-description">Choose your preferred color scheme</div>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select-dropdown">
+                                <option value="default">Default Blue</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="light">Light Mode</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Font Size</div>
+                            <div class="setting-description">Adjust text size for better readability</div>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select-dropdown">
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Animations</div>
+                            <div class="setting-description">Enable smooth transitions and effects</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data & Storage Settings -->
+                <div id="data" class="settings-section" style="display: none;">
+                    <h2 class="section-title">Data & Storage</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Cache Management</div>
+                            <div class="setting-description">Clear stored data to free up space</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="button-control secondary">Clear Cache</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Auto-Download</div>
+                            <div class="setting-description">Automatically download game updates</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Storage Usage</div>
+                            <div class="setting-description">Current app storage: 45.2 MB</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="button-control secondary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Settings -->
+                <div id="about" class="settings-section" style="display: none;">
+                    <h2 class="section-title">About NiteRun</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">App Version</div>
+                            <div class="setting-description">Current version: 1.0.0</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="button-control secondary">Check for Updates</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Terms of Service</div>
+                            <div class="setting-description">Read our terms and conditions</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="button-control secondary" onclick="window.location.href='terms.html'">View</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Privacy Policy</div>
+                            <div class="setting-description">Learn about data collection and usage</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="button-control secondary" onclick="window.location.href='privacy.html'">View</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Support</div>
+                            <div class="setting-description">Get help and contact support</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="button-control secondary" onclick="window.location.href='support.html'">Contact</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="danger-zone">
+                    <h2 class="section-title">Danger Zone</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Delete Account</div>
+                            <div class="setting-description">Permanently remove your account and all data</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="danger-button">Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-brand-text">NiteRun<sup class="registered-tm">®</sup></span>
+                </div>
+                <div class="footer-links">
+                    <a href="about.html" class="footer-link">About</a>
+                    <a href="support.html" class="footer-link">Support</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://instagram.com/niterun.app" target="_blank" class="social-link" title="Follow us on Instagram">
+                        Follow us on Instagram <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 NiteRun<sup class="registered-tm">®</sup>. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Logout function (placeholder)
+        function logout() {
+            alert('Logout functionality coming soon!');
+        }
+
+        // Show/hide settings sections
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.settings-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+
+            // Update active nav link
+            const navLinks = document.querySelectorAll('.settings-nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Find and activate the clicked link
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Toggle switch functionality
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+        }
+
+        // Load settings when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // This would typically load user settings from localStorage or database
+            // For now, we're using default values
+            showSection('profile'); // Show profile section by default
+        });
+    </script>
 </body>
 </html> 

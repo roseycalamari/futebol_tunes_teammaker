@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - NiteRun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .about-container {
+            min-height: 100vh;
+            background: var(--primary-color);
+            padding: 3rem;
+        }
+
+        .about-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 1.5rem 0;
+            position: relative;
+        }
+
+        .header-left {
+            width: 120px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-arrow {
+            width: auto;
+            height: auto;
+            max-width: 80px;
+            max-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: brightness(0) invert(1);
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .back-arrow {
+                max-width: 60px;
+                max-height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-left, .header-right {
+                width: 80px;
+            }
+            
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .settings-icon {
+                width: 26px;
+                height: 26px;
+            }
+            
+            .logout-btn {
+                padding: 0.7rem;
+                font-size: 0.75rem;
+                min-width: 45px;
+            }
+            
+            .logout-btn i {
+                font-size: 0.9rem;
+            }
+            
+            .about-logo {
+                height: 70px;
+            }
+
+            .back-arrow {
+                max-width: 50px;
+                max-height: 50px;
+            }
+        }
+
+        .back-arrow:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .about-logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .header-right {
+            width: 120px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: var(--white);
+            border: 3px solid transparent;
+            color: var(--primary-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            transform: scale(0.95);
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn i {
+            font-size: 1rem;
+        }
+
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .settings-btn:hover {
+            transform: scale(0.95);
+        }
+
+        .settings-icon {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(2000%) hue-rotate(220deg) brightness(100%) contrast(100%);
+        }
+
+        .about-main {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .about-hero {
+            background: var(--white);
+            border-radius: 0;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .about-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .about-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .last-updated {
+            background: var(--primary-light);
+            padding: 1rem 2rem;
+            border-radius: 0;
+            display: inline-block;
+            color: var(--primary-color);
+            font-weight: 600;
+            border: 2px solid var(--primary-color);
+        }
+
+        .about-section {
+            background: var(--white);
+            border-radius: 0;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-content {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .section-content:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight-box {
+            background: var(--cream);
+            border: 2px solid var(--glass-border);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0;
+        }
+
+        .highlight-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-text {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--primary-light);
+            padding: 2rem;
+            border-radius: 0;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .stats-section {
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 0;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .stats-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--cream);
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-member {
+            background: var(--cream);
+            padding: 2rem;
+            border-radius: 0;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--white);
+            font-size: 2rem;
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .contact-info {
+            background: var(--primary-light);
+            padding: 2rem;
+            border-radius: 0;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+            margin-top: 2rem;
+        }
+
+        .contact-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .contact-email {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .contact-email:hover {
+            color: var(--primary-hover);
+        }
+
+        .legal-notice {
+            background: var(--white);
+            border: 2px solid var(--primary-color);
+            padding: 2rem;
+            border-radius: 0;
+            margin-top: 2rem;
+        }
+
+        .legal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .legal-text {
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .about-container {
+                padding: 2rem 1rem;
+            }
+
+            .about-header {
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            .header-left, .header-right {
+                width: 100px;
+            }
+            
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .settings-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .logout-btn {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                min-width: 50px;
+                justify-content: center;
+            }
+            
+            .logout-btn .logout-text {
+                display: none;
+            }
+            
+            .logout-btn i {
+                font-size: 1rem;
+                margin: 0;
+            }
+            
+            .about-logo {
+                height: 80px;
+            }
+
+            .about-hero,
+            .about-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .about-title {
+                font-size: 2rem;
+            }
+
+            .features-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="about-container">
+        <!-- Header -->
+        <header class="about-header">
+            <div class="header-left">
+                <button class="settings-btn" onclick="window.location.href='dashboard.html'">
+                    <img src="assets/images/arrowicon.png" alt="Back" class="settings-icon">
+                </button>
+            </div>
+            <div class="header-center">
+                <img src="assets/images/logo png.png" alt="NiteRun Logo" class="about-logo">
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span class="logout-text">Logout</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="about-main">
+            <!-- Hero Section -->
+            <section class="about-hero">
+                <h1 class="about-title">About NiteRun</h1>
+                <p class="about-subtitle">
+                    Revolutionizing Football Team Management Since 2024
+                </p>
+                <div class="last-updated">
+                    <i class="fas fa-calendar-alt"></i>
+                    Founded: 2024
+                </div>
+            </section>
+
+            <!-- Mission Section -->
+            <section class="about-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bullseye"></i>
+                    Our Mission
+                </h2>
+                <p class="section-content">
+                    At NiteRun, we're passionate about bringing people together through football. Our mission is to provide coaches, 
+                    players, and organizers with intuitive tools that eliminate the hassle of team management, allowing everyone to 
+                    focus on what matters most: playing the game we all love.
+                </p>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Vision:</div>
+                    <div class="highlight-text">
+                        We believe that the beautiful game deserves beautiful tools that make every aspect of team management seamless and enjoyable.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="about-section">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    What Makes Us Special
+                </h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="feature-title">Smart Team Generation</div>
+                        <div class="feature-description">
+                            Our advanced algorithms create perfectly balanced teams based on player positions, skills, and preferences.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="feature-title">Performance Tracking</div>
+                        <div class="feature-description">
+                            Comprehensive statistics and analytics to track player and team performance over time.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="feature-title">Mobile-First Design</div>
+                        <div class="feature-description">
+                            Built for the modern world, accessible on any device, anywhere, anytime.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Team Section -->
+            <section class="about-section">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    Meet Our Team
+                </h2>
+                <p class="section-content">
+                    We're a small but passionate team of football enthusiasts, developers, and designers who believe in the power 
+                    of technology to bring people together through sport.
+                </p>
+                
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="member-name">Development Team</div>
+                        <div class="member-role">Software Engineers</div>
+                    </div>
+
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="member-name">Design Team</div>
+                        <div class="member-role">UX/UI Designers</div>
+                    </div>
+
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="member-name">Support Team</div>
+                        <div class="member-role">Customer Success</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Information -->
+            <section class="about-section">
+                <h2 class="section-title">
+                    <i class="fas fa-envelope"></i>
+                    Get in Touch
+                </h2>
+                <p class="section-content">
+                    Want to learn more about NiteRun or have questions about our platform? We'd love to hear from you!
+                </p>
+                
+                <div class="contact-info">
+                    <div class="contact-title">Contact Us</div>
+                    <a href="mailto:niterun.app@gmail.com" class="contact-email">niterun.app@gmail.com</a>
+                    <p style="margin-top: 1rem; color: #666;">
+                        We'll get back to you within 24 hours.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Legal Notice -->
+            <div class="legal-notice">
+                <div class="legal-title">Join the NiteRun Community</div>
+                <div class="legal-text">
+                    Whether you're a player, coach, or organizer, NiteRun is here to make your football experience better. 
+                    Join thousands of users who have already transformed their team management.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Logout function (placeholder)
+        function logout() {
+            alert('Logout functionality coming soon!');
+        }
+    </script>
+</body>
+</html>

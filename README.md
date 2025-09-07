@@ -80,75 +80,61 @@ futebol_tunes_teammaker/
 ├── signup.html          # User registration
 ├── dashboard.html       # User dashboard
 ├── team-generator.html  # Team creation tool
-├── player-profiles.html # Player management
-├── match-tracker.html   # Match tracking
-├── tournament.html      # Tournament management
-├── player-stats.html    # Statistics view
+├── search.html          # Player and team search
+├── profile.html         # User profile management
 ├── settings.html        # App settings
+├── about.html           # About page
+├── privacy.html         # Privacy policy
+├── support.html         # Support page
+├── terms.html           # Terms of service
 ├── styles.css           # Main stylesheet
-├── script.js            # Core functionality
 └── README.md            # This file
 ```
 
 ## 🔧 Configuration
 
-### Firebase Configuration
-Replace the placeholder config in your files:
-
-```javascript
-const firebaseConfig = {
-  apiKey: "your-actual-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id"
-};
-```
-
 ### Customization
 - **Colors**: Modify CSS variables in `styles.css`
-- **Sports**: Add new sports in `EnhancedTeamGenerator.sports`
-- **Features**: Extend functionality in `script.js`
+- **Sports**: Add new sports in the team generator
+- **Features**: Extend functionality as needed
 
 ## 🎯 Next Steps
 
 ### Immediate Improvements
-1. **Set up Firebase**: Complete authentication setup
-2. **Test Core Features**: Generate teams, add players
-3. **Customize Sports**: Add your preferred sports
-4. **Test on Mobile**: Ensure responsive design works
+1. **Test Core Features**: Generate teams, search players
+2. **Customize Sports**: Add your preferred sports
+3. **Test on Mobile**: Ensure responsive design works
+4. **Complete Profile System**: User profile management
 
 ### Future Enhancements
-1. **Real-time Updates**: Live team changes for groups
-2. **Advanced Analytics**: Performance trends and insights
-3. **Mobile App**: Progressive Web App (PWA) features
-4. **Social Features**: Chat, notifications, sharing
-5. **Tournament Mode**: Bracket generation and management
-6. **Weather Integration**: Game cancellation predictions
-7. **Location Services**: Find nearby fields/courts
+1. **Player Management**: Add and manage player database
+2. **Match Tracking**: Track game results and statistics
+3. **Advanced Analytics**: Performance trends and insights
+4. **Mobile App**: Progressive Web App (PWA) features
+5. **Social Features**: Chat, notifications, sharing
+6. **Tournament Mode**: Bracket generation and management
 
 ## 💡 Usage Tips
 
 ### For WhatsApp Groups
 1. **Create a Group**: Use the group management feature
 2. **Generate Teams**: Use team generator for each game
-3. **Share Results**: Track match outcomes
-4. **Invite Members**: Share group codes with friends
+3. **Search Players**: Find players by skills and availability
+4. **Share Results**: Track match outcomes
 
 ### For Team Captains
-1. **Player Database**: Build your regular player list
-2. **Skill Tracking**: Monitor improvement over time
+1. **Team Generation**: Create balanced teams instantly
+2. **Player Search**: Find players with specific skills
 3. **Team History**: Review past team combinations
-4. **Performance Analysis**: Identify strengths and weaknesses
+4. **Profile Management**: Manage your personal information
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
-- **Authentication Errors**: Check Firebase configuration
 - **Data Not Saving**: Verify localStorage is enabled
 - **Styling Issues**: Check CSS file paths and variables
 - **Mobile Problems**: Test responsive design breakpoints
+- **Navigation Issues**: Check file paths and links
 
 ### Browser Support
 - **Modern Browsers**: Chrome, Firefox, Safari, Edge

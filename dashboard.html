@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - NiteRun</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#006dff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="NiteRun">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
@@ -11,93 +18,152 @@
         .dashboard-container {
             min-height: 100vh;
             background: var(--primary-color);
-            padding: 2rem;
+            padding: 3rem;
         }
 
         .dashboard-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2rem;
-            padding: 1rem 0;
+            margin-bottom: 3rem;
+            padding: 1.5rem 0;
+            position: relative;
         }
 
         .header-left {
-            width: 60px;
+            width: 120px;
             display: flex;
             justify-content: flex-start;
+            align-items: center;
         }
 
         .header-center {
-            flex: 1;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             justify-content: center;
         }
 
         .header-right {
-            width: 60px;
+            width: 120px;
             display: flex;
             justify-content: flex-end;
+            align-items: center;
         }
 
-        .back-arrow {
-            width: 32px;
-            height: 32px;
+        .logout-btn {
+            background: var(--white);
+            border: 3px solid transparent;
+            color: var(--primary-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0;
             cursor: pointer;
             transition: all 0.3s ease;
-            filter: brightness(0) invert(1);
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .back-arrow:hover {
-            transform: scale(1.1);
-            opacity: 0.8;
+        .logout-btn:hover {
+            transform: scale(0.95);
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .dashboard-logo {
+        .logout-btn i {
+            font-size: 1rem;
+        }
+
+        .settings-btn {
+            width: 50px;
             height: 50px;
-            width: auto;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            border-radius: 0;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            overflow: hidden;
         }
 
-        .user-avatar:hover {
-            transform: scale(1.05);
-            border-color: rgba(255, 255, 255, 0.6);
+        .settings-btn:hover {
+            transform: scale(0.95);
         }
+
+        .settings-icon {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .profile-avatar-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 0;
+            overflow: hidden;
+            margin: 0 auto 1.2rem auto;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-photo-large {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dashboard-logo {
+            height: 100px;
+            width: auto;
+        }
+
+
+
+
+
+
 
         .dashboard-stats {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
+            margin-top: 2rem;
         }
 
         .action-card {
             background: var(--white);
-            padding: 1.5rem;
+            padding: 0;
             border-radius: 0;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
             border: 3px solid transparent;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 2.5rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-bottom: 2rem;
+            box-sizing: border-box;
+            position: relative;
         }
 
         .action-card:hover {
@@ -109,7 +175,7 @@
         .action-icon {
             width: 60px;
             height: 60px;
-            margin: 0 auto 1rem auto;
+            margin: 0 auto 1.2rem auto;
             display: block;
         }
 
@@ -117,7 +183,7 @@
             font-size: 1.3rem;
             font-weight: 700;
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
         }
 
@@ -125,45 +191,48 @@
             color: #666;
             font-size: 0.9rem;
             line-height: 1.4;
-        }
-
-        .action-card.coming-soon {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .action-card.coming-soon:hover {
-            transform: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-color: transparent;
+            margin: 0;
         }
 
         .dashboard-sections {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
         }
 
         .section-card {
             background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
+            border-radius: 0;
+            padding: 2rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .section-header {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
             border-bottom: 2px solid #f0f0f0;
+            text-align: center;
         }
 
         .section-title {
             font-size: 1.3rem;
             font-weight: 600;
             color: var(--primary-color);
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            margin-bottom: 0.6rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 400;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            line-height: 1.3;
         }
 
         .add-btn {
@@ -171,7 +240,7 @@
             color: white;
             border: none;
             padding: 0.5rem 1rem;
-            border-radius: 8px;
+            border-radius: 0;
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.3s ease;
@@ -181,15 +250,54 @@
             background: var(--primary-hover);
         }
 
+        .center-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: block;
+            min-width: 140px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .center-btn:hover {
+            transform: scale(0.95);
+            background: var(--cream);
+            color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .center-btn:hover .plus-icon {
+            filter: none;
+        }
+
+        .plus-icon {
+            width: 28px;
+            height: 28px;
+            margin-right: 8px;
+            vertical-align: middle;
+            filter: brightness(0) invert(1);
+        }
+
         .item-list {
             max-height: 300px;
             overflow-y: auto;
+            margin-top: 1rem;
         }
 
         .item-card {
             background: #f8f9fa;
-            padding: 1rem;
-            margin-bottom: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
             border-radius: 8px;
             border-left: 4px solid var(--primary-color);
         }
@@ -209,6 +317,11 @@
             text-align: center;
             padding: 2rem;
             color: #999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
         }
 
         .empty-state i {
@@ -220,6 +333,7 @@
         @media (max-width: 768px) {
             .dashboard-container {
                 padding: 1rem;
+                padding-top: 3rem;
             }
 
             .dashboard-sections {
@@ -250,7 +364,7 @@
             }
 
             .dashboard-logo {
-                height: 40px;
+                height: 100px;
             }
 
             .back-arrow {
@@ -259,26 +373,260 @@
             }
 
             .user-avatar {
-                width: 36px;
-                height: 36px;
+                width: 45px;
+                height: 58px;
                 font-size: 1rem;
+                padding-top: 3px;
+            }
+
+            .profile-text {
+                font-size: 0.6rem;
+                margin-top: 1px;
+            }
+
+            .avatar-photo-space {
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
             }
         }
+        
+        /* Footer Styles */
+        .app-footer {
+            background: transparent;
+            border-top: 1px solid rgba(255, 252, 239, 0.05);
+            padding: 1.5rem 0 1rem 0;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .footer-brand-text {
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--cream);
+            letter-spacing: 0.5px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .footer-brand-text:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            transition: color 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .footer-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .footer-social {
+            display: flex;
+            align-items: center;
+        }
+        
+        .social-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .social-link:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+        
+        .social-link i {
+            font-size: 0.9rem;
+        }
+        
+        .footer-copyright {
+            text-align: center;
+        }
+        
+        .footer-copyright p {
+            color: var(--cream);
+            font-size: 0.75rem;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .footer-copyright p:hover {
+            color: rgba(255, 252, 239, 0.7);
+        }
+
+        .registered-tm {
+            font-size: 0.6em;
+            vertical-align: super;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-left: 1px;
+        }
+
+
+        
+        /* Footer Mobile Responsive */
+        @media (max-width: 768px) {
+            .app-footer {
+                padding: 1rem 0 0.8rem 0;
+                margin-top: 3rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+                padding: 0 1rem;
+            }
+            
+            .footer-links {
+                gap: 1.5rem;
+            }
+            
+            .footer-brand {
+                justify-content: center;
+            }
+            
+            .footer-social {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .footer-content {
+                gap: 1rem;
+            }
+        }
+
+        /* Header Mobile Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            .header-left, .header-right {
+                width: 100px;
+            }
+            
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .settings-icon {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .logout-btn {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                min-width: 50px;
+                justify-content: center;
+            }
+            
+            .logout-btn .logout-text {
+                display: none;
+            }
+            
+            .logout-btn i {
+                font-size: 1rem;
+                margin: 0;
+            }
+            
+            .dashboard-logo {
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-left, .header-right {
+                width: 80px;
+            }
+            
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .settings-icon {
+                width: 22px;
+                height: 22px;
+            }
+            
+            .logout-btn {
+                padding: 0.7rem;
+                font-size: 0.75rem;
+                min-width: 45px;
+            }
+            
+            .logout-btn i {
+                font-size: 0.9rem;
+            }
+            
+            .dashboard-logo {
+                height: 70px;
+            }
+        }
+
     </style>
 </head>
 <body>
     <div class="dashboard-container">
         <div class="dashboard-header">
             <div class="header-left">
-                <img src="assets/images/arrowicon.png" alt="Back" class="back-arrow" onclick="window.location.href='index.html'">
+                <button class="settings-btn" onclick="window.location.href='settings.html'">
+                    <img src="assets/images/settingsicon.png" alt="Settings" class="settings-icon">
+                </button>
             </div>
             <div class="header-center">
-                <img src="assets/images/logos/nr.png" alt="NiteRun" class="dashboard-logo">
+                <img src="assets/images/logo png.png" alt="NiteRun" class="dashboard-logo">
             </div>
             <div class="header-right">
-                <div class="user-avatar" onclick="openUserProfile()" id="userAvatar">
-                    U
-                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span class="logout-text">Logout</span>
+                </button>
             </div>
         </div>
 
@@ -289,20 +637,22 @@
                 <div class="action-title">Generate Team</div>
                 <div class="action-subtitle">Create balanced teams instantly</div>
             </div>
-            <div class="action-card" onclick="window.location.href='search.html'">
-                <img src="assets/images/profileicon.png" alt="Search Players" class="action-icon">
+            <div class="action-card" onclick="alert('Search functionality coming soon!')">
+                <img src="assets/images/search.png" alt="Search Players" class="action-icon">
                 <div class="action-title">Search</div>
                 <div class="action-subtitle">Find and discover players</div>
             </div>
-            <div class="action-card coming-soon">
-                <img src="assets/images/matchtrackericon.png" alt="Coming Soon" class="action-icon">
-                <div class="action-title">Coming Soon</div>
-                <div class="action-subtitle">New feature in development</div>
+            <div class="action-card" onclick="window.location.href='#'">
+                <img src="assets/images/dahsboard.png" alt="My Stats" class="action-icon">
+                <div class="action-title">My Stats</div>
+                <div class="action-subtitle">Stats & achievements</div>
             </div>
-            <div class="action-card coming-soon">
-                <img src="assets/images/tournamentsicon.png" alt="Coming Soon" class="action-icon">
-                <div class="action-title">Coming Soon</div>
-                <div class="action-subtitle">New feature in development</div>
+            <div class="action-card" onclick="window.location.href='profile.html'">
+                <div class="profile-avatar-large">
+                    <img src="assets/images/Imagem WhatsApp 2025-08-25 às 01.06.35_bb018055.jpg" alt="Profile Photo" class="profile-photo-large">
+                </div>
+                <div class="action-title">Profile</div>
+                <div class="action-subtitle">View and edit your profile</div>
             </div>
         </div>
 
@@ -312,49 +662,29 @@
             <div class="section-card">
                 <div class="section-header">
                     <h3 class="section-title">Recent Teams</h3>
-                    <button class="add-btn" onclick="window.location.href='team-generator.html'">
-                        <i class="fas fa-plus"></i> Generate
-                    </button>
+                    <p class="section-subtitle">View your recently generated teams</p>
                 </div>
                 <div class="item-list" id="recentTeams">
                     <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <p>No teams generated yet</p>
-                        <p>Generate your first team to get started!</p>
+                        <button class="center-btn" onclick="window.location.href='team-generator.html'">
+                            <img src="assets/images/plus.png" alt="Plus" class="plus-icon"> Generate Team
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Players -->
-            <div class="section-card">
-                <div class="section-header">
-                    <h3 class="section-title">Recent Players</h3>
-                    <button class="add-btn" onclick="window.location.href='player-profiles.html'">
-                        <i class="fas fa-plus"></i> Add
-                    </button>
-                </div>
-                <div class="item-list" id="recentPlayers">
-                    <div class="empty-state">
-                        <i class="fas fa-user"></i>
-                        <p>No players added yet</p>
-                        <p>Add players to start building teams!</p>
-                    </div>
-                </div>
-            </div>
 
             <!-- Recent Matches -->
             <div class="section-card">
                 <div class="section-header">
                     <h3 class="section-title">Recent Matches</h3>
-                    <button class="add-btn" onclick="window.location.href='match-tracker.html'">
-                        <i class="fas fa-plus"></i> Track
-                    </button>
+                    <p class="section-subtitle">Track your match history</p>
                 </div>
                 <div class="item-list" id="recentMatches">
                     <div class="empty-state">
-                        <i class="fas fa-futbol"></i>
-                        <p>No matches tracked yet</p>
-                        <p>Start tracking your matches!</p>
+                        <button class="center-btn" onclick="alert('Match tracking coming soon!')">
+                            <img src="assets/images/plus.png" alt="Plus" class="plus-icon"> Track Match
+                        </button>
                     </div>
                 </div>
             </div>
@@ -363,25 +693,48 @@
             <div class="section-card">
                 <div class="section-header">
                     <h3 class="section-title">Your Groups</h3>
-                    <button class="add-btn" onclick="createGroup()">
-                        <i class="fas fa-plus"></i> Create
-                    </button>
+                    <p class="section-subtitle">Organize teams into groups</p>
                 </div>
                 <div class="item-list" id="userGroups">
                     <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <p>No groups created yet</p>
-                        <p>Create a group to organize your teams!</p>
+                        <button class="center-btn" onclick="createGroup()">
+                            <img src="assets/images/plus.png" alt="Plus" class="plus-icon"> Create Group
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+        
+
+        
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-brand-text">NiteRun<sup class="registered-tm">®</sup></span>
+                </div>
+                <div class="footer-links">
+                    <a href="about.html" class="footer-link">About</a>
+                    <a href="support.html" class="footer-link">Support</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://instagram.com/niterun.app" target="_blank" class="social-link" title="Follow us on Instagram">
+                        Follow us on Instagram <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 NiteRun<sup class="registered-tm">®</sup>. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
+
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script>
         // Firebase configuration
@@ -396,74 +749,37 @@
         };
 
         // Initialize Firebase
-        try {
-            firebase.initializeApp(firebaseConfig);
-            console.log("Dashboard: Firebase initialized successfully!");
-        } catch (error) {
-            console.log("Dashboard: Firebase initialization error:", error);
-        }
-
-        // Check authentication
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                loadDashboardData();
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
         // Open user profile (placeholder)
         function openUserProfile() {
             alert('User profile coming soon!');
-            // Future: window.location.href = 'profile.html';
         }
 
-        // Update user avatar with user's initial
-        function updateUserAvatar() {
-            const currentUser = firebase.auth().currentUser;
-            const userAvatar = document.getElementById('userAvatar');
+        // Logout functionality
+        function logout() {
+            // Clear user data from localStorage
+            localStorage.removeItem('user');
             
-            if (currentUser) {
-                const displayName = currentUser.displayName || '';
-                const email = currentUser.email || '';
-                
-                // Get first letter of display name or email
-                let initial = 'U';
-                if (displayName) {
-                    initial = displayName.charAt(0).toUpperCase();
-                } else if (email) {
-                    initial = email.charAt(0).toUpperCase();
-                }
-                
-                userAvatar.textContent = initial;
-            }
+            // Redirect to login page
+            window.location.href = 'login.html';
         }
 
-        // Load dashboard data
+
+        // Load dashboard data from localStorage (if any)
         function loadDashboardData() {
-            updateUserAvatar();
             // Load data from localStorage
             const teams = JSON.parse(localStorage.getItem('teams') || '[]');
             const players = JSON.parse(localStorage.getItem('players') || '[]');
             const matches = JSON.parse(localStorage.getItem('matches') || '[]');
             const groups = JSON.parse(localStorage.getItem('groups') || '[]');
 
-            // Filter by current user
-            const currentUser = firebase.auth().currentUser;
-            if (currentUser) {
-                const userTeams = teams.filter(team => team.userId === currentUser.uid);
-                const userPlayers = players.filter(player => player.userId === currentUser.uid);
-                const userMatches = matches.filter(match => match.userId === currentUser.uid);
-                const userGroups = groups.filter(group => group.members.includes(currentUser.uid));
-
-                // Action cards don't need stat updates - they're navigation buttons
-
-                // Update sections
-                updateSection('recentTeams', userTeams, 'teams');
-                updateSection('recentPlayers', userPlayers, 'players');
-                updateSection('recentMatches', userMatches, 'matches');
-                updateSection('userGroups', userGroups, 'groups');
-            }
+            // Update sections with any existing data
+            updateSection('recentTeams', teams, 'teams');
+            updateSection('recentMatches', matches, 'matches');
+            updateSection('userGroups', groups, 'groups');
         }
 
         // Update section content
@@ -493,16 +809,9 @@
             switch (type) {
                 case 'teams':
                     return `
-                        <div class="item-card">
-                            <div class="item-title">${item.sport?.name || 'Team'} - ${item.totalPlayers || 0} players</div>
+                        <div class="item-card" onclick="loadSavedTeams('${item.id}')" style="cursor: pointer;">
+                            <div class="item-title">${item.name || 'Team'} - ${item.totalPlayers || 0} players</div>
                             <div class="item-details">Created: ${new Date(item.createdAt).toLocaleDateString()}</div>
-                        </div>
-                    `;
-                case 'players':
-                    return `
-                        <div class="item-card">
-                            <div class="item-title">${item.name}</div>
-                            <div class="item-details">Level: ${item.skillLevel || 'N/A'} | Position: ${item.position || 'N/A'}</div>
                         </div>
                     `;
                 case 'matches':
@@ -529,14 +838,13 @@
             const groupName = prompt('Enter group name:');
             if (groupName && groupName.trim()) {
                 const groups = JSON.parse(localStorage.getItem('groups') || '[]');
-                const currentUser = firebase.auth().currentUser;
                 
                 const newGroup = {
                     id: Date.now().toString(),
                     name: groupName.trim(),
                     createdAt: new Date().toISOString(),
-                    createdBy: currentUser ? currentUser.uid : 'anonymous',
-                    members: currentUser ? [currentUser.uid] : [],
+                    createdBy: 'anonymous',
+                    members: [],
                     inviteCode: Math.random().toString(36).substring(2, 8).toUpperCase()
                 };
                 
@@ -549,6 +857,183 @@
                 alert(`Group "${groupName}" created! Invite code: ${newGroup.inviteCode}`);
             }
         }
+
+        // Load saved teams
+        function loadSavedTeams(teamId) {
+            const savedTeams = JSON.parse(localStorage.getItem('savedTeams') || '[]');
+            const teamData = savedTeams.find(team => team.id === teamId);
+            
+            if (teamData) {
+                // Load the teams data into the generator
+                localStorage.setItem('generatedTeams', JSON.stringify(teamData.teams));
+                localStorage.setItem('players', JSON.stringify(teamData.players));
+                
+                // Redirect to team generator and go to step 4
+                window.location.href = 'team-generator.html#step4';
+            } else {
+                alert('Team data not found!');
+            }
+        }
+
+        // Check if user is logged in
+        function checkAuth() {
+            const user = localStorage.getItem('user');
+            console.log('Checking auth, user data:', user); // Debug log
+            
+            if (!user) {
+                console.log('No user found, redirecting to login'); // Debug log
+                // No user logged in, redirect to login
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            try {
+                const userData = JSON.parse(user);
+                console.log('User data parsed successfully:', userData); // Debug log
+                return true;
+            } catch (error) {
+                console.error('Error parsing user data:', error); // Debug log
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+                return false;
+            }
+        }
+
+        // Display user info
+        function displayUserInfo() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                // Update profile section with user data
+                const profileSection = document.querySelector('.action-card:last-child');
+                if (profileSection) {
+                    const profileTitle = profileSection.querySelector('.action-title');
+                    if (profileTitle) {
+                        profileTitle.textContent = user.displayName || 'Profile';
+                    }
+                }
+
+                // Update profile photo if available
+                if (user.photoURL) {
+                    const profilePhoto = document.querySelector('.profile-photo-large');
+                    if (profilePhoto) {
+                        profilePhoto.src = user.photoURL;
+                        profilePhoto.alt = user.displayName + "'s Profile Photo";
+                    }
+                }
+
+                // Add welcome message
+                addWelcomeMessage(user);
+            }
+        }
+
+        // Add welcome message to dashboard
+        function addWelcomeMessage(user) {
+            const dashboardHeader = document.querySelector('.dashboard-header');
+            if (dashboardHeader && user.displayName) {
+                // Create welcome message
+                const welcomeDiv = document.createElement('div');
+                welcomeDiv.className = 'welcome-message';
+                // Get first name only
+                const firstName = user.displayName ? user.displayName.split(' ')[0] : 'there';
+                
+                welcomeDiv.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <h2 style="color: var(--cream); font-size: 1.5rem; margin: 0;">
+                            <span style="font-family: 'SK Glypher Trial', 'Poppins', sans-serif;">Welcome back,</span> 
+                            <span style="font-family: 'Poppins', sans-serif;">${firstName}!</span>
+                        </h2>
+                        <p style="color: rgba(255, 252, 239, 0.8); font-size: 0.9rem; margin: 0.5rem 0 0 0;">
+                            Ready to create some amazing teams?
+                        </p>
+                    </div>
+                `;
+                
+                // Insert after the header
+                dashboardHeader.parentNode.insertBefore(welcomeDiv, dashboardHeader.nextSibling);
+            }
+        }
+
+        // Firestore functions
+        async function saveUserStats(userId, stats) {
+            try {
+                await db.collection("users").doc(userId).set({
+                    ...stats,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                console.log("User stats saved successfully");
+            } catch (error) {
+                console.error("Error saving user stats:", error);
+            }
+        }
+
+        async function loadUserStats(userId) {
+            try {
+                const userDoc = await db.collection("users").doc(userId).get();
+                if (userDoc.exists) {
+                    return userDoc.data();
+                } else {
+                    // Create new user stats if doesn't exist
+                    const newStats = {
+                        gamesPlayed: 0,
+                        wins: 0,
+                        losses: 0,
+                        mvps: 0,
+                        joinDate: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    await saveUserStats(userId, newStats);
+                    return newStats;
+                }
+            } catch (error) {
+                console.error("Error loading user stats:", error);
+                return {
+                    gamesPlayed: 0,
+                    wins: 0,
+                    losses: 0,
+                    mvps: 0,
+                    joinDate: new Date()
+                };
+            }
+        }
+
+        async function updateDashboardWithRealData() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                const stats = await loadUserStats(user.uid);
+                
+                // Update the stats display
+                const statElements = document.querySelectorAll('.stat-number');
+                if (statElements.length >= 4) {
+                    statElements[0].textContent = stats.gamesPlayed || 0;
+                    statElements[1].textContent = stats.mvps || 0;
+                    statElements[2].textContent = stats.wins || 0;
+                    statElements[3].textContent = stats.losses || 0;
+                }
+            }
+        }
+
+        // Load dashboard data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication first
+            if (checkAuth()) {
+                displayUserInfo();
+                loadDashboardData();
+                updateDashboardWithRealData();
+            }
+        });
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
+

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - NiteRun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .support-container {
+            min-height: 100vh;
+            background: var(--primary-color);
+            padding: 3rem;
+        }
+
+        .support-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 1.5rem 0;
+            position: relative;
+        }
+
+        .header-left {
+            width: 120px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-arrow {
+            width: auto;
+            height: auto;
+            max-width: 80px;
+            max-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: brightness(0) invert(1);
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .back-arrow {
+                max-width: 60px;
+                max-height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-arrow {
+                max-width: 50px;
+                max-height: 50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .back-arrow {
+                max-width: 60px;
+                max-height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-left, .header-right {
+                width: 80px;
+            }
+            
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .settings-icon {
+                width: 26px;
+                height: 26px;
+            }
+            
+            .logout-btn {
+                padding: 0.7rem;
+                font-size: 0.75rem;
+                min-width: 45px;
+            }
+            
+            .logout-btn i {
+                font-size: 0.9rem;
+            }
+            
+            .support-logo {
+                height: 70px;
+            }
+
+            .back-arrow {
+                max-width: 50px;
+                max-height: 50px;
+            }
+        }
+
+        .back-arrow:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .support-logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .header-right {
+            width: 120px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: var(--white);
+            border: 3px solid transparent;
+            color: var(--primary-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            transform: scale(0.95);
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn i {
+            font-size: 1rem;
+        }
+
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .settings-btn:hover {
+            transform: scale(0.95);
+        }
+
+        .settings-icon {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(2000%) hue-rotate(220deg) brightness(100%) contrast(100%);
+        }
+
+        .support-main {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .support-hero {
+            background: var(--white);
+            border-radius: 0;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .support-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
+        }
+
+        .support-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .last-updated {
+            background: var(--primary-light);
+            padding: 1rem 2rem;
+            border-radius: 0;
+            display: inline-block;
+            color: var(--primary-color);
+            font-weight: 600;
+            border: 2px solid var(--primary-color);
+        }
+
+        .support-section {
+            background: var(--white);
+            border-radius: 0;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-content {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .section-content:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight-box {
+            background: var(--cream);
+            border: 2px solid var(--glass-border);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0;
+        }
+
+        .highlight-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-text {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-method {
+            background: var(--primary-light);
+            padding: 2rem;
+            border-radius: 0;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .contact-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 109, 255, 0.2);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .contact-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-info {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .email-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .email-link:hover {
+            color: var(--primary-hover);
+        }
+
+        .faq-item {
+            background: var(--cream);
+            margin-bottom: 1rem;
+            border-radius: 0;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        .faq-question {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--primary-hover);
+        }
+
+        .faq-answer {
+            padding: 1.5rem;
+            color: #555;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-toggle.active {
+            transform: rotate(180deg);
+        }
+
+        .legal-notice {
+            background: var(--white);
+            border: 2px solid var(--primary-color);
+            padding: 2rem;
+            border-radius: 0;
+            margin-top: 2rem;
+        }
+
+        .legal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .legal-text {
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .support-container {
+                padding: 2rem 1rem;
+            }
+
+            .support-header {
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            .header-left, .header-right {
+                width: 100px;
+            }
+            
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .settings-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .logout-btn {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                min-width: 50px;
+                justify-content: center;
+            }
+            
+            .logout-btn .logout-text {
+                display: none;
+            }
+            
+            .logout-btn i {
+                font-size: 1rem;
+                margin: 0;
+            }
+            
+            .support-logo {
+                height: 80px;
+            }
+
+            .support-hero,
+            .support-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .support-title {
+                font-size: 2rem;
+            }
+
+            .contact-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="support-container">
+        <!-- Header -->
+        <header class="support-header">
+            <div class="header-left">
+                <button class="settings-btn" onclick="window.location.href='dashboard.html'">
+                    <img src="assets/images/arrowicon.png" alt="Back" class="settings-icon">
+                </button>
+            </div>
+            <div class="header-center">
+                <img src="assets/images/logo png.png" alt="NiteRun Logo" class="support-logo">
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span class="logout-text">Logout</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="support-main">
+            <!-- Hero Section -->
+            <section class="support-hero">
+                <h1 class="support-title">Support Center</h1>
+                <p class="support-subtitle">
+                    Need help with NiteRun? We're here to assist you with any questions or issues you might have.
+                </p>
+                <div class="last-updated">
+                    <i class="fas fa-headset"></i>
+                    Available 24/7
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section class="support-section">
+                <h2 class="section-title">
+                    <i class="fas fa-headset"></i>
+                    Get in Touch
+                </h2>
+                <p class="section-content">
+                    Our support team is available to help you with any questions about NiteRun's football team management features.
+                </p>
+                
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-title">Email Support</div>
+                        <div class="contact-info">
+                            <a href="mailto:niterun.app@gmail.com" class="email-link">niterun.app@gmail.com</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-title">Response Time</div>
+                        <div class="contact-info">Within 24 hours</div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="contact-title">Language</div>
+                        <div class="contact-info">Portuguese & English</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="support-section">
+                <h2 class="section-title">
+                    <i class="fas fa-question-circle"></i>
+                    Frequently Asked Questions
+                </h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        How do I create a new team?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Navigate to the Team Generator page, add your players with their positions, and click "Generate Teams" to create balanced teams automatically.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Can I save my team configurations?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! You can save your team setups and player lists for future use. Simply use the save feature in the Team Generator.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        How do I track match statistics?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Use the Match Tracker feature to record goals, assists, and other match events. All data is automatically saved to player profiles.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Is my data secure?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely! We take data security seriously. All your information is encrypted and stored securely. Read our Privacy Policy for more details.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Additional Help -->
+            <section class="support-section">
+                <h2 class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Additional Resources
+                </h2>
+                <p class="section-content">
+                    Check out our comprehensive guides and tutorials to get the most out of NiteRun's features. 
+                    From beginner tips to advanced team management strategies, we've got you covered.
+                </p>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Documentation:</div>
+                    <div class="highlight-text">
+                        Access our detailed user guides, video tutorials, and best practices to maximize your NiteRun experience.
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">Video Tutorials:</div>
+                    <div class="highlight-text">
+                        Step-by-step video guides for all major features, from basic setup to advanced team management.
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">Community Forum:</div>
+                    <div class="highlight-text">
+                        Connect with other users, share tips, and get help from the NiteRun community.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Legal Notice -->
+            <div class="legal-notice">
+                <div class="legal-title">Need More Help?</div>
+                <div class="legal-text">
+                    If you can't find the answer you're looking for, don't hesitate to reach out to our support team. 
+                    We're here to help you succeed with NiteRun.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Logout function (placeholder)
+        function logout() {
+            alert('Logout functionality coming soon!');
+        }
+
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const toggle = element.querySelector('.faq-toggle');
+            
+            if (answer.classList.contains('active')) {
+                answer.classList.remove('active');
+                toggle.classList.remove('active');
+            } else {
+                // Close all other FAQs
+                document.querySelectorAll('.faq-answer').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelectorAll('.faq-toggle').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Open current FAQ
+                answer.classList.add('active');
+                toggle.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

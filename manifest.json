@@ -1,0 +1,27 @@
+{
+  "name": "NiteRun - Sports Team Manager",
+  "short_name": "NiteRun",
+  "description": "Create teams, track matches, and manage your sports community",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#006dff",
+  "theme_color": "#006dff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/images/logo png.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/logo png.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "games", "social"],
+  "lang": "en",
+  "dir": "ltr"
+}
