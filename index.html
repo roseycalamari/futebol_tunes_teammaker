@@ -405,6 +405,16 @@
                 return;
             }
 
+            // Check if we're on the correct domain
+            const currentDomain = window.location.hostname;
+            console.log('Current domain:', currentDomain);
+            
+            // Allow both vercel domain and custom domain
+            if (!currentDomain.includes('niterun.app') && !currentDomain.includes('vercel.app')) {
+                console.log('Not on correct domain, skipping install prompt');
+                return;
+            }
+
             console.log('Showing install prompt...');
 
             // Create the install prompt popup
@@ -449,24 +459,27 @@
                     position: fixed;
                     top: 0;
                     left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.7);
+                    width: 100vw;
+                    height: 100vh;
+                    background: rgba(0, 0, 0, 0.8);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    z-index: 10000;
+                    z-index: 999999;
                     padding: 1rem;
+                    box-sizing: border-box;
                 }
                 
                 .install-prompt-card {
                     background: var(--cream);
-                    border-radius: 0;
+                    border-radius: 12px;
                     padding: 2rem;
                     max-width: 400px;
                     width: 100%;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
                     text-align: center;
+                    position: relative;
+                    margin: 0 auto;
                 }
                 
                 .install-prompt-header {
@@ -558,13 +571,28 @@
                 }
                 
                 @media (max-width: 480px) {
+                    .install-prompt-overlay {
+                        padding: 0.5rem;
+                    }
+                    
                     .install-prompt-card {
                         padding: 1.5rem;
-                        margin: 0.5rem;
+                        margin: 0;
+                        max-width: 100%;
+                        border-radius: 8px;
                     }
                     
                     .install-prompt-actions {
                         flex-direction: column;
+                        gap: 0.75rem;
+                    }
+                    
+                    .install-prompt-header h3 {
+                        font-size: 1.3rem;
+                    }
+                    
+                    .install-prompt-content p {
+                        font-size: 0.9rem;
                     }
                 }
             `;
