@@ -195,6 +195,19 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
+        .btn-install {
+            background: var(--accent-color);
+            color: var(--cream);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-install:hover {
+            background: #ff6b00;
+            border-color: #ff6b00;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
         .btn-icon {
             font-size: 1rem;
         }
@@ -328,10 +341,12 @@
                     Join NiteRun
                 </a>
                 
-                <!-- Debug button for testing -->
-                <button onclick="forceShowInstallPrompt()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #ff6b6b; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">
-                    Test Install Popup
+                <!-- Install App Button -->
+                <button id="installAppBtn" class="auth-btn btn-install" style="display: none;">
+                    <i class="fas fa-download btn-icon"></i>
+                    Install App
                 </button>
+                
             </div>
         </div>
         
@@ -357,529 +372,48 @@
             });
         }
 
-        // PWA Install Prompt
+        // PWA Install Button
         let deferredPrompt;
-        let installPromptShown = false;
+        const installButton = document.getElementById('installAppBtn');
 
         // Listen for the beforeinstallprompt event
         window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('beforeinstallprompt event fired!');
+            console.log('PWA installable - showing install button');
             // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
             // Stash the event so it can be triggered later
             deferredPrompt = e;
-            // Show our custom install prompt
-            showInstallPrompt();
+            // Show the install button
+            installButton.style.display = 'flex';
         });
 
-        // Debug: Check if PWA is installable
-        window.addEventListener('load', function() {
-            console.log('Page loaded, checking PWA status...');
-            console.log('Service Worker support:', 'serviceWorker' in navigator);
-            console.log('Beforeinstallprompt support:', 'onbeforeinstallprompt' in window);
-            console.log('User Agent:', navigator.userAgent);
-            
-            // Check if already installed
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('App is already running in standalone mode');
-            } else {
-                console.log('App is running in browser mode');
-                
-                // Check if Safari
-                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                console.log('Is Safari:', isSafari);
-                
-                // Force show on Safari immediately
-                if (isSafari) {
-                    console.log('Safari detected - forcing install prompt');
-                    setTimeout(() => {
-                        showInstallPrompt();
-                    }, 1000);
-                }
-                
-                // Fallback: Show install prompt after 3 seconds for testing
-                setTimeout(() => {
-                    console.log('Fallback check - deferredPrompt:', !!deferredPrompt, 'installPromptShown:', installPromptShown);
-                    if (!installPromptShown) {
-                        console.log('Fallback: Showing install prompt after delay');
-                        showInstallPrompt();
-                    }
-                }, 3000);
+        // Handle install button click
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                // Clear the deferredPrompt
+                deferredPrompt = null;
+                // Hide the install button
+                installButton.style.display = 'none';
             }
         });
 
-        // Show custom install prompt
-        function showInstallPrompt() {
-            // Only show on mobile devices
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            if (!isMobile) {
-                console.log('Not mobile device, skipping install prompt');
-                return;
-            }
+        // Check if app is already installed
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            installButton.style.display = 'none';
+        });
 
-            // Don't show if already shown or user dismissed it
-            if (installPromptShown || localStorage.getItem('installPromptDismissed') === 'true') {
-                console.log('Install prompt already shown or dismissed');
-                return;
-            }
-
-            // Check if we're on the correct domain
-            const currentDomain = window.location.hostname;
-            console.log('Current domain:', currentDomain);
-            
-            // Allow both vercel domain and custom domain
-            if (!currentDomain.includes('niterun.app') && !currentDomain.includes('vercel.app')) {
-                console.log('Not on correct domain, skipping install prompt');
-                return;
-            }
-
-            console.log('Showing install prompt...');
-
-            // Create the install prompt popup
-            const installPrompt = document.createElement('div');
-            installPrompt.id = 'installPrompt';
-            installPrompt.innerHTML = `
-                <div class="install-prompt-overlay">
-                    <div class="install-prompt-card">
-                        <div class="install-prompt-header">
-                            <img src="assets/images/logo png.png" alt="NiteRun" class="install-prompt-logo">
-                            <h3>Install NiteRun App</h3>
-                        </div>
-                        <div class="install-prompt-content">
-                            <p>Get instant match notifications and work offline - never miss a game!</p>
-                            <div class="install-prompt-features">
-                                <div class="feature-item">
-                                    <i class="fas fa-bell"></i>
-                                    <span>Match notifications</span>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-wifi"></i>
-                                    <span>Works offline</span>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-mobile-alt"></i>
-                                    <span>App-like experience</span>
-                                </div>
-                            </div>
-                            <div class="install-instructions" id="installInstructions" style="display: none;">
-                                <p style="font-size: 0.9rem; color: var(--primary-color); margin-top: 1rem; padding: 1rem; background: rgba(0, 109, 255, 0.1); border-radius: 8px;">
-                                    <strong>Safari:</strong> Tap the Share button <i class="fas fa-share"></i> then "Add to Home Screen"
-                                </p>
-                            </div>
-                        </div>
-                        <div class="install-prompt-actions">
-                            <button id="installAppBtn" class="install-btn-primary">Install App</button>
-                            <button id="notNowBtn" class="install-btn-secondary">Not Now</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Add styles
-            const style = document.createElement('style');
-            style.textContent = `
-                .install-prompt-overlay {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100vw;
-                    height: 100vh;
-                    background: rgba(0, 0, 0, 0.8);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 999999;
-                    padding: 1rem;
-                    box-sizing: border-box;
-                }
-                
-                .install-prompt-card {
-                    background: var(--cream);
-                    border-radius: 12px;
-                    padding: 2rem;
-                    max-width: 400px;
-                    width: 100%;
-                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-                    text-align: center;
-                    position: relative;
-                    margin: 0 auto;
-                }
-                
-                .install-prompt-header {
-                    margin-bottom: 1.5rem;
-                }
-                
-                .install-prompt-logo {
-                    height: 60px;
-                    width: auto;
-                    margin-bottom: 1rem;
-                }
-                
-                .install-prompt-header h3 {
-                    color: var(--primary-color);
-                    font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    margin: 0;
-                }
-                
-                .install-prompt-content p {
-                    color: var(--primary-color);
-                    font-size: 1rem;
-                    margin-bottom: 1.5rem;
-                    line-height: 1.5;
-                }
-                
-                .install-prompt-features {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.75rem;
-                    margin-bottom: 2rem;
-                }
-                
-                .feature-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                    color: var(--primary-color);
-                    font-size: 0.9rem;
-                }
-                
-                .feature-item i {
-                    color: var(--accent-color);
-                    width: 20px;
-                }
-                
-                .install-prompt-actions {
-                    display: flex;
-                    gap: 1rem;
-                }
-                
-                .install-btn-primary {
-                    flex: 1;
-                    background: var(--primary-color);
-                    color: var(--cream);
-                    border: none;
-                    padding: 1rem 1.5rem;
-                    border-radius: 0;
-                    font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
-                    font-weight: 700;
-                    font-size: 1rem;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-                
-                .install-btn-primary:hover {
-                    background: #0056b3;
-                    transform: scale(0.98);
-                }
-                
-                .install-btn-secondary {
-                    flex: 1;
-                    background: transparent;
-                    color: var(--primary-color);
-                    border: 2px solid var(--primary-color);
-                    padding: 1rem 1.5rem;
-                    border-radius: 0;
-                    font-family: 'Poppins', sans-serif;
-                    font-weight: 600;
-                    font-size: 1rem;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-                
-                .install-btn-secondary:hover {
-                    background: var(--primary-color);
-                    color: var(--cream);
-                }
-                
-                @media (max-width: 480px) {
-                    .install-prompt-overlay {
-                        padding: 0.5rem;
-                    }
-                    
-                    .install-prompt-card {
-                        padding: 1.5rem;
-                        margin: 0;
-                        max-width: 100%;
-                        border-radius: 8px;
-                    }
-                    
-                    .install-prompt-actions {
-                        flex-direction: column;
-                        gap: 0.75rem;
-                    }
-                    
-                    .install-prompt-header h3 {
-                        font-size: 1.3rem;
-                    }
-                    
-                    .install-prompt-content p {
-                        font-size: 0.9rem;
-                    }
-                }
-            `;
-
-            document.head.appendChild(style);
-            document.body.appendChild(installPrompt);
-            installPromptShown = true;
-
-            // Check if Safari and show instructions
-            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-            if (isSafari) {
-                document.getElementById('installInstructions').style.display = 'block';
-                document.getElementById('installAppBtn').textContent = 'Got It!';
-            }
-
-            // Add event listeners
-            document.getElementById('installAppBtn').addEventListener('click', () => {
-                if (deferredPrompt) {
-                    // Chrome/Android - use native prompt
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('User accepted the install prompt');
-                        }
-                        deferredPrompt = null;
-                    });
-                } else if (isSafari) {
-                    // Safari - just close the prompt (user needs to use Share button)
-                    console.log('Safari detected - user needs to use Share button');
-                }
-                hideInstallPrompt();
-            });
-
-            document.getElementById('notNowBtn').addEventListener('click', () => {
-                localStorage.setItem('installPromptDismissed', 'true');
-                hideInstallPrompt();
-            });
+        // Check if running in standalone mode (already installed)
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('App is running in standalone mode');
+            installButton.style.display = 'none';
         }
 
-        function hideInstallPrompt() {
-            const prompt = document.getElementById('installPrompt');
-            if (prompt) {
-                prompt.remove();
-            }
-        }
-
-        // Force show install prompt (bypasses all checks)
-        function forceShowInstallPrompt() {
-            console.log('Force showing install prompt...');
-            
-            // Remove any existing prompt
-            const existingPrompt = document.getElementById('installPrompt');
-            if (existingPrompt) {
-                existingPrompt.remove();
-            }
-            
-            // Create the install prompt popup (same as showInstallPrompt but without checks)
-            const installPrompt = document.createElement('div');
-            installPrompt.id = 'installPrompt';
-            installPrompt.innerHTML = `
-                <div class="install-prompt-overlay">
-                    <div class="install-prompt-card">
-                        <div class="install-prompt-header">
-                            <img src="assets/images/logo png.png" alt="NiteRun" class="install-prompt-logo">
-                            <h3>Install NiteRun App</h3>
-                        </div>
-                        <div class="install-prompt-content">
-                            <p>Get instant match notifications and work offline - never miss a game!</p>
-                            <div class="install-prompt-features">
-                                <div class="feature-item">
-                                    <i class="fas fa-bell"></i>
-                                    <span>Match notifications</span>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-wifi"></i>
-                                    <span>Works offline</span>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-mobile-alt"></i>
-                                    <span>App-like experience</span>
-                                </div>
-                            </div>
-                            <div class="install-instructions" id="installInstructions" style="display: block;">
-                                <p style="font-size: 0.9rem; color: var(--primary-color); margin-top: 1rem; padding: 1rem; background: rgba(0, 109, 255, 0.1); border-radius: 8px;">
-                                    <strong>Safari:</strong> Tap the Share button <i class="fas fa-share"></i> then "Add to Home Screen"
-                                </p>
-                            </div>
-                        </div>
-                        <div class="install-prompt-actions">
-                            <button id="installAppBtn" class="install-btn-primary">Got It!</button>
-                            <button id="notNowBtn" class="install-btn-secondary">Not Now</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Add the same styles (reuse existing style if present)
-            if (!document.getElementById('installPromptStyles')) {
-                const style = document.createElement('style');
-                style.id = 'installPromptStyles';
-                style.textContent = `
-                    .install-prompt-overlay {
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100vw;
-                        height: 100vh;
-                        background: rgba(0, 0, 0, 0.8);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        z-index: 999999;
-                        padding: 1rem;
-                        box-sizing: border-box;
-                    }
-                    
-                    .install-prompt-card {
-                        background: var(--cream);
-                        border-radius: 12px;
-                        padding: 2rem;
-                        max-width: 400px;
-                        width: 100%;
-                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-                        text-align: center;
-                        position: relative;
-                        margin: 0 auto;
-                    }
-                    
-                    .install-prompt-header {
-                        margin-bottom: 1.5rem;
-                    }
-                    
-                    .install-prompt-logo {
-                        height: 60px;
-                        width: auto;
-                        margin-bottom: 1rem;
-                    }
-                    
-                    .install-prompt-header h3 {
-                        color: var(--primary-color);
-                        font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
-                        font-size: 1.5rem;
-                        font-weight: 700;
-                        margin: 0;
-                    }
-                    
-                    .install-prompt-content p {
-                        color: var(--primary-color);
-                        font-size: 1rem;
-                        margin-bottom: 1.5rem;
-                        line-height: 1.5;
-                    }
-                    
-                    .install-prompt-features {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 0.75rem;
-                        margin-bottom: 2rem;
-                    }
-                    
-                    .feature-item {
-                        display: flex;
-                        align-items: center;
-                        gap: 0.75rem;
-                        color: var(--primary-color);
-                        font-size: 0.9rem;
-                    }
-                    
-                    .feature-item i {
-                        color: var(--accent-color);
-                        width: 20px;
-                    }
-                    
-                    .install-prompt-actions {
-                        display: flex;
-                        gap: 1rem;
-                    }
-                    
-                    .install-btn-primary {
-                        flex: 1;
-                        background: var(--primary-color);
-                        color: var(--cream);
-                        border: none;
-                        padding: 1rem 1.5rem;
-                        border-radius: 0;
-                        font-family: 'SK Glypher Trial', 'Poppins', sans-serif;
-                        font-weight: 700;
-                        font-size: 1rem;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    }
-                    
-                    .install-btn-primary:hover {
-                        background: #0056b3;
-                        transform: scale(0.98);
-                    }
-                    
-                    .install-btn-secondary {
-                        flex: 1;
-                        background: transparent;
-                        color: var(--primary-color);
-                        border: 2px solid var(--primary-color);
-                        padding: 1rem 1.5rem;
-                        border-radius: 0;
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 1rem;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    }
-                    
-                    .install-btn-secondary:hover {
-                        background: var(--primary-color);
-                        color: var(--cream);
-                    }
-                    
-                    @media (max-width: 480px) {
-                        .install-prompt-overlay {
-                            padding: 0.5rem;
-                        }
-                        
-                        .install-prompt-card {
-                            padding: 1.5rem;
-                            margin: 0;
-                            max-width: 100%;
-                            border-radius: 8px;
-                        }
-                        
-                        .install-prompt-actions {
-                            flex-direction: column;
-                            gap: 0.75rem;
-                        }
-                        
-                        .install-prompt-header h3 {
-                            font-size: 1.3rem;
-                        }
-                        
-                        .install-prompt-content p {
-                            font-size: 0.9rem;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-
-            document.body.appendChild(installPrompt);
-            installPromptShown = true;
-
-            // Add event listeners
-            document.getElementById('installAppBtn').addEventListener('click', () => {
-                console.log('Install button clicked');
-                hideInstallPrompt();
-            });
-
-            document.getElementById('notNowBtn').addEventListener('click', () => {
-                console.log('Not now button clicked');
-                hideInstallPrompt();
-            });
-        }
-
-        // Make functions globally accessible for debugging
-        window.showInstallPrompt = showInstallPrompt;
-        window.hideInstallPrompt = hideInstallPrompt;
-        window.forceShowInstallPrompt = forceShowInstallPrompt;
     </script>
 </body>
 </html>
