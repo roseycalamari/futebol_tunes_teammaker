@@ -137,6 +137,52 @@
             color: var(--primary-color);
         }
 
+        .username-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .username-prefix {
+            position: absolute;
+            left: 12px;
+            color: #666;
+            font-weight: 500;
+            z-index: 2;
+            font-size: 1rem;
+        }
+
+        .username-input {
+            padding-left: 30px;
+        }
+
+        .username-availability {
+            position: absolute;
+            right: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 2;
+        }
+
+        .username-available {
+            color: #28a745;
+        }
+
+        .username-taken {
+            color: #dc3545;
+        }
+
+        .username-checking {
+            color: #ffc107;
+        }
+
+        .form-hint {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
         .form-actions {
             display: flex;
             justify-content: space-between;
@@ -557,6 +603,16 @@
                     </div>
                     
                     <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="username-container">
+                            <span class="username-prefix">@</span>
+                            <input type="text" id="username" class="form-input username-input" placeholder="Choose a username" required>
+                            <div class="username-availability" id="usernameAvailability"></div>
+                        </div>
+                        <small class="form-hint">This will be your unique identifier for friends to find you</small>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
                     </div>
@@ -620,12 +676,12 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-        // Your web app's Firebase configuration
+    <script>
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBoFoGuzuZHVys-bF02P1mrg6-NbjQj8pY",
             authDomain: "niterun-sports-app.firebaseapp.com",
@@ -637,9 +693,56 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const googleProvider = new GoogleAuthProvider();
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+        // Username validation
+        let usernameCheckTimeout;
+        
+        function checkUsernameAvailability(username) {
+            if (!username || username.length < 3) {
+                return;
+            }
+            
+            // Clear previous timeout
+            clearTimeout(usernameCheckTimeout);
+            
+            // Show checking state
+            const availabilityDiv = document.getElementById('usernameAvailability');
+            availabilityDiv.textContent = 'Checking...';
+            availabilityDiv.className = 'username-availability username-checking';
+            
+            // Debounce the check
+            usernameCheckTimeout = setTimeout(async () => {
+                try {
+                    const usernameQuery = await db.collection('users')
+                        .where('username', '==', username.toLowerCase())
+                        .limit(1)
+                        .get();
+                    
+                    if (usernameQuery.empty) {
+                        availabilityDiv.textContent = 'Available';
+                        availabilityDiv.className = 'username-availability username-available';
+                    } else {
+                        availabilityDiv.textContent = 'Taken';
+                        availabilityDiv.className = 'username-availability username-taken';
+                    }
+                } catch (error) {
+                    console.error('Error checking username:', error);
+                    availabilityDiv.textContent = 'Error';
+                    availabilityDiv.className = 'username-availability username-taken';
+                }
+            }, 500);
+        }
+        
+        // Username input event listener
+        document.getElementById('username').addEventListener('input', function(e) {
+            const username = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+            e.target.value = username;
+            checkUsernameAvailability(username);
+        });
 
         // Password toggle functionality
         function togglePassword() {
@@ -700,6 +803,7 @@
             hideMessages();
             
             const fullName = document.getElementById('fullName').value;
+            const username = document.getElementById('username').value.toLowerCase();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
@@ -707,13 +811,30 @@
             const signupBtn = document.getElementById('signupBtn');
             
             // Validation
-            if (!fullName || !email || !password || !confirmPassword) {
+            if (!fullName || !username || !email || !password || !confirmPassword) {
                 showError('Please fill in all fields.');
+                return;
+            }
+            
+            if (username.length < 3) {
+                showError('Username must be at least 3 characters long.');
+                return;
+            }
+            
+            if (!/^[a-z0-9_]+$/.test(username)) {
+                showError('Username can only contain lowercase letters, numbers, and underscores.');
                 return;
             }
             
             if (password !== confirmPassword) {
                 showError('Passwords do not match.');
+                return;
+            }
+            
+            // Check if username is available
+            const availabilityDiv = document.getElementById('usernameAvailability');
+            if (availabilityDiv.textContent === 'Taken' || availabilityDiv.textContent === 'Checking...') {
+                showError('Please wait for username availability check or choose a different username.');
                 return;
             }
             
@@ -732,21 +853,46 @@
             signupBtn.disabled = true;
 
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 
                 // Update user profile with display name
-                await updateProfile(user, {
+                await firebase.auth().updateProfile(user, {
                     displayName: fullName
                 });
                 
-                // Store user data in localStorage
+                // Create user document in Firestore
                 const userData = {
                     uid: user.uid,
                     email: user.email,
-                    displayName: fullName
+                    displayName: fullName,
+                    username: username,
+                    photoURL: user.photoURL || null,
+                    friends: [],
+                    friendRequests: {
+                        sent: [],
+                        received: []
+                    },
+                    stats: {
+                        gamesPlayed: 0,
+                        wins: 0,
+                        losses: 0,
+                        mvps: 0
+                    },
+                    joinDate: firebase.firestore.FieldValue.serverTimestamp()
                 };
-                localStorage.setItem('user', JSON.stringify(userData));
+                
+                // Save to Firestore
+                await db.collection('users').doc(user.uid).set(userData);
+                
+                // Store user data in localStorage
+                localStorage.setItem('user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: fullName,
+                    username: username,
+                    photoURL: user.photoURL
+                }));
                 console.log('User data stored in localStorage:', userData); // Debug log
                 
                 showSuccess('Account created successfully! Redirecting...');
@@ -793,14 +939,45 @@
             googleBtn.disabled = true;
 
             try {
-                const result = await signInWithPopup(auth, googleProvider);
+                const result = await firebase.auth().signInWithPopup(googleProvider);
                 const user = result.user;
+                
+                // Generate username from display name
+                const baseUsername = user.displayName.toLowerCase()
+                    .replace(/[^a-z0-9]/g, '')
+                    .substring(0, 15);
+                const username = baseUsername + '_' + Math.random().toString(36).substr(2, 4);
+                
+                // Create user document in Firestore
+                const userData = {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    username: username,
+                    photoURL: user.photoURL || null,
+                    friends: [],
+                    friendRequests: {
+                        sent: [],
+                        received: []
+                    },
+                    stats: {
+                        gamesPlayed: 0,
+                        wins: 0,
+                        losses: 0,
+                        mvps: 0
+                    },
+                    joinDate: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Save to Firestore
+                await db.collection('users').doc(user.uid).set(userData);
                 
                 // Store user data in localStorage
                 localStorage.setItem('user', JSON.stringify({
                     uid: user.uid,
                     email: user.email,
                     displayName: user.displayName,
+                    username: username,
                     photoURL: user.photoURL
                 }));
                 

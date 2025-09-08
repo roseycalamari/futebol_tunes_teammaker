@@ -1407,6 +1407,79 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
 
+        .captain-badge {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .session-created-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .message-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            margin: 1rem;
+        }
+
+        .message-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .message-actions button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
         .team-header {
             text-align: center;
             margin-bottom: 1.5rem;
@@ -3739,9 +3812,30 @@
         </footer>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
-                 // Team Generator JavaScript functionality
-         let currentStep = 1;
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoFoGuzuZHVys-bF02P1mrg6-NbjQj8pY",
+            authDomain: "niterun-sports-app.firebaseapp.com",
+            projectId: "niterun-sports-app",
+            storageBucket: "niterun-sports-app.firebasestorage.app",
+            messagingSenderId: "320354701270",
+            appId: "1:320354701270:web:53302cfe9a63112e95de77",
+            measurementId: "G-VXLNF0KB61"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Team Generator JavaScript functionality
+        let currentStep = 1;
 
          // Logout function (placeholder)
          function logout() {
@@ -3756,10 +3850,50 @@
 
                          // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication first
+            checkAuth();
             setupSportSelection();
             setupTeamConfig();
             loadSavedTeamsFromHash();
         });
+
+        // Check if user is logged in
+        function checkAuth() {
+            const user = auth.currentUser;
+            console.log('Checking auth, user:', user);
+            
+            if (!user) {
+                console.log('No user logged in, showing login prompt');
+                // Show login prompt instead of redirecting
+                showLoginPrompt();
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Show login prompt
+        function showLoginPrompt() {
+            const container = document.querySelector('.team-generator-container');
+            if (container) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--white); padding: 4rem 2rem;">
+                        <h2 style="margin-bottom: 2rem; font-family: 'SK Glypher Trial', 'Poppins', sans-serif;">Login Required</h2>
+                        <p style="margin-bottom: 3rem; font-size: 1.1rem;">Please log in to use the team generator and create live sessions.</p>
+                        <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="login.html" class="back-btn" style="display: inline-block; text-decoration: none;">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Login
+                            </a>
+                            <a href="signup.html" class="back-btn" style="display: inline-block; text-decoration: none; background: var(--accent-color);">
+                                <i class="fas fa-user-plus"></i>
+                                Sign Up
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
         // Load saved teams if hash is present
         function loadSavedTeamsFromHash() {
@@ -4468,11 +4602,29 @@
 
         // Generate balanced teams
         function generateTeams() {
+            console.log('generateTeams called');
+            console.log('Players:', players);
+            console.log('Selected teams:', selectedTeams);
+            console.log('Selected players per team:', selectedPlayersPerTeam);
+            
+            // Check authentication
+            if (!checkAuth()) {
+                console.log('Authentication failed, cannot generate teams');
+                return;
+            }
             
             const totalPlayers = players.length;
             const numTeams = selectedTeams;
-            const playersPerTeam = Math.floor(totalPlayers / numTeams);
-            const extraPlayers = totalPlayers % numTeams;
+            const playersPerTeam = selectedPlayersPerTeam; // Use exact players per team
+            
+            console.log('Total players:', totalPlayers);
+            console.log('Required players:', numTeams * playersPerTeam);
+            
+            // Validate that we have enough players
+            if (totalPlayers < numTeams * playersPerTeam) {
+                alert(`Not enough players! You need ${numTeams * playersPerTeam} players for ${numTeams} teams of ${playersPerTeam} players each.`);
+                return;
+            }
             
             // Create teams array
             const teams = [];
@@ -4481,6 +4633,9 @@
                     name: `Team ${i + 1}`,
                     players: [],
                     totalLevel: 0,
+                    wins: 0,
+                    losses: 0,
+                    draws: 0,
                     positions: {
                         goalkeeper: 0,
                         defender: 0,
@@ -4497,26 +4652,123 @@
                 return levelB - levelA;
             });
             
-            // Distribute players to teams using round-robin for balance
-            sortedPlayers.forEach((player, index) => {
-                const teamIndex = index % numTeams;
-                teams[teamIndex].players.push(player);
+            // Distribute players to teams using snake draft for perfect balance
+            // This ensures each team gets exactly playersPerTeam players
+            for (let i = 0; i < numTeams * playersPerTeam; i++) {
+                const player = sortedPlayers[i];
+                const teamIndex = i % numTeams;
+                
+                // For snake draft: reverse direction on odd rounds
+                const round = Math.floor(i / numTeams);
+                const actualTeamIndex = round % 2 === 0 ? teamIndex : (numTeams - 1 - teamIndex);
+                
+                teams[actualTeamIndex].players.push(player);
                 
                 // Calculate team level
                 const playerLevel = parseInt(player.level.replace(/[^0-9]/g, ''));
-                teams[teamIndex].totalLevel += playerLevel;
+                teams[actualTeamIndex].totalLevel += playerLevel;
                 
                 // Count positions
-                teams[teamIndex].positions[player.position]++;
+                teams[actualTeamIndex].positions[player.position]++;
+            }
+            
+            // Assign captains randomly (one per team)
+            teams.forEach(team => {
+                if (team.players.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * team.players.length);
+                    team.players[randomIndex].isCaptain = true;
+                }
             });
             
             // Save teams and players data to localStorage
             localStorage.setItem('generatedTeams', JSON.stringify(teams));
             localStorage.setItem('players', JSON.stringify(players));
             
+            // Create session in Firestore
+            createSession(teams);
+            
             // Display teams and go to step 4
             displayTeams(teams);
             goToStep(4);
+        }
+
+        // Create session in Firestore
+        async function createSession(teams) {
+            try {
+                console.log('createSession called with teams:', teams);
+                const user = auth.currentUser;
+                console.log('Current user:', user);
+                
+                if (!user) {
+                    console.error('No user logged in');
+                    alert('Please log in to create a session');
+                    return;
+                }
+
+                // Add user IDs and initialize team stats
+                const teamsWithUserIds = teams.map(team => ({
+                    ...team,
+                    wins: 0,
+                    losses: 0,
+                    draws: 0,
+                    players: team.players.map(player => ({
+                        ...player,
+                        uid: player.name === user.displayName ? user.uid : null // Only current user gets their UID
+                    }))
+                }));
+
+                const sessionId = Date.now().toString();
+                const sessionData = {
+                    sessionId: sessionId,
+                    admin: user.uid,
+                    adminName: user.displayName || user.email,
+                    teams: teamsWithUserIds,
+                    status: 'live',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    completedAt: null,
+                    mvp: null,
+                    leftPlayers: [],
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // Save to Firestore
+                await db.collection('sessions').doc(sessionId).set(sessionData);
+                
+                // Save session ID to localStorage for easy access
+                localStorage.setItem('currentSessionId', sessionId);
+                
+                console.log('Session created successfully:', sessionId);
+                
+                // Show success message with link to session tracker
+                showSessionCreatedMessage(sessionId);
+                
+            } catch (error) {
+                console.error('Error creating session:', error);
+                alert('Error creating session. Please try again.');
+            }
+        }
+
+        // Show session created message
+        function showSessionCreatedMessage(sessionId) {
+            const message = document.createElement('div');
+            message.className = 'session-created-message';
+            message.innerHTML = `
+                <div class="message-content">
+                    <h3>🎉 Session Created!</h3>
+                    <p>Your live session is ready. Captains can now track their team's W/L/D records.</p>
+                    <div class="message-actions">
+                        <button onclick="goToSessionTracker('${sessionId}')" class="btn-primary">Track Session</button>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="btn-secondary">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(message);
+        }
+
+        // Go to session tracker
+        function goToSessionTracker(sessionId) {
+            window.location.href = `session-tracker.html?sessionId=${sessionId}`;
         }
         
         // Display generated teams
@@ -4545,7 +4797,10 @@
                                 <div class="player-info">
                                     <div class="player-number">${String.fromCharCode(65 + playerIndex)}</div>
                                     <div class="player-details">
-                                        <div class="player-name">${player.name}</div>
+                                        <div class="player-name">
+                                            ${player.name}
+                                            ${player.isCaptain ? '<span class="captain-badge">CAPTAIN</span>' : ''}
+                                        </div>
                                         <div class="player-meta">${player.level} • ${player.position}</div>
                                     </div>
                                 </div>

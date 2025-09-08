@@ -195,18 +195,6 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-install {
-            background: var(--accent-color);
-            color: var(--cream);
-            border: 2px solid var(--accent-color);
-        }
-
-        .btn-install:hover {
-            background: #ff6b00;
-            border-color: #ff6b00;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
 
         .btn-icon {
             font-size: 1rem;
@@ -341,11 +329,6 @@
                     Join NiteRun
                 </a>
                 
-                <!-- Install App Button -->
-                <button id="installAppBtn" class="auth-btn btn-install" style="display: none;">
-                    <i class="fas fa-download btn-icon"></i>
-                    Install App
-                </button>
                 
             </div>
         </div>
@@ -372,47 +355,6 @@
             });
         }
 
-        // PWA Install Button
-        let deferredPrompt;
-        const installButton = document.getElementById('installAppBtn');
-
-        // Listen for the beforeinstallprompt event
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('PWA installable - showing install button');
-            // Prevent the mini-infobar from appearing on mobile
-            e.preventDefault();
-            // Stash the event so it can be triggered later
-            deferredPrompt = e;
-            // Show the install button
-            installButton.style.display = 'flex';
-        });
-
-        // Handle install button click
-        installButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                // Show the install prompt
-                deferredPrompt.prompt();
-                // Wait for the user to respond to the prompt
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-                // Clear the deferredPrompt
-                deferredPrompt = null;
-                // Hide the install button
-                installButton.style.display = 'none';
-            }
-        });
-
-        // Check if app is already installed
-        window.addEventListener('appinstalled', () => {
-            console.log('PWA was installed');
-            installButton.style.display = 'none';
-        });
-
-        // Check if running in standalone mode (already installed)
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            console.log('App is running in standalone mode');
-            installButton.style.display = 'none';
-        }
 
     </script>
 </body>

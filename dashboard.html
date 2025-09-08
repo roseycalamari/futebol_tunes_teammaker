@@ -637,15 +637,20 @@
                 <div class="action-title">Generate Team</div>
                 <div class="action-subtitle">Create balanced teams instantly</div>
             </div>
-            <div class="action-card" onclick="alert('Search functionality coming soon!')">
-                <img src="assets/images/search.png" alt="Search Players" class="action-icon">
-                <div class="action-title">Search</div>
-                <div class="action-subtitle">Find and discover players</div>
+            <div class="action-card" onclick="window.location.href='session-tracker.html'">
+                <img src="assets/images/matchtrackericon.png" alt="Live Session" class="action-icon">
+                <div class="action-title">Live Session</div>
+                <div class="action-subtitle">Track games in real-time</div>
             </div>
             <div class="action-card" onclick="window.location.href='#'">
                 <img src="assets/images/dahsboard.png" alt="My Stats" class="action-icon">
                 <div class="action-title">My Stats</div>
                 <div class="action-subtitle">Stats & achievements</div>
+            </div>
+            <div class="action-card" onclick="window.location.href='friends.html'">
+                <img src="assets/images/profileicon.png" alt="Friends" class="action-icon">
+                <div class="action-title">Friends</div>
+                <div class="action-subtitle">Connect with your community</div>
             </div>
             <div class="action-card" onclick="window.location.href='profile.html'">
                 <div class="profile-avatar-large">
@@ -674,16 +679,16 @@
             </div>
 
 
-            <!-- Recent Matches -->
+            <!-- Recent Sessions -->
             <div class="section-card">
                 <div class="section-header">
-                    <h3 class="section-title">Recent Matches</h3>
-                    <p class="section-subtitle">Track your match history</p>
+                    <h3 class="section-title">Recent Sessions</h3>
+                    <p class="section-subtitle">Your live game sessions</p>
                 </div>
-                <div class="item-list" id="recentMatches">
+                <div class="item-list" id="recentSessions">
                     <div class="empty-state">
-                        <button class="center-btn" onclick="alert('Match tracking coming soon!')">
-                            <img src="assets/images/plus.png" alt="Plus" class="plus-icon"> Track Match
+                        <button class="center-btn" onclick="window.location.href='team-generator.html'">
+                            <img src="assets/images/plus.png" alt="Plus" class="plus-icon"> Create Session
                         </button>
                     </div>
                 </div>
@@ -768,18 +773,49 @@
         }
 
 
-        // Load dashboard data from localStorage (if any)
-        function loadDashboardData() {
+        // Load dashboard data from localStorage and Firestore
+        async function loadDashboardData() {
             // Load data from localStorage
             const teams = JSON.parse(localStorage.getItem('teams') || '[]');
             const players = JSON.parse(localStorage.getItem('players') || '[]');
-            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
             const groups = JSON.parse(localStorage.getItem('groups') || '[]');
+
+            // Load recent sessions from Firestore
+            await loadRecentSessions();
 
             // Update sections with any existing data
             updateSection('recentTeams', teams, 'teams');
-            updateSection('recentMatches', matches, 'matches');
             updateSection('userGroups', groups, 'groups');
+        }
+
+        // Load recent sessions from Firestore
+        async function loadRecentSessions() {
+            try {
+                const user = auth.currentUser;
+                if (!user) return;
+
+                // Get sessions where user is admin or participant
+                const sessionsQuery = await db.collection('sessions')
+                    .where('admin', '==', user.uid)
+                    .orderBy('createdAt', 'desc')
+                    .limit(5)
+                    .get();
+
+                const sessions = [];
+                sessionsQuery.forEach(doc => {
+                    const data = doc.data();
+                    sessions.push({
+                        id: doc.id,
+                        ...data,
+                        createdAt: data.createdAt?.toDate() || new Date()
+                    });
+                });
+
+                updateSection('recentSessions', sessions, 'sessions');
+                
+            } catch (error) {
+                console.error('Error loading recent sessions:', error);
+            }
         }
 
         // Update section content
@@ -814,11 +850,20 @@
                             <div class="item-details">Created: ${new Date(item.createdAt).toLocaleDateString()}</div>
                         </div>
                     `;
-                case 'matches':
+                case 'sessions':
+                    const statusColor = item.status === 'live' ? '#4CAF50' : item.status === 'completed' ? '#2196F3' : '#FF9800';
+                    const statusText = item.status === 'live' ? 'LIVE' : item.status === 'completed' ? 'COMPLETED' : 'PENDING';
+                    const teamNames = item.teams?.map(team => team.name).join(' vs ') || 'Session';
+                    const totalPlayers = item.teams?.reduce((total, team) => total + (team.players?.length || 0), 0) || 0;
+                    
                     return `
-                        <div class="item-card">
-                            <div class="item-title">${item.team1 || 'Team 1'} vs ${item.team2 || 'Team 2'}</div>
-                            <div class="item-details">Score: ${item.score1 || 0} - ${item.score2 || 0}</div>
+                        <div class="item-card" onclick="openSession('${item.id}')" style="cursor: pointer;">
+                            <div class="item-title">${teamNames}</div>
+                            <div class="item-details">
+                                <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span> • 
+                                ${totalPlayers} players • 
+                                ${new Date(item.createdAt).toLocaleDateString()}
+                            </div>
                         </div>
                     `;
                 case 'groups':
@@ -831,6 +876,11 @@
                 default:
                     return '';
             }
+        }
+
+        // Open session in session tracker
+        function openSession(sessionId) {
+            window.open(`session-tracker.html?sessionId=${sessionId}`, '_blank');
         }
 
         // Create a new group
@@ -1012,11 +1062,11 @@
         }
 
         // Load dashboard data when page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Check authentication first
             if (checkAuth()) {
                 displayUserInfo();
-                loadDashboardData();
+                await loadDashboardData();
                 updateDashboardWithRealData();
             }
         });

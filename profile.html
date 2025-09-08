@@ -721,6 +721,10 @@
                         <div class="stat-number" id="losses">0</div>
                         <div class="stat-label">Losses</div>
                     </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="friends-count">0</div>
+                        <div class="stat-label">Friends</div>
+                    </div>
                 </div>
             </div>
 
@@ -840,34 +844,77 @@
         }
 
         // Load and display user profile data
-        function loadUserProfile() {
+        async function loadUserProfile() {
             const user = JSON.parse(localStorage.getItem('user'));
             if (user) {
-                // Update profile photo
-                const profilePhoto = document.querySelector('.avatar-photo-large img');
-                if (profilePhoto && user.photoURL) {
-                    profilePhoto.src = user.photoURL;
-                    profilePhoto.alt = user.displayName + "'s Profile Photo";
-                }
+                try {
+                    // Load user data from Firestore
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        
+                        // Update profile photo
+                        const profilePhoto = document.querySelector('.avatar-photo-large img');
+                        if (profilePhoto && userData.photoURL) {
+                            profilePhoto.src = userData.photoURL;
+                            profilePhoto.alt = userData.displayName + "'s Profile Photo";
+                        }
 
-                // Update profile name
-                const profileName = document.querySelector('.profile-name');
-                if (profileName) {
-                    profileName.textContent = user.displayName || 'User';
-                }
+                        // Update profile name
+                        const profileName = document.querySelector('.profile-name');
+                        if (profileName) {
+                            profileName.textContent = userData.displayName || 'User';
+                        }
 
-                // Update username (create from email if no display name)
-                const username = document.querySelector('.profile-username');
-                if (username) {
-                    const usernameText = user.displayName ? 
-                        '@' + user.displayName.toLowerCase().replace(/\s+/g, '') : 
-                        '@' + user.email.split('@')[0];
-                    username.textContent = usernameText;
-                }
+                        // Update username
+                        const username = document.querySelector('.profile-username');
+                        if (username) {
+                            username.textContent = '@' + userData.username;
+                        }
 
-                // Update personal info
-                updatePersonalInfo(user);
+                        // Update friend count
+                        const friendsCount = document.getElementById('friends-count');
+                        if (friendsCount) {
+                            friendsCount.textContent = userData.friends ? userData.friends.length : 0;
+                        }
+
+                        // Update personal info
+                        updatePersonalInfo(userData);
+                    }
+                } catch (error) {
+                    console.error('Error loading user profile:', error);
+                    // Fallback to localStorage data
+                    loadUserProfileFromLocalStorage(user);
+                }
             }
+        }
+
+        // Fallback function to load from localStorage
+        function loadUserProfileFromLocalStorage(user) {
+            // Update profile photo
+            const profilePhoto = document.querySelector('.avatar-photo-large img');
+            if (profilePhoto && user.photoURL) {
+                profilePhoto.src = user.photoURL;
+                profilePhoto.alt = user.displayName + "'s Profile Photo";
+            }
+
+            // Update profile name
+            const profileName = document.querySelector('.profile-name');
+            if (profileName) {
+                profileName.textContent = user.displayName || 'User';
+            }
+
+            // Update username
+            const username = document.querySelector('.profile-username');
+            if (username) {
+                const usernameText = user.username ? '@' + user.username : 
+                    (user.displayName ? '@' + user.displayName.toLowerCase().replace(/\s+/g, '') : 
+                    '@' + user.email.split('@')[0]);
+                username.textContent = usernameText;
+            }
+
+            // Update personal info
+            updatePersonalInfo(user);
         }
 
         // Update personal information section
